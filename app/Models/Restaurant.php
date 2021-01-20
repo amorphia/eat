@@ -38,11 +38,18 @@ class Restaurant extends Model
         return $this->hasMany( Location::class );
     }
 
+    public function ratings()
+    {
+        return $this->hasMany( Rating::class );
+    }
+
+    /*
     public function users()
     {
         return $this->belongsToMany(User::class, 'ratings' )
                     ->as( 'rating' )
                     ->withPivot('visited', 'rating', 'priority' );
     }
+    */
 
 }
