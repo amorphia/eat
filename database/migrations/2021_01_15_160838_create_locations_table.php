@@ -25,7 +25,7 @@ class CreateLocationsTable extends Migration
             $table->decimal('longitude', 11, 8 );
             $table->string( 'street' )->nullable();
             $table->string( 'city' )->nullable();
-            $table->integer( 'zip' )->nullable();
+            $table->string( 'zip' )->nullable();
             $table->boolean( 'active' )->default( true );
             $table->timestamps();
         });
