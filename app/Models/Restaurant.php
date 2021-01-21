@@ -52,4 +52,44 @@ class Restaurant extends Model
     }
     */
 
+
+    /**
+     *
+     *  Methods
+     *
+     */
+    public function close()
+    {
+        $this->update([ 'active' => false ]);
+    }
+
+
+    public static function addRestaurant( $location )
+    {
+
+        // create restaurant
+        $restaurant = self::create([ 'name' => $location->name ]);
+
+        // create array of categories
+        $categories = [];
+
+        foreach( $location->categories as $category ){
+            $categories[] = $category->title;
+        }
+
+        // add restaurant categories
+        $restaurant->addCategories( $categories );
+
+        return $restaurant;
+    }
+
+    public function addCategories( $categories )
+    {
+        foreach( $categories as $cat ){
+            // find the category of create it if new
+            $category = Category::firstOrCreate([ 'name' => $cat ]);
+            // attach category
+            $this->categories()->attach( $category );
+        }
+    }
 }

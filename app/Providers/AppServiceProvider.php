@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -14,7 +15,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
+        /*
+         *  Yelp API Client
+         */
+        $this->app->singleton('Yelp', function ( $app ) {
+            $config = [
+                'apiKey' => config( 'services.yelp.api_key' ),
+                'apiHost' => config( 'services.yelp.host' ),
+            ];
+            return \Stevenmaguire\Yelp\ClientFactory::makeWith(
+                $config,
+                \Stevenmaguire\Yelp\Version::THREE
+            );
+        });
     }
 
     /**

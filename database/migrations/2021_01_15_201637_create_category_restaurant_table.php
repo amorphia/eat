@@ -18,6 +18,7 @@ class CreateCategoryRestaurantTable extends Migration
             $table->integer( 'category_id' );
             $table->integer( 'restaurant_id' );
             $table->timestamps();
+            $table->unique(['category_id', 'restaurant_id']);
         });
     }
 

@@ -2,6 +2,8 @@
 
 return [
 
+    'my_email' => env( 'MAIL_ADDRESS', 'jeremy@jeremykalgreen.com' ),
+
     /*
     |--------------------------------------------------------------------------
     | Default Mailer

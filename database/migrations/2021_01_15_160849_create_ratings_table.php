@@ -15,12 +15,13 @@ class CreateRatingsTable extends Migration
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('restaurant_id');
-            $table->boolean('visited')->nullable();
-            $table->integer('rating')->nullable();
-            $table->integer('priority')->nullable();
+            $table->integer( 'user_id' );
+            $table->integer( 'restaurant_id' );
+            $table->boolean( 'visited' )->nullable();
+            $table->integer( 'rating' )->nullable();
+            $table->boolean( 'starred' )->default( false );
             $table->timestamps();
+            $table->unique(['user_id', 'restaurant_id']);
         });
     }
 
