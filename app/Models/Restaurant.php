@@ -68,7 +68,10 @@ class Restaurant extends Model
     {
 
         // create restaurant
-        $restaurant = self::create([ 'name' => $location->name ]);
+        $restaurant = self::create([
+            'name' => $location->name,
+            'image' => $location->image_url
+        ]);
 
         // create array of categories
         $categories = [];
