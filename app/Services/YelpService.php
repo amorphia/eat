@@ -52,10 +52,10 @@ class YelpService
             }
 
             // if we are continuing increment our offset and then
-            // sleep for a half a second to avoid rate limiting
+            // sleep for a second to avoid rate limiting
             if( $continue ){
                 $offset += $this->limit;
-                usleep( 500000 );
+                sleep( 1 );
             }
         }
 

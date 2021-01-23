@@ -13,11 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
+/*
+ * Routes for authentication and logging out
+ */
 Auth::routes();
+Route::get( 'logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'] )->name( 'logout' );
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+/*
+ * Other than authentication, all other routes should point to the SPA
+ */
+Route::get('/{any}', function () {
+    return view('app');
+})->where('any', '.*' )->middleware('auth')->name('home');
+
+

@@ -7,11 +7,22 @@
 require('./dependencies');
 
 /*
+* Import Vue and Vue Router
+*/
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+
+
+Vue.use( VueRouter );
+Vue.config.devtools = true;
+
+
+/*
 *
 *  Register vue components globally
 *
 */
-const files = require.context('./components', true, /\.vue$/i);
+const files = require.context( './components', true, /\.vue$/i);
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 
@@ -40,6 +51,8 @@ require( './partials/_drag' ); // drag directive
 require( './partials/_preload' ); // image preloader
  */
 
+import routes from './routes';
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -48,4 +61,5 @@ require( './partials/_preload' ); // image preloader
 
 const app = new Vue({
     el: '#app',
+    router: new VueRouter( routes ),
 });

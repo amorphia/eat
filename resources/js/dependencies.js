@@ -9,6 +9,7 @@ window._ = require('lodash');
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.withCredentials = true;
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
@@ -16,6 +17,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * a simple convenience so we don't have to attach every token manually.
  */
 
+/*
 let getToken = function(){
 
     let token = document.querySelector('meta[name="csrf-token"]');
@@ -29,13 +31,10 @@ let getToken = function(){
 };
 
 getToken();
-
+*/
 
 /**
- * Import Vue
- */
-window.Vue = require('vue').default;
-Vue.config.devtools = true;
+
 
 
 /**
