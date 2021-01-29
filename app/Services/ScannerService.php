@@ -157,7 +157,7 @@ class ScannerService
         if( !$details ) return;
 
         // set location hours
-        if( $details->hours ) $location->update([ 'hours' => $details->hours[0]->open ]);
+        if( isset( $details->hours ) ) $location->update([ 'hours' => $details->hours[0]->open ]);
 
         // save location photos
         $this->saveLocationPhotos( $location, $details );
@@ -167,7 +167,7 @@ class ScannerService
     protected function saveLocationPhotos( $location, $details )
     {
         $restaurant = Restaurant::find( $location->restaurant_id );
-        if( ! $restaurant || !$details->photos ) return;
+        if( ! $restaurant || !isset( $details->photos ) ) return;
 
         foreach( $details->photos as $photo ){
             $restaurant->photos()->create([ 'url' => $photo ]);
