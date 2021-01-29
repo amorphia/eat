@@ -15,14 +15,6 @@ use App\Models\Location;
 */
 
 
-Route::get( 'test', function(){
-
-    $client = resolve( 'Yelp' );
-    $location = Location::find( 2 );
-
-    $details = $client->getBusiness( $location->yelp_id );
-    dd( $details->photos  );
-});
 
 /*
  * Routes for authentication and logging out
@@ -39,6 +31,6 @@ Route::get( 'welcome', function () {
  */
 Route::get('/{any}', function () {
     return view( 'app' );
-})->where('any', '.*' )->middleware( 'auth' )->name( 'home' );
+})->middleware( 'auth' )->name( 'home' );
 
 
