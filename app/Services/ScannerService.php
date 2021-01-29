@@ -134,6 +134,8 @@ class ScannerService
 
     protected function getLocationDetails( $location )
     {
+        $details = null;
+
         try {
             $details = $this->yelp->details( $location );
         } catch ( \Throwable $e ) {

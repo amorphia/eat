@@ -49,6 +49,8 @@ class YelpService
             'sort_by' => 'distance'
         ];
 
+        $results = null;
+
         try
         {
             $results = $this->client->getBusinessesSearchResults( $parameters );
