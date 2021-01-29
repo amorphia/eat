@@ -52,6 +52,6 @@ class ScanYelp extends Command
         // sell scanner to send summary email
         if( $this->option( 'silent' ) ) $this->scanner->setSummary( false );
 
-        $this->scanner->scan( $this->argument('zip'), $this->option( 'silent' ) );
+        $this->scanner->scan( $this->argument('zip'), $this->option( 'slow' ) );
     }
 }

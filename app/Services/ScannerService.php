@@ -20,6 +20,10 @@ class ScannerService
     protected $summary = true;
     protected $newLocations = [];
     protected $closedLocations = [];
+    protected $sleep = 2;
+    protected $errors = 0;
+    protected $max_errors = 10;
+    protected $errorTimeout = 10;
 
     public function __construct( YelpService $yelpService )
     {
@@ -130,7 +134,20 @@ class ScannerService
 
     protected function getLocationDetails( $location )
     {
-        $details = $this->yelp->details( $location );
+        try {
+            $details = $this->yelp->details( $location );
+        } catch ( \Throwable $e ) {
+            if( $this->console ) $this->console->error( 'Failed to scan for details: ' . $e->getMessage() );
+
+            $this->errors++;
+            if( $this->errors >= $this->max_errors ){
+                if( $this->console ) $this->console->error( 'Too many errors, aborting' );
+                die();
+            } else {
+                sleep( $this->errorTimeout );
+            }
+        }
+
         if( !$details || !isset( $details->hours ) ) return;
 
         // set location hours
@@ -138,6 +155,8 @@ class ScannerService
 
         // save location photos
         $this->saveLocationPhotos( $location, $details );
+
+        sleep( $this->sleep );
     }
 
 

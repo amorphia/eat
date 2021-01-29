@@ -12,7 +12,10 @@ class YelpService
     protected $client;
     protected $limit = 50; // how many results to fetch at once from Yelp API (max 50)
     protected $max_results = 500; // Maximum number of results to collect (max 1000)
-
+    protected $sleep = 2;
+    protected $errors = 0;
+    protected $maxErrors = 10;
+    protected $errorTimeout = 10;
 
     public function __construct()
     {
@@ -46,7 +49,25 @@ class YelpService
             'sort_by' => 'distance'
         ];
 
-        return $this->client->getBusinessesSearchResults( $parameters );
+        try
+        {
+            $results = $this->client->getBusinessesSearchResults( $parameters );
+        }
+        catch ( \Throwable $e )
+        {
+            if( $this->console ) $this->console->error( 'Failed to scan for details: ' . $e->getMessage() );
+
+            $this->errors++;
+            if( $this->errors >= $this->maxErrors ){
+                if( $this->console ) $this->console->error( 'Too many errors, aborting' );
+                die();
+            } else {
+                sleep( $this->errorTimeout );
+            }
+        }
+
+
+        return $results;
     }
 
     public function search( $zip, $options = [] )
@@ -74,7 +95,7 @@ class YelpService
                 $offset += $this->limit;
 
                 // set our sleep time to either 1 or 2 seconds depending on our supplied options
-                $sleepTime = $options['slow'] ?? 1;
+                $sleepTime = $options['slow'] ? $this->sleep * 2 : $this->sleep;
                 sleep( $sleepTime );
             }
         }
