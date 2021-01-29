@@ -12,16 +12,16 @@
 
 @font-face {
     font-family: "HC";
-    src: url("/fonts/HC-book.ttf");
+    src: url("/fonts/HC-book.ttf") format('truetype');
 }
 @font-face {
     font-family: "HC";
-    src: url("/fonts/HC-bold.ttf");
+    src: url("/fonts/HC-bold.ttf") format('truetype');
     font-weight: bold;
 }
 @font-face {
     font-family: "HC";
-    src: url("/fonts/HC-light.ttf");
+    src: url("/fonts/HC-light.ttf") format('truetype');
     font-weight: 300;
 }
 
