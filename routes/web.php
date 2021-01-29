@@ -31,6 +31,6 @@ Route::get( 'welcome', function () {
  */
 Route::get('/{any}', function () {
     return view( 'app' );
-})->middleware( 'auth' )->name( 'home' );
+})->where('any', '.*' )->middleware( 'auth' )->name( 'home' );
 
 
