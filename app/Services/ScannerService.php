@@ -150,15 +150,17 @@ class ScannerService
             }
         }
 
-        if( !$details || !isset( $details->hours ) ) return;
+        // sleep for a bit to avoid API trouble
+        sleep( $this->sleep );
+
+        // if we didn't get nothin, then we are done here
+        if( !$details ) return;
 
         // set location hours
-        $location->update([ 'hours' => $details->hours[0]->open ]);
+        if( $details->hours ) $location->update([ 'hours' => $details->hours[0]->open ]);
 
         // save location photos
         $this->saveLocationPhotos( $location, $details );
-
-        sleep( $this->sleep );
     }
 
 
