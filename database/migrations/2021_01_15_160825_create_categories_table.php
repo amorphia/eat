@@ -17,6 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->string( 'name' )->unique();
             $table->boolean( 'priority' )->default( false );
+            $table->boolean( 'active' )->default( true );
             $table->timestamps();
         });
     }

@@ -20,17 +20,22 @@ class Restaurant extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class );
+        return $this->belongsToMany(Category::class )
+            ->where('active', 1 )
+            ->orderBy( 'priority', 'desc' );
     }
 
     public function posts()
     {
-        return $this->hasMany( Post::class );
+        return $this->hasMany( Post::class )
+            ->orderBy( 'created_at', 'desc' );
     }
 
     public function photos()
     {
-        return $this->hasMany( Photo::class );
+        return $this->hasMany( Photo::class )
+            ->where('active', 1 )
+            ->orderBy( 'priority', 'desc' );
     }
 
     public function locations()
@@ -42,6 +47,7 @@ class Restaurant extends Model
     {
         return $this->hasMany( Rating::class );
     }
+
 
     /*
     public function users()

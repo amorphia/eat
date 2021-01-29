@@ -17,9 +17,8 @@ class CreateRatingsTable extends Migration
             $table->id();
             $table->integer( 'user_id' );
             $table->integer( 'restaurant_id' );
-            $table->boolean( 'visited' )->nullable();
             $table->integer( 'rating' )->nullable();
-            $table->boolean( 'starred' )->default( false );
+            $table->integer( 'interest' )->default( 0 );
             $table->timestamps();
             $table->unique(['user_id', 'restaurant_id']);
         });

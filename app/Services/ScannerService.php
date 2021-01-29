@@ -16,6 +16,7 @@ class ScannerService
 
     protected $yelp;
     protected $console;
+    protected $slow;
     protected $summary = true;
     protected $newLocations = [];
     protected $closedLocations = [];
@@ -41,11 +42,14 @@ class ScannerService
     /*
      *  Run a full scan of all the zip codes in our area
      */
-    public function scan( $zip = null )
+    public function scan( $zip = null, $slow = null )
     {
         // get our array of zip codes then shuffle them
         $zips = config( 'services.yelp.zip_codes' );
         shuffle ( $zips );
+
+        // slow down the process if the slow parameter set
+        $this->slow = $slow;
 
         // if we supplied a zip code, instead just use the selected zip code
         if( $zip ) $zips = [ $zip ];
@@ -69,7 +73,7 @@ class ScannerService
         if( $this->console ) $this->console->info( "Begin scanning {$zip}" );
 
         // grab our results for this zip code from yelp
-        $locations = $this->yelp->search( $zip );
+        $locations = $this->yelp->search( $zip, [ 'slow' => $this->slow ] );
 
         // if we didn't get any results then we are done
         if( !is_array( $locations ) || !count( $locations ) ){
@@ -117,7 +121,34 @@ class ScannerService
     {
         if( $this->console ) $this->console->info( "Adding location for {$location->name}" );
         $location = Location::addLocation( $location );
+
+        $this->getLocationDetails( $location );
+
         if( $this->summary ) $this->newLocations[] = $location;
+    }
+
+
+    protected function getLocationDetails( $location )
+    {
+        $details = $this->yelp->details( $location );
+        if( !$details || !isset( $details->hours ) ) return;
+
+        // set location hours
+        $location->update([ 'hours' => $details->hours[0]->open ]);
+
+        // save location photos
+        $this->saveLocationPhotos( $location, $details );
+    }
+
+
+    protected function saveLocationPhotos( $location, $details )
+    {
+        $restaurant = Restaurant::find( $location->restaurant_id );
+        if( ! $restaurant || !$details->photos ) return;
+
+        foreach( $details->photos as $photo ){
+            $restaurant->photos()->create([ 'url' => $photo ]);
+        }
     }
 
 

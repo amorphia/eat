@@ -1,0 +1,50 @@
+:root {
+	--dark-text: #282828;
+	--near-white: rgb(251,251,251);
+    --light-text: #d4d4d4;
+    --light-grey: #767676;
+    --mid-grey: #272727;
+    --dark-grey: #0e0e0e;
+    --primary-light: #0aab9c;
+    --primary-color: #1b5b58;
+    --primary-dark: #16262a;
+    --primary-extra-dark: #162325;
+    --primary-darkest: #111c1d;
+    --primary-font: "Oswald", impact, arial, sans-serif;
+    --secondary-font: "HC", helvetica, arial, sans-serif;
+    --accent-font: "Teko", helvetica, sans-serif;
+    --success-color: #38b383;
+    --highlight-color : #ffce00;
+    --dark-color: #333333;
+    --off-white : #ADADAD;
+    --light-yellow : #ffeb5b;
+    --subtle-text: #86afad;
+}
+
+.primary { color: var(--primary-color) }
+.primary-bg { background-color: var(--primary-color) }
+
+.primary-light { color: var(--primary-light) }
+.primary-light-bg { background-color: var(--primary-light) }
+
+.primary-dark { color: var(--primary-dark) }
+.primary-dark-bg { background-color: var(--primary-dark) }
+
+.primary-darkest { color: var(--primary-darkest) }
+.primary-darkest-bg { background-color: var(--primary-darkest) }
+
+.highlight { color: var(--highlight-color) }
+.highlight-bg { background-color: var(--highlight-color) }
+
+.subtle { color: var(--subtle-text) }
+.subtle-bg { background-color: var(--subtle-text) }
+
+.light-text { color: var(--light-text) }
+.light-text-bg { background-color: var(--light-text) }
+
+.white { color: white }
+.white-bg { background-color: white }
+
+.primary-font { font-family: var(--primary-font) }
+.secondary-font { font-family: var(--secondary-font) }
+.accent-font { font-family: var(--accent-font) }

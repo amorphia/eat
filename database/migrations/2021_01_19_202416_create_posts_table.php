@@ -18,6 +18,7 @@ class CreatePostsTable extends Migration
             $table->integer( 'user_id' );
             $table->integer( 'restaurant_id' );
             $table->text( 'body' );
+            $table->boolean( 'public' )->default( 1 );
             $table->timestamps();
         });
     }

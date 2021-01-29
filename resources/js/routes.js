@@ -1,5 +1,4 @@
-import Home from './views/Home';
-import About from './views/About';
+import RestaurantList from "./views/RestaurantList";
 
 export default {
 
@@ -9,18 +8,13 @@ export default {
     routes: [
         {
             path: '*',
-            component: Home,
+            component: RestaurantList,
             name: '404'
         },
         {
             path: '/',
-            component: Home,
+            component: RestaurantList,
             name: 'home'
-        },
-        {
-            path: '/about',
-            component: About,
-            name: 'about'
         },
     ]
 }

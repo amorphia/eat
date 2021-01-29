@@ -67,9 +67,18 @@ class PhotoController extends Controller
      * @param  \App\Models\Photo  $photo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Photo $photo)
+    public function update( Request $request, Photo $photo )
     {
-        //
+        if( !user()->can( 'update', $photo ) ) return error();
+
+        $validated = $request->validate([
+            'url' => 'string',
+            'body' => 'string|nullable',
+            'priority' => 'integer',
+        ]);
+
+        // update rating with new values then return
+        return $photo->update( $validated );
     }
 
     /**
@@ -78,8 +87,10 @@ class PhotoController extends Controller
      * @param  \App\Models\Photo  $photo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Photo $photo)
+    public function destroy(Request $request, Photo $photo)
     {
-        //
+        if( !user()->can( 'delete', $photo ) ) return error();
+
+        return $photo->update([ 'active' => false ]);
     }
 }

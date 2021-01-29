@@ -11,12 +11,30 @@ require('./dependencies');
 */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueConfirmDialog from 'vue-confirm-dialog';
+import VueLazyLoad from 'vue-lazyload'
 
 
+window.Vue = Vue;
 Vue.use( VueRouter );
+Vue.use( VueConfirmDialog );
+Vue.use( VueLazyLoad );
+
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default);
 Vue.config.devtools = true;
 
+/*
+* Import day JS
+*/
+window.Day = require('dayjs');
 
+// add custom parse format
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+Day.extend(customParseFormat);
+
+// add is between
+var isBetween = require('dayjs/plugin/isBetween');
+Day.extend(isBetween);
 /*
 *
 *  Register vue components globally
@@ -37,19 +55,18 @@ window.App = window.App || {};
 /**
  *
  * Import partials
- *
-
+ */
+require( './partials/_event' ); // Event emitter
 require( './partials/_ajax' ); // ajax helper
 require( './partials/_onload' ); // onload helper
-require( './partials/_ifCsrf' ); // set ifCsrf handler
 require( './partials/_helpers' ); // set up shared state
 require( './partials/_state' ); // set up shared state
-require( './partials/_event' ); // Event emitter
 require( './partials/_cookies' ); // Cookie handler
-require( './partials/_filters' ); // filters
-require( './partials/_drag' ); // drag directive
-require( './partials/_preload' ); // image preloader
- */
+require( './partials/_confirm' ); // Confirm dialog handler
+require( './partials/_date' ); // Date handler
+//require( './partials/_filters' ); // filters
+//require( './partials/_drag' ); // drag directive
+
 
 import routes from './routes';
 

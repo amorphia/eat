@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rating;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RestaurantController extends Controller
 {
@@ -14,7 +16,30 @@ class RestaurantController extends Controller
      */
     public function index( Request $request )
     {
-        return [ ['name' => $request->user()->name ] ];
+
+        return Restaurant::with([
+            'locations',
+            'photos.user',
+            'categories',
+            'posts' => function ( $q ) use ( $request ) {
+                return $q->where( 'user_id', $request->user()->id );
+            }])
+            ->leftJoin( 'ratings', function( $join ) use( $request ) {
+                $join->on( 'restaurants.id', '=', 'ratings.restaurant_id' )
+                    ->where( 'ratings.user_id', '=', $request->user()->id );
+            })
+            ->select('restaurants.*',
+                DB::raw('coalesce( ratings.rating, 0) as rating'),
+                DB::raw('coalesce( ratings.interest, 0) as interest')
+            )
+            ->orderBy( 'rating', 'desc' )
+            ->orderBy( 'interest', 'desc' )
+            ->orderBy( 'name', 'asc' )
+            ->where( 'active', true )
+            ->where( 'interest', '!=', -1 )
+            ->orWhereNull( 'interest' )
+            ->take( 102 )
+            ->get();
     }
 
     /**
@@ -71,6 +96,7 @@ class RestaurantController extends Controller
     {
         //
     }
+
 
     /**
      * Remove the specified resource from storage.

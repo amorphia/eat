@@ -26,6 +26,7 @@ class CreateLocationsTable extends Migration
             $table->string( 'street' )->nullable();
             $table->string( 'city' )->nullable();
             $table->string( 'zip' )->nullable();
+            $table->json( 'hours' )->nullable();
             $table->boolean( 'active' )->default( true );
             $table->timestamps();
         });

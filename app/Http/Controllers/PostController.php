@@ -33,9 +33,14 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store( Request $request )
     {
-        //
+        $validated = $request->validate([
+            'body' => 'string',
+            'restaurant_id' => 'exists:restaurants,id'
+        ]);
+
+        return user()->posts()->create( $validated );
     }
 
     /**
@@ -44,7 +49,7 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show( Post $post )
     {
         //
     }
@@ -69,7 +74,16 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        if( !user()->can( 'update', $post ) ) return error();
+
+        $validated = $request->validate([
+            'body' => 'string',
+        ]);
+
+        // update with new values then return
+        $post->update( $validated );
+
+        return $post;
     }
 
     /**
@@ -80,6 +94,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if( !user()->can( 'delete', $post ) ) return error();
+        return $post->delete();
     }
 }

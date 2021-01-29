@@ -1,0 +1,27 @@
+/* Scrollbar */
+body {
+    scrollbar-color: var(--primary-light) rgba(0,0,0,.1); /* thumb and track color */
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,.1);
+    box-shadow: inset 0 0 5px rgba(0,0,0,.5);
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--primary-light);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}

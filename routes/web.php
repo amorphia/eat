@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Location;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,18 +14,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::get( 'test', function(){
+
+    $client = resolve( 'Yelp' );
+    $location = Location::find( 2 );
+
+    $details = $client->getBusiness( $location->yelp_id );
+    dd( $details->photos  );
+});
+
 /*
  * Routes for authentication and logging out
  */
 Auth::routes();
 Route::get( 'logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'] )->name( 'logout' );
 
+Route::get( 'welcome', function () {
+    return view( 'welcome' );
+} )->name( 'welcome' );
 
 /*
  * Other than authentication, all other routes should point to the SPA
  */
 Route::get('/{any}', function () {
-    return view('app');
-})->where('any', '.*' )->middleware('auth')->name('home');
+    return view( 'app' );
+})->where('any', '.*' )->middleware( 'auth' )->name( 'home' );
 
 

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Blade;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -38,6 +39,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Set database string length
         Schema::defaultStringLength(191);
+
+        /**
+         *
+         *  Register svg blade helper
+         *
+         */
+
+        Blade::directive('svg', function( $expression ) {
+            $expression = str_replace( ["'", '"'], '', $expression );
+            $path = "images/svg/$expression.svg";
+            return file_get_contents( $path );
+            return "<?php echo file_get_contents( images\svg\{$expression}.svg ); ?>";
+        });
     }
 }

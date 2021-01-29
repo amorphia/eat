@@ -1,0 +1,60 @@
+
+.confirm-popup {
+
+    &.vc-overlay {
+        background-color: rgba(15, 47, 52, .61);
+        backdrop-filter: blur(4px);
+    }
+
+    .vc-container {
+        background-image : url('/images/main-background.jpg');
+        background-size: cover;
+        background-position: center;
+        border-radius: 0;
+        width: 30rem;
+        font-family: var(--secondary-font);
+        position: relative;
+
+        &:before{
+            content: '';
+            position: absolute;
+            background-color: rgba(0,0,0,.2);
+            height: 0.5em;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+    }
+
+    .vc-title {
+        font-weight: bold;
+    }
+
+    .vc-text {
+        padding: 3rem 1rem;
+        color: white;
+        font-size: 1.6rem;
+    }
+
+    .vc-btn-grid {
+        border-radius: 0;
+        background-color: rgba(0,0,0,.3);
+    }
+
+    .vc-btn {
+        border-radius: 0;
+        background-color: var(--highlight-color);
+        border-top: none;
+        color: var(--primary-darkest);
+        font-size: 1.6rem;
+        font-weight: bold;
+
+        &.left {
+            background-color: transparent;
+            border-right: none;
+            color: white;
+            font-weight: normal;
+        }
+    }
+
+}
