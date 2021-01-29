@@ -3,11 +3,15 @@
         <transition name="slide-down" tag="div">
             <section class="restaurant-block width-100 pos-relative">
                 <restaurant-item
-                    v-for="restaurant in shared.restaurants"
+                    v-for="(restaurant, index) in shared.restaurants"
                     :key="restaurant.id"
+                    :index="index"
                     :restaurant.sync="restaurant"
                     :selected="selectedRestaurant"
-                    @selected="obj => selectedRestaurant = obj"
+                    @selected="obj => {
+                        selectedRestaurant = obj;
+                        selectedIndex = index;
+                    }"
                 ></restaurant-item>
             </section>
         </transition>

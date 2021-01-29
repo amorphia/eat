@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use App\Models\Zip;
 use App\Models\Category;
 use App\Models\Location;
 use App\Models\Restaurant;
@@ -24,6 +25,7 @@ class ScannerService
     protected $errors = 0;
     protected $max_errors = 10;
     protected $errorTimeout = 10;
+    protected $zipCount = 2;
 
     public function __construct( YelpService $yelpService )
     {
@@ -37,26 +39,45 @@ class ScannerService
     }
 
 
+    public function setZipCount( $count )
+    {
+        $this->zipCount = $count;
+    }
+
     public function setConsole( $console )
     {
         $this->console = $console;
     }
 
 
+    public function getZips( $zip = null )
+    {
+        // if we supplied a zip code, instead just use the selected zip code
+        if( $zip ) return [ $zip ];
+
+
+        // check if we have any zips left to scan, if not, reset them
+        if( Zip::where( 'scanned', false )->count() === 0 ){
+            Zip::where( 'scanned', true )->update([ 'scanned' => false ]);
+        }
+
+        // get our array of zip codes then shuffle them
+        $zips = Zip::where( 'scanned', false )->take( $this->zipCount )->pluck( 'zip' )->toArray();
+        shuffle ( $zips );
+
+        return $zips;
+    }
+
     /*
      *  Run a full scan of all the zip codes in our area
      */
     public function scan( $zip = null, $slow = null )
     {
-        // get our array of zip codes then shuffle them
-        $zips = config( 'services.yelp.zip_codes' );
-        shuffle ( $zips );
-
         // slow down the process if the slow parameter set
         $this->slow = $slow;
 
-        // if we supplied a zip code, instead just use the selected zip code
-        if( $zip ) $zips = [ $zip ];
+        // get our zip codes array
+        $zips = $this->getZips( $zip );
 
         foreach( $zips as $zip ){
             $this->scanZip( $zip );
@@ -92,6 +113,10 @@ class ScannerService
         foreach( $locations as $location ){
             $this->processLocation( $location );
         }
+
+        // mark our zip code as scanned once done
+        Zip::where( 'zip', $zip )->update( 'scanned', true );
+
     }
 
 

@@ -10,7 +10,7 @@
     export default {
 
         name: 'rating-number',
-        props :[ 'value', 'rating', 'open', 'restaurant' ],
+        props :[ 'value', 'open', 'restaurant' ],
         data() {
             return {
                 shared : App.state
@@ -18,7 +18,7 @@
         },
         computed : {
             active(){
-                return this.value === this.rating;
+                return this.value === this.restaurant.rating;
             },
 
             ratingText(){

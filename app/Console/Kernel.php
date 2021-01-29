@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command( 'scanYelp' )->twiceMonthly( 1, 15, '6:00' );
+        $schedule->command( 'scanYelp' )->dailyAt( '5:00' );
     }
 
     /**

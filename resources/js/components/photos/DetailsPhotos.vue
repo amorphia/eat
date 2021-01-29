@@ -18,7 +18,7 @@
             <i class="icon-add_photo"></i>
         </button>
 
-        <LightBox :media="media"
+        <LightBox v-if="media.length" :media="media"
                   :showLightBox="false"
                   :showThumbs="false"
                   :showCaption="true"

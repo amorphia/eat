@@ -6,9 +6,7 @@
 
             <div class="restaurant__main" :id="`restaurant-${restaurant.id}`">
                 <div class='pad-buffer restaurant__name' @click="openViewRestaurant">{{ restaurant.name }}</div>
-                <restaurant-rating
-                    :rating="restaurant.rating"
-                    :restaurant="restaurant"></restaurant-rating>
+                <restaurant-rating :restaurant="restaurant"></restaurant-rating>
             </div>
 
         </div>
@@ -20,7 +18,7 @@
     export default {
 
         name: 'restaurant-item',
-        props: [ 'restaurant', 'selected' ],
+        props: [ 'restaurant', 'selected', 'index' ],
         data() {
             return {
                 shared : App.state
@@ -34,7 +32,7 @@
         },
         methods : {
             openViewRestaurant(){
-                App.event.emit( 'viewRestaurant', this.restaurant );
+                App.event.emit( 'viewRestaurant', this.index, );
             }
         }
     }

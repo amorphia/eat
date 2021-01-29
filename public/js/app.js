@@ -3140,7 +3140,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'rating-number',
-  props: ['value', 'rating', 'open', 'restaurant'],
+  props: ['value', 'open', 'restaurant'],
   data: function data() {
     return {
       shared: App.state
@@ -3148,7 +3148,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     active: function active() {
-      return this.value === this.rating;
+      return this.value === this.restaurant.rating;
     },
     ratingText: function ratingText() {
       return this.value > 0 ? this.value : '-';
@@ -3181,8 +3181,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
-/* harmony import */ var _posts_DetailsPosts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../posts/DetailsPosts */ "./resources/js/components/posts/DetailsPosts.vue");
-/* harmony import */ var _locations_DetailsLocations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../locations/DetailsLocations */ "./resources/js/components/locations/DetailsLocations.vue");
 //
 //
 //
@@ -3220,18 +3218,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'restaurant-details',
-  components: {
-    DetailsLocations: _locations_DetailsLocations__WEBPACK_IMPORTED_MODULE_1__.default,
-    DetailsPosts: _posts_DetailsPosts__WEBPACK_IMPORTED_MODULE_0__.default
-  },
   data: function data() {
     return {
       shared: App.state,
-      restaurant: null
+      index: null
     };
   },
   watch: {
@@ -3247,11 +3252,30 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
+  computed: {
+    restaurant: function restaurant() {
+      if (this.index === null) return null;
+      return this.shared.restaurants[this.index];
+    },
+    maxIndex: function maxIndex() {
+      if (!this.shared.restaurants) return 0;
+      return this.shared.restaurants.length - 1;
+    }
+  },
+  methods: {
+    updateIndex: function updateIndex(val) {
+      var index = this.index;
+      index += val;
+      if (index < 0) index = 0;
+      if (index > this.maxIndex) index = this.maxIndex;
+      this.index = index;
+    }
+  },
   created: function created() {
     var _this = this;
 
-    App.event.on('viewRestaurant', function (restaurant) {
-      return _this.restaurant = restaurant;
+    App.event.on('viewRestaurant', function (index) {
+      return _this.index = index;
     });
   }
 });
@@ -3327,11 +3351,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'restaurant-item',
-  props: ['restaurant', 'selected'],
+  props: ['restaurant', 'selected', 'index'],
   data: function data() {
     return {
       shared: App.state
@@ -3344,7 +3366,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     openViewRestaurant: function openViewRestaurant() {
-      App.event.emit('viewRestaurant', this.restaurant);
+      App.event.emit('viewRestaurant', this.index);
     }
   }
 });
@@ -3452,10 +3474,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'restaurant-rating',
-  props: ['rating', 'restaurant'],
+  props: ['restaurant'],
   data: function data() {
     return {
       values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -3515,7 +3536,11 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    contentOverflowing: function contentOverflowing() {
+      return this.$refs.container.scrollWidth > this.$refs.container.clientWidth;
+    },
     wheel: function wheel(e) {
+      if (this.contentOverflowing()) e.preventDefault();
       if (e.deltaY > 0) this.$refs.container.scrollLeft += this.wheelScroll;else this.$refs.container.scrollLeft -= this.wheelScroll;
     },
     scroll: function scroll(sign) {
@@ -3729,6 +3754,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
+//
+//
+//
+//
 //
 //
 //
@@ -5112,7 +5141,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".details {\n  background-image: url(\"/images/main-background.jpg\");\n  background-position: center;\n  background-size: cover;\n  font-size: 1.4rem;\n  color: var(--primary-light-color);\n  transition: transform .3s;\n}\n.details__name {\n  padding: 1.5rem 4rem;\n  font-size: 2.5rem;\n  color: white;\n  letter-spacing: 2px;\n  font-family: var(--secondary-font);\n  font-weight: 300;\n  position: relative;\n  box-shadow: 0px 3px 0px 0px rgba(0, 0, 0, 0.39);\n  background-color: var(--primary-dark);\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".details {\n  background-image: url(\"/images/main-background.jpg\");\n  background-position: center;\n  background-size: cover;\n  font-size: 1.4rem;\n  color: var(--primary-light-color);\n  transition: transform .3s;\n}\n.details__name {\n  padding: 1.5rem 4rem;\n  font-size: 2.5rem;\n  color: white;\n  letter-spacing: 2px;\n  font-family: var(--secondary-font);\n  font-weight: 300;\n  position: relative;\n  box-shadow: 0px 3px 0px 0px rgba(0, 0, 0, 0.39);\n  background-color: var(--primary-dark);\n}\n.details__nav-button {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  top: 60%;\n  padding: .5rem;\n  border-radius: 50%;\n  background-color: rgba(0, 0, 0, 0.5);\n  color: white;\n  font-size: 1.5rem;\n  z-index: 50;\n  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);\n}\n.details__nav-button:hover {\n  color: var(--highlight-color);\n}\n.details__nav-button.left {\n  left: 1rem;\n}\n.details__nav-button.right {\n  right: 1rem;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -5208,7 +5237,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/* CSS Document */\n.restaurant__rating {\n  background-color: #1b5b58;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  z-index: 4;\n}\n.restaurant__rating:after {\n  content: '';\n  position: absolute;\n  left: 0;\n  top: 50%;\n  background-color: #1b5b58;\n  width: 6em;\n  height: 6em;\n  border-radius: 50%;\n  transform: translate(-25%, -50%);\n}\n.restaurant_ratings {\n  height: 100%;\n  display: flex;\n  align-items: center;\n  position: relative;\n  z-index: 1;\n  top: .2em;\n  padding-right: .5em;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "/* CSS Document */\n.restaurant__rating {\n  background-color: #1b5b58;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  z-index: 4;\n}\n.restaurant__rating.details__rating {\n  font-size: 1.4rem;\n  padding-right: 3em;\n}\n.restaurant__rating:after {\n  content: '';\n  position: absolute;\n  left: 0;\n  top: 50%;\n  background-color: #1b5b58;\n  width: 6em;\n  height: 6em;\n  border-radius: 50%;\n  transform: translate(-25%, -50%);\n}\n.restaurant_ratings {\n  height: 100%;\n  display: flex;\n  align-items: center;\n  position: relative;\n  z-index: 1;\n  top: .2em;\n  padding-right: .5em;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -30276,15 +30305,17 @@ var render = function() {
       _vm._v(" "),
       _vm._m(0),
       _vm._v(" "),
-      _c("LightBox", {
-        ref: "lightbox",
-        attrs: {
-          media: _vm.media,
-          showLightBox: false,
-          showThumbs: false,
-          showCaption: true
-        }
-      })
+      _vm.media.length
+        ? _c("LightBox", {
+            ref: "lightbox",
+            attrs: {
+              media: _vm.media,
+              showLightBox: false,
+              showThumbs: false,
+              showCaption: true
+            }
+          })
+        : _vm._e()
     ],
     1
   )
@@ -30580,7 +30611,7 @@ var render = function() {
                 staticClass: "toggle minimize-toggle top-0 right-0",
                 on: {
                   click: function($event) {
-                    _vm.restaurant = null
+                    _vm.index = null
                   }
                 }
               },
@@ -30595,27 +30626,38 @@ var render = function() {
                   attrs: { restaurant: _vm.restaurant }
                 }),
                 _vm._v(" "),
-                _c("div", { staticClass: "details__name d-flex" }, [
-                  _c("span", { staticClass: "pr-6" }, [
-                    _vm._v(_vm._s(_vm.restaurant.name))
-                  ]),
-                  _vm._v(" "),
-                  _vm.restaurant.categories.length
-                    ? _c(
-                        "div",
-                        {
-                          staticClass: "details__categories d-flex align-center"
-                        },
-                        _vm._l(_vm.restaurant.categories, function(category) {
-                          return _c("category-item", {
-                            key: category.name,
-                            attrs: { category: category }
-                          })
-                        }),
-                        1
-                      )
-                    : _vm._e()
-                ]),
+                _c(
+                  "div",
+                  { staticClass: "details__name d-flex overflow-hidden" },
+                  [
+                    _c("span", { staticClass: "pr-6" }, [
+                      _vm._v(_vm._s(_vm.restaurant.name))
+                    ]),
+                    _vm._v(" "),
+                    _vm.restaurant.categories.length
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "details__categories d-flex align-center"
+                          },
+                          _vm._l(_vm.restaurant.categories, function(category) {
+                            return _c("category-item", {
+                              key: category.name,
+                              attrs: { category: category }
+                            })
+                          }),
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("restaurant-rating", {
+                      staticClass: "details__rating",
+                      attrs: { restaurant: _vm.restaurant }
+                    })
+                  ],
+                  1
+                ),
                 _vm._v(" "),
                 _c("details-photos", {
                   attrs: { photos: _vm.restaurant.photos }
@@ -30623,15 +30665,45 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "details__secondary-wrap d-flex py-6" },
+                  { staticClass: "details__secondary-wrap d-flex p-6" },
                   [
+                    _vm.index > 0
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "details__nav-button left",
+                            on: {
+                              click: function($event) {
+                                return _vm.updateIndex(-1)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "icon-prev" })]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
                     _c("details-posts", {
                       attrs: { restaurant: _vm.restaurant }
                     }),
                     _vm._v(" "),
                     _c("details-locations", {
                       attrs: { restaurant: _vm.restaurant }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _vm.index < _vm.maxIndex
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "details__nav-button right",
+                            on: {
+                              click: function($event) {
+                                return _vm.updateIndex(1)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "icon-next" })]
+                        )
+                      : _vm._e()
                   ],
                   1
                 )
@@ -30724,12 +30796,7 @@ var render = function() {
                 [_vm._v(_vm._s(_vm.restaurant.name))]
               ),
               _vm._v(" "),
-              _c("restaurant-rating", {
-                attrs: {
-                  rating: _vm.restaurant.rating,
-                  restaurant: _vm.restaurant
-                }
-              })
+              _c("restaurant-rating", { attrs: { restaurant: _vm.restaurant } })
             ],
             1
           )
@@ -30794,12 +30861,7 @@ var render = function() {
       _vm._l(_vm.values, function(val) {
         return _c("rating-number", {
           key: val,
-          attrs: {
-            value: val,
-            rating: _vm.rating,
-            open: _vm.open,
-            restaurant: _vm.restaurant
-          },
+          attrs: { value: val, open: _vm.open, restaurant: _vm.restaurant },
           on: { clicked: _vm.numberClicked }
         })
       }),
@@ -31039,10 +31101,11 @@ var render = function() {
         _c(
           "section",
           { staticClass: "restaurant-block width-100 pos-relative" },
-          _vm._l(_vm.shared.restaurants, function(restaurant) {
+          _vm._l(_vm.shared.restaurants, function(restaurant, index) {
             return _c("restaurant-item", {
               key: restaurant.id,
               attrs: {
+                index: index,
                 restaurant: restaurant,
                 selected: _vm.selectedRestaurant
               },
@@ -31051,7 +31114,8 @@ var render = function() {
                   restaurant = $event
                 },
                 selected: function(obj) {
-                  return (_vm.selectedRestaurant = obj)
+                  _vm.selectedRestaurant = obj
+                  _vm.selectedIndex = index
                 }
               }
             })

@@ -34,7 +34,13 @@
         },
 
         methods : {
+            contentOverflowing(){
+                return this.$refs.container.scrollWidth > this.$refs.container.clientWidth;
+            },
+
             wheel( e ){
+                if( this.contentOverflowing() ) e.preventDefault();
+
                 if (e.deltaY > 0) this.$refs.container.scrollLeft += this.wheelScroll;
                 else this.$refs.container.scrollLeft -= this.wheelScroll;
             },
@@ -70,7 +76,6 @@
                 if (!this.isMounted ) return;
                 return this.buttons && this.$refs.container.scrollWidth > this.$refs.container.clientWidth;
             },
-
         }
     }
 </script>

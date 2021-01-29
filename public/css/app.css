@@ -1918,7 +1918,7 @@ body {
   background-color: rgba(0, 0, 0, 0.8);
   color: var(--highlight-color);
   position: absolute;
-  z-index: 2;
+  z-index: 5;
 }
 
 .edit-panel {

@@ -7,7 +7,6 @@
                 v-for="val in values"
                 :value="val"
                 :key="val"
-                :rating="rating"
                 :open="open"
                 :restaurant="restaurant"
                 @clicked="numberClicked"
@@ -20,7 +19,7 @@
 <script>
     export default {
         name: 'restaurant-rating',
-        props : [ 'rating', 'restaurant' ],
+        props : [ 'restaurant' ],
 
         data() {
             return {
@@ -49,6 +48,11 @@
         bottom: 0;
         right: 0;
         z-index: 4;
+
+        &.details__rating {
+            font-size: 1.4rem;
+            padding-right: 3em;
+        }
 
         &:after{
             content: '';
