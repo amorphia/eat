@@ -28,19 +28,17 @@
     <style>
         @font-face {
             font-family: "HC";
-            src: url('/fonts/H-book.woff') format('woff'), /* Pretty Modern Browsers */
-            url("/fonts/H-book.ttf") format('truetype');
+            src: url("/fonts/hero.ttf") format('truetype');
+
         }
         @font-face {
         font-family: "HC";
-            src: url('/fonts/H-bold.woff') format('woff'),
-            url("/fonts/H-bold.ttf") format('truetype');
+            src: url("/fonts/hero-bold.ttf") format('truetype');
             font-weight: bold;
         }
         @font-face {
             font-family: "HC";
-            src: url('/fonts/H-light.woff') format('woff'),
-            url("/fonts/H-light.ttf") format('truetype');
+            src: url("/fonts/hero-light.ttf") format('truetype');
             font-weight: 300;
         }
     </style>
