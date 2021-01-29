@@ -14,7 +14,7 @@
 
         <div class="location__actions d-flex">
             <a :href="location.yelp_url" target="_blank" class="icon-clip mr-2" title="View on Yelp"></a>
-            <button v-if="hours.length" class="icon-clock" @click="openHours = !openHours" title="View hours"></button>
+            <button v-if="hours && hours.length" class="icon-clock" @click="openHours = !openHours" title="View hours"></button>
         </div>
 
     </div>
@@ -49,7 +49,10 @@
             },
 
             hours(){
-                return JSON.parse( this.location.hours ).map( (obj, index) => {
+                let hours = JSON.parse( this.location.hours );
+                if( ! hours ) return [];
+
+                return hours.map( (obj, index) => {
                     obj.index = index;
                     return obj;
                 });

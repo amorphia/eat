@@ -2696,7 +2696,9 @@ __webpack_require__.r(__webpack_exports__);
       return "https://maps.google.com/?q=".concat(this.addressText);
     },
     hours: function hours() {
-      return JSON.parse(this.location.hours).map(function (obj, index) {
+      var hours = JSON.parse(this.location.hours);
+      if (!hours) return [];
+      return hours.map(function (obj, index) {
         obj.index = index;
         return obj;
       });
@@ -30102,7 +30104,7 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _vm.hours.length
+      _vm.hours && _vm.hours.length
         ? _c("button", {
             staticClass: "icon-clock",
             attrs: { title: "View hours" },
