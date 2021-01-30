@@ -658,6 +658,10 @@ a {
   margin-right: 3vw;
 }
 
+.mr-auto {
+  margin-right: auto;
+}
+
 .ml-1 {
   margin-left: 0.125vw;
 }
@@ -680,6 +684,10 @@ a {
 
 .ml-6 {
   margin-left: 3vw;
+}
+
+.ml-auto {
+  margin-left: auto;
 }
 
 .mt-1 {

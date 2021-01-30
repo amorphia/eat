@@ -1,9 +1,7 @@
 <template>
     <transition name="right">
         <div v-if="restaurant" class="details pos-fixed width-100 height-100 top-0 left-0 right-0 bottom-0 z-50">
-            <button @click="index = null" class="toggle minimize-toggle top-0 right-0">
-                <i class="icon-x"></i>
-            </button>
+
 
             <!-- main content -->
             <div class="width-100 height-100 overflow-auto">
@@ -12,16 +10,23 @@
 
                 <!-- name -->
                 <div class="details__name d-flex overflow-hidden">
-                    <span class="pr-6">{{ restaurant.name }}</span>
+                    <span class="pr-6 d-flex align-center">{{ restaurant.name }}</span>
+
                     <!-- categories -->
-                    <div v-if="restaurant.categories.length" class="details__categories d-flex align-center">
+                    <div v-if="restaurant.categories.length" class="details__categories d-flex align-center mr-auto">
                         <category-item v-for="category in restaurant.categories"
                                        :key="category.name"
                                        :category="category">
                         </category-item>
                     </div>
 
+                    <!-- rating -->
                     <restaurant-rating :restaurant="restaurant" class="details__rating"></restaurant-rating>
+
+                    <!-- close button -->
+                    <button @click="index = null" class="toggle">
+                        <i class="icon-x"></i>
+                    </button>
                 </div>
 
               <details-photos :photos="restaurant.photos"></details-photos>
@@ -111,10 +116,17 @@
         font-size: 1.4rem;
         color: var(--primary-light-color);
         transition: transform .3s;
+
+         .details__rating {
+             font-size: 1.4rem;
+             padding-right: 1em;
+             position: relative;
+         }
     }
 
     .details__name {
-        padding: 1.5rem 4rem;
+        padding-left: 4rem;
+        height: 4.75rem;
         font-size: 2.5rem;
         color: white;
         letter-spacing: 2px;
@@ -123,6 +135,11 @@
         position: relative;
         box-shadow: 0px 3px 0px 0px rgba( 0, 0, 0, .39 );
         background-color: var(--primary-dark);
+
+        & .toggle {
+            position: relative;
+            background-color: var(--primary-darkest);
+        }
     }
 
     .details__nav-button {

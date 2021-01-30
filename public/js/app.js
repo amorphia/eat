@@ -3231,6 +3231,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'restaurant-details',
   data: function data() {
@@ -5141,7 +5146,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".details {\n  background-image: url(\"/images/main-background.jpg\");\n  background-position: center;\n  background-size: cover;\n  font-size: 1.4rem;\n  color: var(--primary-light-color);\n  transition: transform .3s;\n}\n.details__name {\n  padding: 1.5rem 4rem;\n  font-size: 2.5rem;\n  color: white;\n  letter-spacing: 2px;\n  font-family: var(--secondary-font);\n  font-weight: 300;\n  position: relative;\n  box-shadow: 0px 3px 0px 0px rgba(0, 0, 0, 0.39);\n  background-color: var(--primary-dark);\n}\n.details__nav-button {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  top: 60%;\n  padding: .5rem;\n  border-radius: 50%;\n  background-color: rgba(0, 0, 0, 0.5);\n  color: white;\n  font-size: 1.5rem;\n  z-index: 50;\n  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);\n}\n.details__nav-button:hover {\n  color: var(--highlight-color);\n}\n.details__nav-button.left {\n  left: 1rem;\n}\n.details__nav-button.right {\n  right: 1rem;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".details {\n  background-image: url(\"/images/main-background.jpg\");\n  background-position: center;\n  background-size: cover;\n  font-size: 1.4rem;\n  color: var(--primary-light-color);\n  transition: transform .3s;\n}\n.details .details__rating {\n  font-size: 1.4rem;\n  padding-right: 1em;\n  position: relative;\n}\n.details__name {\n  padding-left: 4rem;\n  height: 4.75rem;\n  font-size: 2.5rem;\n  color: white;\n  letter-spacing: 2px;\n  font-family: var(--secondary-font);\n  font-weight: 300;\n  position: relative;\n  box-shadow: 0px 3px 0px 0px rgba(0, 0, 0, 0.39);\n  background-color: var(--primary-dark);\n}\n.details__name .toggle {\n  position: relative;\n  background-color: var(--primary-darkest);\n}\n.details__nav-button {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  top: 60%;\n  padding: .5rem;\n  border-radius: 50%;\n  background-color: rgba(0, 0, 0, 0.5);\n  color: white;\n  font-size: 1.5rem;\n  z-index: 50;\n  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);\n}\n.details__nav-button:hover {\n  color: var(--highlight-color);\n}\n.details__nav-button.left {\n  left: 1rem;\n}\n.details__nav-button.right {\n  right: 1rem;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -5237,7 +5242,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/* CSS Document */\n.restaurant__rating {\n  background-color: #1b5b58;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  z-index: 4;\n}\n.restaurant__rating.details__rating {\n  font-size: 1.4rem;\n  padding-right: 3em;\n}\n.restaurant__rating:after {\n  content: '';\n  position: absolute;\n  left: 0;\n  top: 50%;\n  background-color: #1b5b58;\n  width: 6em;\n  height: 6em;\n  border-radius: 50%;\n  transform: translate(-25%, -50%);\n}\n.restaurant_ratings {\n  height: 100%;\n  display: flex;\n  align-items: center;\n  position: relative;\n  z-index: 1;\n  top: .2em;\n  padding-right: .5em;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "/* CSS Document */\n.restaurant__rating {\n  background-color: #1b5b58;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  z-index: 4;\n}\n.restaurant__rating:after {\n  content: '';\n  position: absolute;\n  left: 0;\n  top: 50%;\n  background-color: #1b5b58;\n  width: 6em;\n  height: 6em;\n  border-radius: 50%;\n  transform: translate(-25%, -50%);\n}\n.restaurant_ratings {\n  height: 100%;\n  display: flex;\n  align-items: center;\n  position: relative;\n  z-index: 1;\n  top: .2em;\n  padding-right: .5em;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -30606,19 +30611,6 @@ var render = function() {
           },
           [
             _c(
-              "button",
-              {
-                staticClass: "toggle minimize-toggle top-0 right-0",
-                on: {
-                  click: function($event) {
-                    _vm.index = null
-                  }
-                }
-              },
-              [_c("i", { staticClass: "icon-x" })]
-            ),
-            _vm._v(" "),
-            _c(
               "div",
               { staticClass: "width-100 height-100 overflow-auto" },
               [
@@ -30630,7 +30622,7 @@ var render = function() {
                   "div",
                   { staticClass: "details__name d-flex overflow-hidden" },
                   [
-                    _c("span", { staticClass: "pr-6" }, [
+                    _c("span", { staticClass: "pr-6 d-flex align-center" }, [
                       _vm._v(_vm._s(_vm.restaurant.name))
                     ]),
                     _vm._v(" "),
@@ -30639,7 +30631,7 @@ var render = function() {
                           "div",
                           {
                             staticClass:
-                              "details__categories d-flex align-center"
+                              "details__categories d-flex align-center mr-auto"
                           },
                           _vm._l(_vm.restaurant.categories, function(category) {
                             return _c("category-item", {
@@ -30654,7 +30646,20 @@ var render = function() {
                     _c("restaurant-rating", {
                       staticClass: "details__rating",
                       attrs: { restaurant: _vm.restaurant }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "toggle",
+                        on: {
+                          click: function($event) {
+                            _vm.index = null
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "icon-x" })]
+                    )
                   ],
                   1
                 ),

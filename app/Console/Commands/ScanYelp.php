@@ -53,7 +53,7 @@ class ScanYelp extends Command
         if( $this->option( 'silent' ) ) $this->scanner->setSummary( false );
 
         // set how many zip codes to scan
-        $this->scanner->zipsCount( $this->option( 'zipsCount' ) );
+        $this->scanner->setZipCount( $this->option( 'zipsCount' ) );
 
         $this->scanner->scan( $this->argument('zip'), $this->option( 'slow' ) );
     }

@@ -49,11 +49,6 @@
         right: 0;
         z-index: 4;
 
-        &.details__rating {
-            font-size: 1.4rem;
-            padding-right: 3em;
-        }
-
         &:after{
             content: '';
             position: absolute;
