@@ -115,7 +115,7 @@ class ScannerService
         }
 
         // mark our zip code as scanned once done
-        Zip::where( 'zip', $zip )->update( 'scanned', true );
+        Zip::where( 'zip', $zip )->update(['scanned' => true]);
 
     }
 
