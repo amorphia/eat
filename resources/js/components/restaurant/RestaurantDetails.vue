@@ -40,15 +40,18 @@
                     <div v-else class="details__name-input pr-6 d-flex align-center" v-text="restaurant.name"></div>
 
                     <!-- categories -->
-                    <div v-if="restaurant.categories.length" class="details__categories d-flex align-center mr-auto">
+                    <div v-if="restaurant.categories.length" class="details__categories d-flex align-center">
                         <category-item v-for="category in restaurant.categories"
                                        :key="category.name"
                                        :category="category">
                         </category-item>
                     </div>
 
+                    <!-- combined -->
+                    <div v-if="restaurant.combined_rating" class="details__combined-rating" >{{ restaurant.combined_rating }}</div>
+
                     <!-- rating -->
-                    <restaurant-rating :restaurant="restaurant" class="details__rating"></restaurant-rating>
+                    <restaurant-rating :restaurant="restaurant" class="details__rating ml-auto"></restaurant-rating>
 
                     <!-- close button -->
                     <button @click="closeDetails" class="toggle">
@@ -252,5 +255,18 @@
         color: rgba(255,255,255,.2);
     }
 
+
+    .details__combined-rating {
+        background-color: var(--orange);
+        border-radius: 50%;
+        width: 10rem;
+        height: 10rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: var(--accent-font);
+        font-size: 5rem;
+        margin: -2.25rem 0 0 1.5rem;
+    }
 </style>
 

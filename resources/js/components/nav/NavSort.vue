@@ -1,10 +1,13 @@
 <template>
-    <div class="sort nav__item pos-relative" title="Switch Sort">
+    <div class="sort nav__item pos-relative" title="Switch Sort" :class="{ 'opacity-3' : shared.match }">
 
         <div class="nav__select">
             <i class="nav__icon icon-sort"></i>
 
-            <select class="sort__select nav__input" v-model="shared.sort.sort" @change="setSort">
+            <select class="sort__select nav__input"
+                    v-model="shared.sort.sort"
+                    @change="setSort"
+                    :disabled="shared.match">
                 <option v-for="sort in sortOptions" class="sort__option" :value='sort.column' v-text="sort.name"></option>
             </select>
 

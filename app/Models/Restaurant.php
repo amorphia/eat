@@ -87,16 +87,57 @@ class Restaurant extends Model
                     ->withRelations()
                     ->setCategory()
                     ->joinRatings()
+                    ->setMatches()
+                    ->setSelects()
                     ->setRatedFilter()
                     ->setOrder();
     }
 
 
+    public function scopeSetMatches( $query )
+    {
+        if( !request()->match ) return $query;
+
+        return $query->leftJoin( 'ratings AS match', function( $join ) {
+            $join->on( 'restaurants.id', '=', 'match.restaurant_id' )
+                ->where( 'match.user_id', '=', request()->match );
+        });
+    }
+
+
+    public function scopeSetSelects( $query )
+    {
+
+        if( !request()->match ){
+            return $query->select('restaurants.*',
+                DB::raw('coalesce( ratings.rating, 0) as rating'),
+                DB::raw('coalesce( ratings.interest, 0) as interest'),
+            );
+        } else {
+            return $query->select('restaurants.*',
+                DB::raw('coalesce( ratings.rating, 0) as rating'),
+                DB::raw('coalesce( ratings.interest, 0) as interest'),
+                DB::raw('coalesce( match.rating, 0) as match_rating'),
+                DB::raw('coalesce( match.interest, 0) as match_interest'),
+                DB::raw('coalesce( (match.interest * 5) + (ratings.interest * 5) + match.rating + ratings.rating, 0) as combined_rating'),
+            )->where( function($query) {
+                $query->where( function( $query ){
+                    $query->where( 'match.rating', '>=', 4 )
+                          ->orWhere( 'match.interest', '>=', 1 );
+                })->where( function( $query ){
+                    $query->where( 'ratings.rating', '>=', 4 )
+                        ->orWhere( 'ratings.interest', '>=', 1 );
+                }) ;
+            });
+        }
+    }
+
     public function scopeSearch( $query, $searchTerm )
     {
         return $query->where( 'name', 'like', "%{$searchTerm}%" )
-            ->withRelations()
             ->active()
+            ->withRelations()
+            ->setSelects()
             ->joinRatings()
             ->take( 10 )
             ->orderBy( 'name', 'asc' );
@@ -107,8 +148,8 @@ class Restaurant extends Model
     {
         return $query->where( 'active', true )
                 ->where( function($query) {
-                    $query->where( 'interest', '!=', -1 )
-                        ->orWhereNull( 'interest' );
+                    $query->where( 'ratings.interest', '!=', -1 )
+                        ->orWhereNull( 'ratings.interest' );
                 });
     }
 
@@ -130,16 +171,15 @@ class Restaurant extends Model
         return $query->leftJoin( 'ratings', function( $join ) {
                     $join->on( 'restaurants.id', '=', 'ratings.restaurant_id' )
                         ->where( 'ratings.user_id', '=', request()->user()->id );
-                })
-                ->select('restaurants.*',
-                    DB::raw('coalesce( ratings.rating, 0) as rating'),
-                    DB::raw('coalesce( ratings.interest, 0) as interest')
-                );
+                });
     }
 
 
     public function scopeSetOrder( $query )
     {
+        // all match searches are sorted by combined rating
+        if( request()->match ) return $query->orderBy( 'combined_rating', 'desc' );
+
         $sort = request()->sort;
 
         // add our manual sort if included
@@ -158,6 +198,8 @@ class Restaurant extends Model
 
     public function scopeSetRatedFilter( $query )
     {
+        if( request()->match ) return $query;
+
         $filter = request()->rated;
 
         switch( $filter ){
@@ -179,6 +221,8 @@ class Restaurant extends Model
 
     public function scopeSetCategory( $query )
     {
+        if( request()->match ) return $query;
+
         $category = request()->category;
 
         // if set to all, just return

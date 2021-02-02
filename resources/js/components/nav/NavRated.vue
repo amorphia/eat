@@ -1,10 +1,13 @@
 <template>
-    <div class="rated-filter nav__item pos-relative" title="Set Rated Filter">
+    <div class="rated-filter nav__item pos-relative" title="Set Rated Filter" :class="{ 'opacity-3' : shared.match }">
 
         <div class="nav__select">
             <i class="nav__icon icon-star_half"></i>
 
-            <select class="rated-filter__select nav__input" v-model="shared.rated" @change="setRatedFilter">
+            <select class="rated-filter__select nav__input"
+                    v-model="shared.rated"
+                    @change="setRatedFilter"
+                    :disabled="shared.match">
                 <option v-for="filter in ratedFilterOptions" class="sort__option" :value='filter' v-text="filter"></option>
             </select>
         </div>

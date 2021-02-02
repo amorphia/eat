@@ -18,6 +18,9 @@
         <!-- category filters -->
         <nav-category></nav-category>
 
+        <!-- user match -->
+        <nav-match></nav-match>
+
         <!-- search -->
         <restaurant-search></restaurant-search>
 

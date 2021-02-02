@@ -19,10 +19,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     /*
      *  Users
      */
-    Route::get('/user', function (Request $request) {
-        user()->load( 'blocked' );
-        return user();
-    });
+    Route::get('/user', [App\Http\Controllers\UserController::class, 'show'] );
+    Route::get('/users', [App\Http\Controllers\UserController::class, 'index'] );
 
 
     /*

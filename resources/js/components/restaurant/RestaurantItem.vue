@@ -5,6 +5,11 @@
             <restaurant-interest :restaurant="restaurant"></restaurant-interest>
 
             <div class="restaurant__main" :id="`restaurant-${restaurant.id}`">
+
+                <div v-if="restaurant.combined_rating" class="restaurant__combined-rating">
+                    <span class="z-6">{{ restaurant.combined_rating }}</span>
+                </div>
+
                 <div v-if="shared.editMode"
                      class="restaurant__checkbox"
                      :class="{active : restaurant.checked}"
@@ -13,6 +18,8 @@
                 </div>
                 <div class='pad-buffer restaurant__name' @click="openViewRestaurant">{{ restaurant.name }}</div>
                 <restaurant-rating :restaurant="restaurant"></restaurant-rating>
+
+
             </div>
 
         </div>
@@ -103,6 +110,34 @@
             color: white;
 
             @include mobile{
+            }
+        }
+
+        .restaurant__combined-rating {
+            height: 6rem;
+            position: relative;
+            background-color: var(--orange);
+            margin: -2rem 1rem -2rem 0;
+            right: 2rem;
+            top: .25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0 0 1.5rem;
+            font-size: 3.5rem;
+            font-family: var(--accent-font);
+
+            &:after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 50%;
+                background-color: var(--orange);
+                width: 2em;
+                height: 2em;
+                border-radius: 50%;
+                transform: translate(20%, -54%);
+                z-index: 0;
             }
         }
 

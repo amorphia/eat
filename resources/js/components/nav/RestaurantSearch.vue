@@ -96,6 +96,8 @@
 
             viewRestaurant( restaurant ){
 
+                console.log( 'restaurant', restaurant );
+
                 if( restaurant === 'selected'){
                     restaurant = this.results[ this.selectedItem ];
                 }
@@ -118,6 +120,7 @@
                         { cancelToken : call.token }
                     )
                         .then( response => {
+                            console.log( response );
                             this.results = response.data;
                             this.navigateList( 0 );
                         })

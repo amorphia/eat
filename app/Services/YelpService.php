@@ -16,6 +16,7 @@ class YelpService
     protected $errors = 0;
     protected $maxErrors = 10;
     protected $errorTimeout = 10;
+    protected $console = null;
 
     public function __construct()
     {

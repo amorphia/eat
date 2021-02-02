@@ -110,6 +110,9 @@
                 // category
                 data.category = this.shared.category;
 
+                // match
+                data.match = this.shared.match;
+
                 return data;
             },
 

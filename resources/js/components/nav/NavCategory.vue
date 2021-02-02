@@ -1,10 +1,13 @@
 <template>
-    <div class="category nav__item pos-relative" title="Set Category Filter">
+    <div class="category nav__item pos-relative" title="Set Category Filter" :class="{ 'opacity-3' : shared.match }">
 
         <div class="nav__select">
-            <i class="nav__icon icon-category"></i>
+            <i class="nav__icon icon-food"></i>
 
-            <select class="rated-filter__select nav__input" v-model="shared.category" @change="setFilter">
+            <select class="rated-filter__select nav__input"
+                    v-model="shared.category"
+                    @change="setFilter"
+                    :disabled="shared.match">
                 <option class="sort__option" value="all">all</option>
                 <option v-for="category in categories"
                         class="sort__option"
