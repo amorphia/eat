@@ -48,7 +48,9 @@
                     </div>
 
                     <!-- combined -->
-                    <div v-if="restaurant.combined_rating" class="details__combined-rating" >{{ restaurant.combined_rating }}</div>
+                    <div v-if="restaurant.combined_rating" class="details__combined-container" >
+                        <span class="details__combined-rating">{{ restaurant.combined_rating }}</span>
+                    </div>
 
                     <!-- rating -->
                     <restaurant-rating :restaurant="restaurant" class="details__rating ml-auto"></restaurant-rating>
@@ -256,7 +258,13 @@
     }
 
 
+    .details__combined-container {
+        position: relative;
+        margin-left: 1.5rem;
+    }
+
     .details__combined-rating {
+        position: absolute;
         background-color: var(--orange);
         border-radius: 50%;
         width: 10rem;
@@ -266,7 +274,9 @@
         align-items: center;
         font-family: var(--accent-font);
         font-size: 5rem;
-        margin: -2.25rem 0 0 1.5rem;
+        top: 56%;
+        left: 0;
+        transform: translateY(-50%);
     }
 </style>
 
