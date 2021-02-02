@@ -2,6 +2,18 @@
     <transition name="right">
         <div v-if="restaurant" class="details pos-fixed width-100 height-100 top-0 left-0 right-0 bottom-0 z-50">
 
+            <!-- edit name modal -->
+            <modal-wrap
+                :open="openEditName"
+                @closed="openEditName = false"
+                classes="width-50"
+                focus=".should-focus">
+               <input type="text"
+                      v-model="restaurant.name"
+                      class="form-control should-focus"
+                      @change="nameChanged"
+                      @keydown.enter="e => e.target.blur()">
+            </modal-wrap>
 
             <!-- main content -->
             <div class="width-100 height-100 overflow-auto">
@@ -10,7 +22,22 @@
 
                 <!-- name -->
                 <div class="details__name d-flex overflow-hidden">
-                    <span class="pr-6 d-flex align-center">{{ restaurant.name }}</span>
+
+                    <button v-if="shared.user.admin"
+                            class="details__delete-restaurant mr-3"
+                            @click="confirmDeleteRestaurant">
+                        <i class="icon-trash"></i>
+                    </button>
+
+                    <button class="details__delete-restaurant mr-3"
+                            @click="confirmBlockRestaurant">
+                        <i class="icon-block"></i>
+                    </button>
+
+                    <button v-if="shared.user.admin" class="details__name-input pr-6 d-flex align-center"
+                        @click="openEditName = true"
+                        v-text="restaurant.name"></button>
+                    <div v-else class="details__name-input pr-6 d-flex align-center" v-text="restaurant.name"></div>
 
                     <!-- categories -->
                     <div v-if="restaurant.categories.length" class="details__categories d-flex align-center mr-auto">
@@ -24,16 +51,16 @@
                     <restaurant-rating :restaurant="restaurant" class="details__rating"></restaurant-rating>
 
                     <!-- close button -->
-                    <button @click="index = null" class="toggle">
+                    <button @click="closeDetails" class="toggle">
                         <i class="icon-x"></i>
                     </button>
                 </div>
 
-              <details-photos :photos="restaurant.photos"></details-photos>
+              <details-photos :restaurant="restaurant"></details-photos>
 
                 <div class="details__secondary-wrap d-flex p-6">
                     <!-- left nav button -->
-                    <button v-if="index > 0" @click="updateIndex( -1 )" class="details__nav-button left">
+                    <button v-if="index > 0 && !shared.forcedRestaurant" @click="updateIndex( -1 )" class="details__nav-button left">
                         <i class="icon-prev"></i>
                     </button>
 
@@ -42,7 +69,7 @@
                     <details-locations :restaurant="restaurant"></details-locations>
 
                     <!-- right nav button -->
-                    <button v-if="index < maxIndex" @click="updateIndex( 1 )" class="details__nav-button right">
+                    <button v-if="index < maxIndex  && !shared.forcedRestaurant" @click="updateIndex( 1 )" class="details__nav-button right">
                         <i class="icon-next"></i>
                     </button>
                 </div>
@@ -62,7 +89,15 @@
             return {
                 shared : App.state,
                 index : null,
+                openEditName : false,
             };
+        },
+
+        created(){
+            this.shared.init( 'forcedRestaurant', null );
+
+            App.event.on( 'viewRestaurant', index => this.index = index );
+            App.event.on( 'forceViewRestaurant', this.forceRestaurant );
         },
 
         watch : {
@@ -80,6 +115,7 @@
 
         computed : {
             restaurant(){
+                if( this.shared.forcedRestaurant ) return this.shared.forcedRestaurant;
                 if( this.index === null ) return null;
                 return this.shared.restaurants[this.index];
             },
@@ -91,18 +127,58 @@
         },
 
         methods : {
+
+            forceRestaurant( rest ){
+                let listRestaurant = this.shared.restaurants.find( obj => obj.id === rest.id );
+                this.shared.forcedRestaurant = listRestaurant ? listRestaurant : rest;
+            },
+
+            nameChanged(){
+                App.event.emit( 'updateRestaurant', this.restaurant, { column : 'name', value : this.restaurant.name });
+                this.openEditName = false;
+            },
+
+            closeDetails(){
+                if( this.shared.forcedRestaurant ){
+                    this.shared.forcedRestaurant = null;
+                    return;
+                }
+
+                this.index = null;
+            },
+
+            confirmBlockRestaurant(){
+                App.confirm( () => App.event.emit( 'updateRating', this.restaurant, { column : 'interest', value : -1 } ) ,{
+                    message: 'Are you sure you want to block this restaurant?' });
+            },
+
+            confirmDeleteRestaurant(){
+                App.confirm( () => App.event.emit( 'updateRestaurant',
+                                    this.restaurant,
+                                    { column : 'active', value : false }),{
+                                    message: 'Are you sure you want to delete this restaurant?' });
+            },
+
             updateIndex( val ){
                 let index = this.index;
                 index += val;
                 if( index < 0 ) index = 0;
                 if( index > (this.maxIndex) ) index = this.maxIndex;
                 this.index = index;
+
+                // see if we should load the next pages
+                this.checkForPageLoad();
+            },
+
+            checkForPageLoad(){
+                // if we have less than 5 restaurants left, and we are not done loading
+                if( this.index > this.shared.restaurants.length - 5 && !this.shared.page.complete ){
+                    App.event.emit( 'nextPage' );
+                }
             }
         },
 
-        created(){
-            App.event.on( 'viewRestaurant', index => this.index = index );
-        }
+
     }
 </script>
 
@@ -136,6 +212,16 @@
         box-shadow: 0px 3px 0px 0px rgba( 0, 0, 0, .39 );
         background-color: var(--primary-dark);
 
+        .details__name-input {
+            background-color: transparent;
+            color: white;
+            border: 0;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
         & .toggle {
             position: relative;
             background-color: var(--primary-darkest);
@@ -161,6 +247,10 @@
         &.right { right: 1rem }
     }
 
+    .details__delete-restaurant {
+        font-size: .5em;
+        color: rgba(255,255,255,.2);
+    }
 
 </style>
 

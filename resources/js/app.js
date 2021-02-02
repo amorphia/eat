@@ -13,15 +13,20 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueConfirmDialog from 'vue-confirm-dialog';
 import VueLazyLoad from 'vue-lazyload'
-
+import vSelect from 'vue-select'
 
 window.Vue = Vue;
 Vue.use( VueRouter );
 Vue.use( VueConfirmDialog );
 Vue.use( VueLazyLoad );
 
+Vue.component('v-select', vSelect);
+Vue.component('InfiniteLoading', require('vue-infinite-loading'));
 Vue.component('vue-confirm-dialog', VueConfirmDialog.default);
 Vue.config.devtools = true;
+
+
+
 
 /*
 * Import day JS

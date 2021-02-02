@@ -14,6 +14,7 @@
 
 
 <script>
+
     export default {
         name: 'app-core',
         data() {
@@ -23,15 +24,10 @@
         },
         created(){
             this.loadUser();
-            this.initConfirmDialog();
+
         },
 
         methods : {
-
-            initConfirmDialog(){
-
-            },
-
             loadUser(){
                 App.ajax.get( 'api/user', false )
                     .then( ({ data }) => this.shared.init( 'user', data ) );
@@ -47,7 +43,7 @@
     .main-content {
         flex-grow: 1;
         flex-shrink: 1;
-        padding-top: 4.5rem;
+        padding-top: 4.1rem;
     }
 
     .confirm-popup {

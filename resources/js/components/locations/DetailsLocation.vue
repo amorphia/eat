@@ -4,13 +4,15 @@
             <a v-if="addressText" :href="addressLink" target="_blank">{{ addressText }}</a>
         </div>
 
-        <div class="location__phone mb-3">
+        <div v-if="location.phone" class="location__phone mb-3">
             <a :href="`tel:${location.phone}`" class="d-block">{{ formattedPhone }}</a>
         </div>
 
-        <div v-if="openHours" class="location__hours flex-column mb-3 py-3">
-            <location-hours v-for="hour in hours" :hour="hour" :key="hour.index" ></location-hours>
-        </div>
+        <transition name="collapse">
+            <div v-if="openHours" class="location__hours flex-column mb-3 py-3">
+                <location-hours v-for="hour in hours" :hour="hour" :key="hour.index" ></location-hours>
+            </div>
+        </transition>
 
         <div class="location__actions d-flex">
             <a :href="location.yelp_url" target="_blank" class="icon-clip mr-2" title="View on Yelp"></a>

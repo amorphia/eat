@@ -22,4 +22,9 @@ class Category extends Model
         return $this->belongsToMany(Restaurant::class );
     }
 
+
+    public function users_blocking()
+    {
+        return $this->belongsToMany(User::class );
+    }
 }

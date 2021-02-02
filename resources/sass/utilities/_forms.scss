@@ -29,7 +29,7 @@
         padding: 1rem;
         margin: .25rem 0;
         line-height: 1.25;
-        background-color: rgba(255, 255, 255, 0.25);
+        background-color: rgba(209, 251, 251, .5);
         border: none;
         font-size: 1.5rem;
         color: white;
@@ -72,11 +72,11 @@
     }
 
     input[type=checkbox] + label:before {
-        content: "\ea53"; // unchecked
+        content: "\e916"; // unchecked
     }
 
 
     input[type=checkbox]:checked + label:before {
-        content: "\ea52"; //checked
+        content: "\e915"; //checked
     }
 

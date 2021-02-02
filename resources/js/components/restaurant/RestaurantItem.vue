@@ -5,6 +5,12 @@
             <restaurant-interest :restaurant="restaurant"></restaurant-interest>
 
             <div class="restaurant__main" :id="`restaurant-${restaurant.id}`">
+                <div v-if="shared.editMode"
+                     class="restaurant__checkbox"
+                     :class="{active : restaurant.checked}"
+                     @click="$emit('checked')">
+                        <i :class="checkIcon"></i>
+                </div>
                 <div class='pad-buffer restaurant__name' @click="openViewRestaurant">{{ restaurant.name }}</div>
                 <restaurant-rating :restaurant="restaurant"></restaurant-rating>
             </div>
@@ -28,6 +34,10 @@
             isSelected(){
                 return this.selected
                     &&  this.selected.id === this.restaurant.id;
+            },
+
+            checkIcon(){
+                return this.restaurant.checked ? 'icon-checkbox' : 'icon-checkbox_unchecked';
             }
         },
         methods : {
@@ -110,6 +120,16 @@
 
             @include mobile {
                 padding: .5rem .75rem;
+            }
+        }
+
+        .restaurant__checkbox {
+            font-size: 1.5em;
+            position: relative;
+            right: .5rem;
+
+            &.active {
+                color: var(--highlight-color);
             }
         }
 

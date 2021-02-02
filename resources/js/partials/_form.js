@@ -190,6 +190,7 @@ export default class Form {
      */
     onSuccess( data ) {
         this.success = true;
+        App.event.emit( 'notify', { message : 'success' });
         this.reset();
     }
 

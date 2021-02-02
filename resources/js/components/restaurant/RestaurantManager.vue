@@ -17,6 +17,8 @@
         created() {
             App.event.on( 'updateRating', this.updateRating );
             App.event.on( 'updatePhoto', this.updatePhoto );
+            App.event.on( 'editRestaurants', this.editRestaurants );
+            App.event.on( 'updateRestaurant', this.updateRestaurant );
         },
 
         methods : {
@@ -30,17 +32,28 @@
 
             updateRating( rest, params ){
 
+                console.log( rest, params );
+
+                // get and update the restaurant in our list
                 let restaurant = this.findRestaurant( rest );
+                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
                 restaurant[params.column] = params.value;
 
                 App.ajax.patch( `/api/ratings/${restaurant.id}`, {
                     rating : restaurant.rating,
                     interest : restaurant.interest
+                }).then( response => {
+                    // delete restaurant from array if we set interest to -1
+                    if( params.column === 'interest' && params.value === -1 ) {
+                        this.shared.restaurants = this.shared.restaurants.filter( obj => obj.id !== restaurant.id );
+                    }
                 });
             },
 
             updatePhoto( p, params ){
                 let restaurant = this.findRestaurant( p.restaurant_id );
+                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
+
                 let photo = restaurant.photos.find( obj => obj.id === p.id );
 
                 // delete photo if we set active to false
@@ -57,7 +70,37 @@
                 // otherwise we update its properties
                 photo[params.column] = params.value;
                 App.ajax.patch( `/api/photos/${photo.id}`, photo );
-            }
+            },
+
+
+            editRestaurants( mode, restaurants ){
+                let ids = restaurants.map( obj => obj.id );
+
+                App.ajax.post( `/api/restaurants/${mode}`, { ids : ids }).then( response => {
+                    this.clearRestaurants( response );
+                });
+            },
+
+            clearRestaurants( response ){
+                console.log( response );
+                let ids = response.data.ids;
+                this.shared.restaurants = this.shared.restaurants.filter( obj => !ids.includes( obj.id ) );
+            },
+
+            updateRestaurant( rest, params ){
+                let restaurant = this.findRestaurant( rest );
+                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
+
+                restaurant[params.column] = params.value;
+
+                App.ajax.patch( `/api/restaurants/${restaurant.id}`, restaurant ).then( response => {
+                    // delete restaurant from array if we set active to false
+                    if( params.column === 'active' && !params.value ) {
+                        this.shared.restaurants = this.shared.restaurants.filter( obj => obj.id !== restaurant.id );
+                    }
+                });
+            },
+
         }
     }
 </script>

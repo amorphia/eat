@@ -1,6 +1,7 @@
 <template>
     <transition name="modalfade" mode="out-in">
         <div class="modal-wrap pos-fixed" v-if="open">
+            <button @click="$emit('closed')" class="pos-absolute p-4 modal-wrap__close"><i class="icon-x"></i></button>
             <div class="modal-wrap__content pos-absolute-center" :class="classes" @click="clickedIn">
                 <slot></slot>
             </div>
@@ -90,6 +91,12 @@
         font-family: var(--secondary-font);
     }
 
+    .modal-wrap__close {
+        top: 0;
+        right: 0;
+        font-size: 4rem;
+    }
+
     .modal-wrap__link {
         text-align: center;
         margin-top: 1.5rem;
@@ -98,6 +105,7 @@
         font-family: var(--primary-font);
     }
 
+    /*
     .modal-wrap__content .icon-x {
         font-size: 4rem;
         color: rgba(255, 255, 255, 0.6);
@@ -105,6 +113,6 @@
         top: -1em;
         right: 0;
     }
-
+*/
 </style>
 

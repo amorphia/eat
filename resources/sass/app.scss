@@ -4,6 +4,7 @@
 @import 'utilities/mq';
 @import 'utilities/animations';
 @import 'utilities/utility';
+@import 'vue-select/vue-select';
 @import 'utilities/forms';
 @import 'utilities/transitions';
 @import 'partials/landing';
@@ -30,6 +31,7 @@
 body {
     background-color: var(--near-white);
     font-family: var(--primary-font);
+    color: white;
 }
 
 .background__wrap {

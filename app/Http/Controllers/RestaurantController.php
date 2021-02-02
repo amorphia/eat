@@ -16,30 +16,22 @@ class RestaurantController extends Controller
      */
     public function index( Request $request )
     {
+        return Restaurant::index()->paginate( 51 );
+    }
 
-        return Restaurant::with([
-            'locations',
-            'photos.user',
-            'categories',
-            'posts' => function ( $q ) use ( $request ) {
-                return $q->where( 'user_id', $request->user()->id );
-            }])
-            ->leftJoin( 'ratings', function( $join ) use( $request ) {
-                $join->on( 'restaurants.id', '=', 'ratings.restaurant_id' )
-                    ->where( 'ratings.user_id', '=', $request->user()->id );
-            })
-            ->select('restaurants.*',
-                DB::raw('coalesce( ratings.rating, 0) as rating'),
-                DB::raw('coalesce( ratings.interest, 0) as interest')
-            )
-            ->orderBy( 'rating', 'desc' )
-            ->orderBy( 'interest', 'desc' )
-            ->orderBy( 'name', 'asc' )
-            ->where( 'active', true )
-            ->where( 'interest', '!=', -1 )
-            ->orWhereNull( 'interest' )
-            ->take( 102 )
-            ->get();
+
+
+    public function search( Request $request )
+    {
+        if( ! $request->searchTerm ) return;
+
+        $restaurants = Restaurant::search( $request->searchTerm )->get();
+
+        if( $restaurants->count() ){
+            return $restaurants;
+        }
+
+        return $restaurants->count() ? $restaurants : [[ "name" => "No Results" ]];
     }
 
     /**
@@ -94,7 +86,39 @@ class RestaurantController extends Controller
      */
     public function update(Request $request, Restaurant $restaurant)
     {
-        //
+        if( !user()->can( 'update', Restaurant::class ) ) return error();
+
+        $validated = $request->validate([
+            'name' => 'string',
+            'active' => 'boolean'
+        ]);
+
+        $restaurant->update( $validated );
+
+    }
+
+
+    public function merge( Request $request )
+    {
+        if( !user()->can( 'update', Restaurant::class ) ) return error();
+
+        $validated = $request->validate([
+            'ids.*' => 'exists:restaurants,id'
+        ]);
+
+        $restaurants = Restaurant::whereIn( 'id', $validated['ids'] )->get();
+
+        // take the first restaurant as the anchor to merge the rest into, then merge
+        // the other's relations to it
+        $anchor = $restaurants->first();
+        $restaurants->each->merge( $anchor->id );
+
+        // grab the restaurant ids, and remove the anchor ID to make a list of deleted restaurants
+        $ids = collect( $validated['ids'] )->filter( function ( $val, $key ) use ( $anchor ) {
+            return $val !== $anchor->id;
+        })->toArray();
+
+        return response()->json([ 'ids' => $ids ]);
     }
 
 
@@ -104,8 +128,18 @@ class RestaurantController extends Controller
      * @param  \App\Models\Restaurant  $restaurant
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Restaurant $restaurant)
+    public function destroy( Request $request )
     {
-        //
+        if( !user()->can( 'update', Restaurant::class ) ) return error();
+
+        $validated = $request->validate([
+            'ids.*' => 'exists:restaurants,id'
+        ]);
+
+        // get restaurant models
+        Restaurant::whereIn( 'id', $validated['ids'] )->update([ 'active' => false ]);
+
+        return response()->json([ 'ids' => $validated['ids'] ]);
+
     }
 }

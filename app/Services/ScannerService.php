@@ -61,11 +61,12 @@ class ScannerService
             Zip::where( 'scanned', true )->update([ 'scanned' => false ]);
         }
 
-        // get our array of zip codes then shuffle them
-        $zips = Zip::where( 'scanned', false )->take( $this->zipCount )->pluck( 'zip' )->toArray();
-        shuffle ( $zips );
-
-        return $zips;
+        // get our array of zip codes
+        return Zip::where( 'scanned', false )
+                ->inRandomOrder()
+                ->take( $this->zipCount )
+                ->pluck( 'zip' )
+                ->toArray();
     }
 
     /*

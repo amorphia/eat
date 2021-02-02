@@ -101,20 +101,22 @@
 
 
 /**
-    Slide Open
+    collapse
 **/
 
-.open-enter-active, .open-leave-active {
-    transition: max-height .5s;
+.collapse-enter-active, .collapse-leave-active {
+    transition: max-height .3s ease-out;
     overflow: hidden;
 }
 
-.open-enter-to, .open-leave {
-    max-height: 200vh;
+.collapse-enter-to, .collapse-leave {
+    max-height: 100vh;
     overflow: hidden;
 }
 
-.open-leave-to, .open-enter {
+.collapse-leave-to, .collapse-enter {
     max-height: 0;
     overflow: hidden;
 }
+
+

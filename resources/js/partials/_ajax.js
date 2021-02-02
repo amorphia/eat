@@ -22,8 +22,8 @@ window.App.ajax = new class {
         return this.axios( 'post', url, data, message );
     }
 
-    get( url, message ){
-        return this.axios( 'get', url, {}, message );
+    get( url, message, data = {} ){
+        return this.axios( 'get', url, { params : data }, message );
     }
 
     patch( url, data, message ){

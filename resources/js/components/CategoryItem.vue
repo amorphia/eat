@@ -29,7 +29,7 @@
 
         methods: {
             toggleCategory(){
-                App.event.emit( 'filterCategory', this.category.name );
+                App.event.emit( 'setCategory', this.category.name );
             }
         }
     }

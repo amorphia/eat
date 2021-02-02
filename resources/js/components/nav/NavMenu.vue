@@ -1,27 +1,27 @@
 <template>
-<nav class="nav d-flex align-center">
+<nav class="nav d-flex flex-wrap">
 
-    <a href="/" class="nav-logo desktop-only">
-        <img class="nav-logo__full" src="/images/svg/logo.svg">
-    </a>
+    <nav class="nav__core d-flex align-center">
 
-
-    <!--
-    <transition name="slide">
-        <div v-if="recentOpen" class="recent-movies pos-fixed width-100">
-            <i class="recent-movies__close icon-x" @click="recentOpen = false"></i>
-            <h2 class="recent-headline">Most Recently Seen</h2>
-            <div class="recent-movies__content d-flex flex-wrap width-100">
-                <div v-for="(movie, index) in shared.recentMovies" class="recent-movies__item">
-                    <div class='margin' v-html="`<span>${index + 1 }</span>${movie.title}`"></div>
-                </div>
-            </div>
-        </div>
-    </transition>
-
-    <nav class="nav d-flex pos-fixed width-100 align-stretch justify-center">
+        <a href="/" class="nav-logo desktop-only pull-left">
+            <img class="nav-logo__full" src="/images/svg/logo.svg">
+        </a>
 
 
+
+        <!-- sort select -->
+        <nav-sort></nav-sort>
+
+        <!-- rated filters -->
+        <nav-rated></nav-rated>
+
+        <!-- category filters -->
+        <nav-category></nav-category>
+
+        <!-- search -->
+        <restaurant-search></restaurant-search>
+
+        <!--
         <div class="view-recents nav__item pointer" @click="recentOpen = true">
             <i class="nav__icon icon-recent"></i>
         </div>
@@ -50,8 +50,13 @@
         </div>
 
         <div class="total-movies nav__item" v-text="shared.seenTotal" @click="shared.editMode = !shared.editMode"></div>
+        -->
+
+
+        <nav-account></nav-account>
     </nav>
-    -->
+
+    <edit-mode></edit-mode>
 </nav>
 </template>
 
@@ -93,10 +98,14 @@
         right: 0;
         top: 0;
         z-index: 7;
-        padding: 1.2rem 3.2rem;
         background-color: var(--primary-extra-dark);
         box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.01);
         border-bottom: 1px solid rgba(0,0,0,.1);
+    }
+
+    .nav__core {
+        padding: 1.2rem 3.2rem;
+        width: 100%;
 
         @include mobile {
             padding: 1.2rem .5rem;
@@ -109,12 +118,9 @@
 
     .nav__item {
         position: relative;
-        border-radius: 2px;
-        border: 1px solid #e0e2e5;
-        padding: 1rem;
         margin: 0 .5rem;
         font-size: 1rem;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         max-width: 30%;
 
@@ -126,18 +132,26 @@
     }
 
     .nav__icon {
-        color: var(--primary-color);
+        color: var(--primary-light);
         font-size: 1.4rem;
+    }
+
+    .nav__select {
+        display: inline-flex;
+        align-items: center;
+        padding: .35rem .55rem;
+        border-radius: .2em;
+        border: 1px solid  rgba(101, 155, 145, .42 );
     }
 
     .nav__input {
         outline: none;
         border: 0;
-        color: #9E9E9E;
-        padding: .5rem;
+        color: #ededed;
+        padding: 0 .5rem;
         position: relative;
-        width: 100%;
         background: transparent;
+        line-height: 1.3em;
 
         option {
             background-color: var(--primary-color);
@@ -198,12 +212,12 @@
     .autocomplete {
         top: 100%;
         left: 0;
-        background-color: white;
+        background-color: var(--primary-darkest);
         padding: 1rem;
-        border: 1px solid #e0e2e5;
         border-top: 0;
-        color: var(--primary-color);
-        font-family: var(--accent-font);
+        color: var(--light-text);
+        font-family: var( --secondary-font);
+        letter-spacing: 1px;
     }
 
     .autocomplete__item {

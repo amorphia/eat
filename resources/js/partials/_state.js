@@ -1,6 +1,7 @@
 window.App.state = {
 
     debug : false,
+    editMode : false,
 
     filterMap : {
         //'xSEEKx': '<img class="icon-image ml-3" src="/images/icons/seeking.png">',
@@ -63,6 +64,8 @@ window.App.state = {
             return _map[matched];
         });
     },
+
+
 
 }
 

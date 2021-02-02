@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Photo;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
+
 
 class PhotoController extends Controller
 {
@@ -33,9 +35,32 @@ class PhotoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store( Request $request )
     {
-        //
+        $validated = $request->validate([
+            'restaurant_id' => 'exists:restaurants,id',
+            'body' => 'string|nullable',
+            'image' => 'image|nullable|required_without:url',
+            'url' => 'string|nullable|required_without:image'
+        ]);
+
+        // save image if file supplied rather than url
+        if( $validated['image'] ){
+            $validated['url'] = Photo::saveUpload( $request );
+        }
+
+        // get parent restaurant
+        $restaurant = Restaurant::where( 'id', $validated['restaurant_id'] )->first();
+
+        // store in db
+        $photo = $restaurant->photos()->create([
+            'url' => $validated['url'],
+            'body' => $validated['body'],
+            'user_id' => user()->id
+        ]);
+
+        // return model
+        return $photo;
     }
 
     /**

@@ -1,29 +1,32 @@
 <template>
 
-    <div class="nav-search nav__item grow-2" title="Search movies">
-        <i class="nav__icon icon-search" @click="setSearchOpen"></i>
+    <div class="nav-search nav__item" title="Search movies">
 
-        <div class="nav-search-wrap width-100 d-flex align-center" :class="{ open : openSearch }">
-            <input class="nav__input search-input"
-                   v-model="query"
-                   placeholder="Search..."
-                   type="text"
-                   @input="searchChange"
-                   @keydown.down="navigateList( +1 )"
-                   @keydown.up="navigateList( -1 )"
-                   @keyup.enter="jumpToMovie( 'selected' )"
-                   ref="search"
-                    >
+        <div class="nav__select">
+            <i class="nav__icon icon-search" @click="setSearchOpen"></i>
 
-            <i v-if="openSearch || query" class="nav-search-close icon-x pointer" @click="reset"></i>
+            <div class="nav-search-wrap width-100 d-flex align-center" :class="{ open : openSearch }">
+                <input class="nav__input search-input"
+                       v-model="query"
+                       placeholder="Search..."
+                       type="text"
+                       @input="searchChange"
+                       @keydown.down="navigateList( +1 )"
+                       @keydown.up="navigateList( -1 )"
+                       @keyup.enter="viewRestaurant( 'selected' )"
+                       ref="search"
+                        >
 
-            <div v-if="results" class="autocomplete pos-absolute width-100">
-                <div v-for="( movie, index ) in results"
-                     class="autocomplete__item ellipses"
-                     :class="{ selected : selectedItem === index }"
-                     v-html="searchTitle( movie )"
-                     @click="jumpToMovie( movie )"
-                    ></div>
+                <i v-if="openSearch || query" class="nav-search-close icon-x pointer" @click="reset"></i>
+
+                <div v-if="results" class="autocomplete pos-absolute width-100">
+                    <div v-for="( restaurant, index ) in results"
+                         class="autocomplete__item ellipses"
+                         :class="{ selected : selectedItem === index }"
+                         v-html="restaurant.name"
+                         @click="viewRestaurant( restaurant )"
+                        ></div>
+                </div>
             </div>
         </div>
     </div>
@@ -32,7 +35,7 @@
 <script>
     export default {
 
-        name: 'movie-search',
+        name: 'restaurant-search',
 
         data() {
             return {
@@ -46,7 +49,6 @@
         },
 
         created() {
-
             // throttle searches
             this.searchChange = _.throttle( () => {
                 var search = this.makeRequestCreator();
@@ -57,20 +59,9 @@
 
         computed : {
 
-
-
-
         },
 
         methods : {
-
-            searchTitle( movie ){
-                if( movie.title.match( /\([0-9]{4}\)/ ) ){
-                    return movie.title;
-                } else {
-                    return `${movie.title} <span>(${movie.year})</span>`;
-                }
-            },
 
             setSearchOpen(){
                 this.openSearch = true;
@@ -103,13 +94,13 @@
                 }
             },
 
-            jumpToMovie( movie ){
+            viewRestaurant( restaurant ){
 
-                if( movie === 'selected'){
-                    movie = this.results[ this.selectedItem ];
+                if( restaurant === 'selected'){
+                    restaurant = this.results[ this.selectedItem ];
                 }
 
-                App.event.emit( 'setYear', movie );
+                App.event.emit( 'forceViewRestaurant', restaurant );
                 this.reset();
 
             },
@@ -122,7 +113,7 @@
                     call = axios.CancelToken.source();
 
                     return axios.post(
-                        '/movies/search',
+                        '/api/restaurants/search',
                         { searchTerm : this.query },
                         { cancelToken : call.token }
                     )

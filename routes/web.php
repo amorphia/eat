@@ -29,6 +29,8 @@ Route::get( 'welcome', function () {
 /*
  * Other than authentication, all other routes should point to the SPA
  */
+
+
 Route::get('/{any}', function () {
     return view( 'app' );
 })->where('any', '.*' )->middleware( 'auth' )->name( 'home' );

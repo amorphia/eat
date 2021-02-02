@@ -1,45 +1,142 @@
 <template>
     <div class="restaurant-list overflow-hidden">
-        <transition name="slide-down" tag="div">
-            <section class="restaurant-block width-100 pos-relative">
-                <restaurant-item
-                    v-for="(restaurant, index) in shared.restaurants"
-                    :key="restaurant.id"
-                    :index="index"
-                    :restaurant.sync="restaurant"
-                    :selected="selectedRestaurant"
-                    @selected="obj => {
-                        selectedRestaurant = obj;
-                        selectedIndex = index;
-                    }"
-                ></restaurant-item>
+            <section>
+                <div class="restaurant-block width-100 pos-relative">
+                    <restaurant-item
+                        v-for="(restaurant, index) in shared.restaurants"
+                        :key="restaurant.id"
+                        :index="index"
+                        :restaurant.sync="restaurant"
+                        @checked="restaurant.checked = !restaurant.checked"
+                        :selected="selectedRestaurant"
+                        @selected="obj => {
+                            selectedRestaurant = obj;
+                            selectedIndex = index;
+                        }"
+                    ></restaurant-item>
+                    <infinite-loading @distance="2" ref="infinite" @infinite="nextPage">
+                        <div slot="spinner"></div>
+                        <div slot="no-more"></div>
+                        <div slot="no-results"></div>
+                    </infinite-loading>
+                </div>
+                <div v-if="!hasRestaurants" class="p-6 center-text width-100">
+                    No Results
+                </div>
             </section>
-        </transition>
     </div>
 </template>
 
 
 <script>
+
     export default {
         name: 'restaurant-list',
+
         data() {
             return {
                 shared : App.state,
                 selectedRestaurant : null,
-                sort : {},
             };
         },
-        created(){
-            this.loadRestaurants();
-        },
-        computed : {
 
+        created(){
+            this.initPageManager();
         },
-        methods : {
-            loadRestaurants(){
-                App.ajax.get( 'api/restaurants', false )
-                    .then( ({ data }) => this.shared.init( 'restaurants', data ) );
+
+        mounted(){
+            this.shared.page.state = this.$refs.infinite.stateChanger;
+            this.loadRestaurants();
+            App.event.on( 'loadRestaurants', this.loadRestaurants );
+            App.event.on( 'nextPage', this.nextPage );
+        },
+
+        computed : {
+            hasRestaurants(){
+                return this.shared.restaurants && this.shared.restaurants.length > 0;
             }
+        },
+
+        methods : {
+            initPageManager(){
+                // set restaurants
+                this.shared.init( 'restaurants', [] );
+
+                // set page obj
+                this.shared.init( 'page', {
+                    current : 0,
+                    last: 0,
+                    state : null,
+                    complete : false,
+                });
+            },
+
+
+            loadRestaurants(){
+                this.resetPage();
+                this.nextPage();
+            },
+
+
+            resetPage(){
+                this.shared.page.current = 1;
+                this.shared.page.last = 0;
+                this.shared.restaurants = [];
+                this.shared.page.state.reset();
+                this.shared.page.complete = false;
+
+                App.event.emit( 'viewRestaurant', null );
+            },
+
+
+            nextPage(){
+                if( this.shared.page.complete ) return;
+
+                let data = this.getPageParamData();
+                App.ajax.get( `/api/restaurants`, false, data )
+                    .then( ({ data }) => this.processPageResults( data ) );
+            },
+
+
+            getPageParamData(){
+                let data = { page : this.shared.page.current };
+
+                // add sort parameters
+                Object.assign( data, this.shared.sort );
+
+                // add rated filter
+                data.rated = this.shared.rated;
+
+                // category
+                data.category = this.shared.category;
+
+                return data;
+            },
+
+
+            processPageResults( data ){
+                this.shared.page.current++;
+
+                // if we are on or past our last page, stop loading
+                if( data.current_page >= data.last_page ){
+                    this.shared.page.complete = true;
+                    this.shared.page.state.complete();
+                }
+
+                // if we didn't have any results we are done here
+                if ( !data.data.length ) return;
+
+                // add results to our shared restaurants array
+                if( !this.shared.restaurants.length ){
+                    // if we have none already just plop the whole array in
+                    this.shared.restaurants = data.data;
+                } else {
+                    // otherwise push each result individually
+                    data.data.forEach(obj => this.shared.restaurants.push(obj));
+                }
+
+                this.shared.page.state.loaded();
+            },
         },
     }
 </script>
@@ -49,14 +146,15 @@
     @import 'resources/sass/utilities/_mq.scss';
 
     .restaurant-list {
-        padding: 1.5rem 2.5rem;
-
-    @include mobile {
-        padding: 6.4rem .1rem .75rem;
-    }
     }
 
     .restaurant-block {
+        padding: 1.5rem 2.5rem;
+
+        @include mobile {
+            padding: 6.4rem .1rem .75rem;
+        }
+
         display: flex;
         flex-wrap: wrap;
     }

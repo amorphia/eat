@@ -2,6 +2,8 @@
 
     <div class="form-group" :class="field.class + ' ' + field.name">
 
+        <div v-if="field.label" class="form-label d-block" v-text="labelTitle"></div>
+
         <label
             class="d-block form-file__label form-element secondary uppercase center-text bold pointer"
             :class="{ error : errors.has( field.name ) }"

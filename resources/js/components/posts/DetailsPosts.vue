@@ -51,6 +51,7 @@
                 this.openAddPost = false;
 
                 let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );
+                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
                 restaurant.posts.unshift( response );
             },
         },

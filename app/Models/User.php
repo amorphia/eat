@@ -58,6 +58,11 @@ class User extends Authenticatable
     }
     */
 
+    public function blocked()
+    {
+        return $this->belongsToMany(Category::class );
+    }
+
     public function ratings()
     {
         return $this->hasMany( Rating::class );

@@ -14,7 +14,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return Category::where( 'active', true )
+            ->has( 'restaurants', '>=', 3 )
+            ->orderBy( 'priority', 'desc' )
+            ->orderBy( 'name', 'asc' )->get();
     }
 
     /**

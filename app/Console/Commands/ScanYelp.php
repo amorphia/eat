@@ -15,7 +15,7 @@ class ScanYelp extends Command
      *
      * @var string
      */
-    protected $signature = "scanYelp {zip?} {--zipsCount=2} {--silent : don't send summary email} {--slow : slow the rate of api calls}";
+    protected $signature = "scanYelp {zip?} {--zipsCount=3} {--silent : don't send summary email} {--slow : slow the rate of api calls}";
 
 
     /**
