@@ -11,7 +11,7 @@ class YelpService
 
     protected $client;
     protected $limit = 50; // how many results to fetch at once from Yelp API (max 50)
-    protected $max_results = 500; // Maximum number of results to collect (max 1000)
+    protected $max_results = 1000; // Maximum number of results to collect (max 1000)
     protected $sleep = 2;
     protected $errors = 0;
     protected $maxErrors = 10;

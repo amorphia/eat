@@ -14,7 +14,7 @@
                             selectedIndex = index;
                         }"
                     ></restaurant-item>
-                    <infinite-loading @distance="2" ref="infinite" @infinite="nextPage">
+                    <infinite-loading :distance="500" ref="infinite" @infinite="nextPage">
                         <div slot="spinner"></div>
                         <div slot="no-more"></div>
                         <div slot="no-results"></div>
