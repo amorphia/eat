@@ -63,8 +63,8 @@ class ScannerService
 
         // get our array of zip codes
         return Zip::where( 'scanned', false )
-                ->inRandomOrder()
                 ->take( $this->zipCount )
+                ->orderBy( 'id', 'asc' )
                 ->pluck( 'zip' )
                 ->toArray();
     }
