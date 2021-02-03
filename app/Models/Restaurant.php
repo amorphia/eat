@@ -254,7 +254,7 @@ class Restaurant extends Model
         $this->posts->each->update([ 'restaurant_id'=> $id ]);
         $this->locations->each->update([ 'restaurant_id' => $id ]);
 
-        $this->update([ 'active' => false ]);
+        $this->update([ 'active' => false, 'name' => $this->name . 'x' ]);
     }
 
     public static function addRestaurant( $location )
