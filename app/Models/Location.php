@@ -84,14 +84,16 @@ class Location extends Model
         $location = self::addLocation( $details );
 
         // update location hours
-        $location->update([ 'hours' => $details->hours[0]->open ]);
+        if( isset( $details->hours ) ) $location->update([ 'hours' => $details->hours[0]->open ]);
 
         // get parent restaurant
         $restaurant = Restaurant::find( $location->restaurant_id );
 
         // add photos
-        foreach( $details->photos as $photo ){
-            $restaurant->photos()->create([ 'url' => $photo ]);
+        if( isset( $details->photos ) ){
+            foreach( $details->photos as $photo ){
+                $restaurant->photos()->create([ 'url' => $photo ]);
+            }
         }
     }
 
