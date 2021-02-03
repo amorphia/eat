@@ -21,6 +21,8 @@
 
         methods : {
             updatePriority(){
+                if( this.photo.priority === null ) this.photo.priority = 0;
+                
                 let priority = this.photo.priority + 1;
                 if( priority > 2 ) priority = 0;
                 App.event.emit( 'updatePhoto', this.photo, { column : 'priority', value : priority } );
