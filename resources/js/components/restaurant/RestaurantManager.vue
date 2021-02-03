@@ -82,9 +82,10 @@
             },
 
             clearRestaurants( response ){
-                console.log( response );
                 let ids = response.data.ids;
+                if( !Array.isArray( ids ) ) ids = _.values( ids );
                 this.shared.restaurants = this.shared.restaurants.filter( obj => !ids.includes( obj.id ) );
+                this.shared.restaurants.forEach( obj => obj.selected = false );
             },
 
             updateRestaurant( rest, params ){
