@@ -1,5 +1,19 @@
 <template>
     <div class="nav-account pull-right pos-relative">
+
+        <modal-wrap
+            :open="openAddPage"
+            @closed="openAddPage = false"
+            classes="width-50"
+            focus=".should-focus">
+            <vue-form
+                method="post"
+                :action="pageAction"
+                submitclass="width-100"
+                @success="openAddPage = false"
+                :schema="pageSchema"></vue-form>
+        </modal-wrap>
+
         <div class="nav-account__button primary" @click="dropdown = !dropdown" :class="{active : dropdown}">
             <i class="icon-settings"></i>
         </div>
@@ -10,6 +24,8 @@
                     <button class="toggle mobile-only pos-absolute" @click="dropdown = false"><i class="icon-x"></i></button>
 
                     <a class="nav-account__dropdown-item" href="/logout">logout</a>
+
+                    <button class="nav-account__dropdown-item left-text" @click="openAddPage = true">add location</button>
 
                     <!-- <a class="nav-account__dropdown-item" href="/account">account</a> -->
 
@@ -36,6 +52,9 @@
             return {
                 shared : App.state,
                 dropdown : false,
+                openAddPage : false,
+                pageAction : '/api/locations/yelp/page',
+
             };
         },
 
@@ -51,7 +70,11 @@
         },
 
         computed : {
-
+            pageSchema(){
+                return [
+                    { name: 'yelp_url', label : 'yelp url', focus : true },
+                ]
+            }
         }
     }
 </script>

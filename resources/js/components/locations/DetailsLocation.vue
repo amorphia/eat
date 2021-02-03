@@ -90,6 +90,7 @@
 
     .location__line {
         margin-bottom: .5rem;
+        line-height: 1.4;
     }
 
     .location__actions-icon {

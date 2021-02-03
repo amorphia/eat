@@ -18,13 +18,15 @@
         },
 
         created() {
-            App.event.on('working', data => {
-                this.requests++;
+            App.event.on( 'working', () => {
+                this.requests = this.requests + 1;
+                console.log( 'working started' );
             } );
 
             App.event.on('done', () => {
                 this.requests--;
-                console.log( 'request done' );
+                if( this.requests < 0 ) this.requests = 0;
+                console.log( 'working done' );
             } );
         }
     }

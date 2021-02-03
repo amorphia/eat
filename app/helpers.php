@@ -17,3 +17,9 @@ function user()
 {
     return request()->user();
 }
+
+
+function stripUrlParams( $url ){
+    $arr = explode("?", $url );
+    return $arr[0];
+}

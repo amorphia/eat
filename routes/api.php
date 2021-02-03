@@ -63,6 +63,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     *  Locations
     */
     Route::delete('/locations/{location}', [App\Http\Controllers\LocationController::class, 'destroy'] );
+    Route::post('/locations/yelp/id', [App\Http\Controllers\LocationController::class, 'yelpId'] );
+    Route::post('/locations/yelp/page', [App\Http\Controllers\LocationController::class, 'yelpPage'] );
 });
 
 

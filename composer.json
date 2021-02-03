@@ -17,7 +17,8 @@
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
-        "stevenmaguire/yelp-php": "^2.2"
+        "stevenmaguire/yelp-php": "^2.2",
+        "weidner/goutte": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

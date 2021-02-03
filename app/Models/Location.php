@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Goutte\Client;
 
 class Location extends Model
 {
@@ -37,7 +38,7 @@ class Location extends Model
             'phone' => $locationData->phone,
             'slug' => $locationData->alias,
             'name' => $locationData->name,
-            'yelp_url' => self::getUrlWithoutParameters( $locationData->url ),
+            'yelp_url' => stripUrlParams( $locationData->url ),
             'latitude' => $locationData->coordinates->latitude,
             'longitude' =>	$locationData->coordinates->longitude,
             'street' => $locationData->location->address1,
@@ -57,11 +58,41 @@ class Location extends Model
         return $location;
     }
 
-
-    protected static function getUrlWithoutParameters( $url )
+    public static function addByYelpPage( $url, $yelp )
     {
-        $arr = explode("?", $url );
-        return $arr[0];
+
+        $client = new Client();
+
+        // scrape the page
+        $crawler = $client->request('GET', $url );
+
+        // get id
+        $id = $crawler->filter( 'meta[name=yelp-biz-id]' )->eq( 0 )->attr( 'content' );
+        if( !$id ) return;
+
+        // store
+        self::addByYelpId( $id, $yelp );
+    }
+
+
+    public static function addByYelpId( $id, $yelp )
+    {
+        $details = $yelp->details( $id );
+        if( !$details ) return;
+
+        // store location
+        $location = self::addLocation( $details );
+
+        // update location hours
+        $location->update([ 'hours' => $details->hours[0]->open ]);
+
+        // get parent restaurant
+        $restaurant = Restaurant::find( $location->restaurant_id );
+
+        // add photos
+        foreach( $details->photos as $photo ){
+            $restaurant->photos()->create([ 'url' => $photo ]);
+        }
     }
 
 

@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use App\Services\YelpService;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
+
+    protected $yelp;
+
+    public function __construct( YelpService $yelpService )
+    {
+        $this->yelp = $yelpService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,6 +46,39 @@ class LocationController extends Controller
     {
         //
     }
+
+
+    /*
+     *
+     *  Create a new location from a yelp id
+     *
+     *  @param  \Illuminate\Http\Request  $request
+     */
+    public function yelpId(Request $request)
+    {
+        $validated = $request->validate([
+            'yelp_id' => 'string'
+        ]);
+
+        Location::addByYelpId( $validated['yelp_id'], $this->yelp );
+    }
+
+    /*
+     *
+     *  Create a new location from a yelp id
+     *
+     *  @param  \Illuminate\Http\Request  $request
+     */
+    public function yelpPage( Request $request )
+    {
+        $url = stripUrlParams( $request->yelp_url );
+        $count = Location::where( 'yelp_url', stripUrlParams( $url ) )->count();
+
+        if( $count > 0 ) return error( 'This location already exists' );
+
+        Location::addByYelpPage( $url, $this->yelp );
+    }
+
 
     /**
      * Display the specified resource.

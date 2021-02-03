@@ -26,17 +26,22 @@ class YelpService
 
     public function details( $location )
     {
-        // if the supplied argument isn't a location object, or an int return false
-        if( !is_a( $location, Location::class ) && !is_int( $location ) ){
-            return false;
+
+        if( !is_string( $location ) ){
+            // if the supplied argument isn't a location object, or an int return false
+            if( !is_a( $location, Location::class ) && !is_int( $location ) ){
+                return false;
+            }
+
+            // if we have an int get the location model, otherwise return
+            if( is_int( $location ) ) $location = Location::find( $location );
+            if( !$location ) return false;
+
+            $location = $location->yelp_id;
         }
 
-        // if we have an int get the location model, otherwise return
-        if( is_int( $location ) ) $location = Location::find( $location );
-        if( !$location ) return false;
-
         // return the resulting details
-        return $this->client->getBusiness( $location->yelp_id );
+        return $this->client->getBusiness( $location );
     }
 
 
