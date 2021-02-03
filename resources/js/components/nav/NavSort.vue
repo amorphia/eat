@@ -2,16 +2,16 @@
     <div class="sort nav__item pos-relative" title="Switch Sort" :class="{ 'opacity-3' : shared.match }">
 
         <div class="nav__select">
-            <i class="nav__icon icon-sort"></i>
+            <i class="nav__icon icon-sort" :class="{ active : shared.sort.sort !== this.default }"></i>
 
-            <select class="sort__select nav__input"
+            <select class="sort__select nav__input mobile-cover"
                     v-model="shared.sort.sort"
                     @change="setSort"
                     :disabled="shared.match">
                 <option v-for="sort in sortOptions" class="sort__option" :value='sort.column' v-text="sort.name"></option>
             </select>
 
-            <button @click="toggleDirection"><i class="primary" :class="sortIcon"></i></button>
+            <button @click="toggleDirection" class="desktop-only"><i class="primary" :class="sortIcon"></i></button>
         </div>
 
     </div>
@@ -32,14 +32,15 @@
                     { name : 'rating', column : 'rating', direction : 'desc' },
                     { name : 'name', column : 'name', direction : 'asc' },
                     { name : 'newest', column : 'created_at', direction : 'desc' },
-                ]
+                ],
+                default : 'interest',
             };
         },
 
         created(){
             // set sort
             this.shared.init( 'sort', {
-                sort : 'interest',
+                sort : this.default,
                 direction : 'desc'
             });
         },

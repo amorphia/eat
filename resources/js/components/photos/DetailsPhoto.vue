@@ -56,6 +56,11 @@
 
         .edit-panel { opacity: 0; }
         &:hover .edit-panel { opacity: 1; }
+
+        @include mobile {
+            min-width: 95%;
+            font-size: 2rem;
+        }
     }
 
 

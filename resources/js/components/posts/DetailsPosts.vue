@@ -73,6 +73,12 @@
 
     .posts {
         padding: 0 4rem;
+
+        @include mobile {
+            padding: 1rem 1.5rem 4rem 1.5rem;
+            order: 2;
+            margin-bottom: 4rem;
+        }
     }
 
     .posts__headline {

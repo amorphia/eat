@@ -79,6 +79,11 @@
         overflow: auto;
         min-width: 150px;
         transition: all .3s ease-out;
+
+        @include mobile {
+            width: 80vw;
+            max-width: 80vw;
+        }
     }
 
     .modal-wrap__button {
@@ -95,6 +100,11 @@
         top: 0;
         right: 0;
         font-size: 4rem;
+
+        @include mobile {
+            font-size: 3rem;
+        }
+
     }
 
     .modal-wrap__link {

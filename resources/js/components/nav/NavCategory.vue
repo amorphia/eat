@@ -2,9 +2,9 @@
     <div class="category nav__item pos-relative" title="Set Category Filter" :class="{ 'opacity-3' : shared.match }">
 
         <div class="nav__select">
-            <i class="nav__icon icon-food"></i>
+            <i class="nav__icon icon-food" :class="{ active : shared.category !== this.default }"></i>
 
-            <select class="rated-filter__select nav__input"
+            <select class="rated-filter__select nav__input  mobile-cover"
                     v-model="shared.category"
                     @change="setFilter"
                     :disabled="shared.match">
@@ -28,13 +28,14 @@
         data() {
             return {
                 shared : App.state,
-                categories : []
+                categories : [],
+                default : 'all'
             };
         },
 
         created(){
             // set selected category
-            this.shared.init( 'category', 'all' );
+            this.shared.init( 'category', this.default );
 
             // setCategory event
             App.event.on( 'setCategory', cat => {
@@ -61,5 +62,7 @@
 
 <style lang="scss">
     @import 'resources/sass/utilities/_mq.scss';
+
+
 </style>
 

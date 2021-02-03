@@ -4,8 +4,8 @@
 
             <!-- edit name modal -->
             <modal-wrap
-                :open="openEditName"
-                @closed="openEditName = false"
+                :open="editName"
+                @closed="editName = false"
                 classes="width-50"
                 focus=".should-focus">
                <input type="text"
@@ -16,28 +16,27 @@
             </modal-wrap>
 
             <!-- main content -->
-            <div class="width-100 height-100 overflow-auto">
+            <div class="width-100 height-100 overflow-auto pos-relative">
                 <!-- restaurant interest -->
                 <restaurant-interest :restaurant="restaurant"></restaurant-interest>
 
                 <!-- name -->
                 <div class="details__name d-flex overflow-hidden">
 
-                    <button v-if="shared.user.admin"
-                            class="details__delete-restaurant mr-3"
-                            @click="confirmDeleteRestaurant">
-                        <i class="icon-trash"></i>
-                    </button>
+                    <div class="details__name-input pr-6 d-flex align-center ellipses">
+                        <button v-if="shared.user.admin"
+                                class="details__delete-restaurant details__edit-button mr-3"
+                                @click="confirmDeleteRestaurant">
+                            <i class="icon-trash"></i>
+                        </button>
 
-                    <button class="details__delete-restaurant mr-3"
-                            @click="confirmBlockRestaurant">
-                        <i class="icon-block"></i>
-                    </button>
+                        <button class="details__delete-restaurant details__edit-button mr-3"
+                                @click="confirmBlockRestaurant">
+                            <i class="icon-block"></i>
+                        </button>
 
-                    <button v-if="shared.user.admin" class="details__name-input pr-6 d-flex align-center"
-                        @click="openEditName = true"
-                        v-text="restaurant.name"></button>
-                    <div v-else class="details__name-input pr-6 d-flex align-center" v-text="restaurant.name"></div>
+                        <div class="details__name-name ellipses" @click="openEditName" v-text="restaurant.name"></div>
+                    </div>
 
                     <!-- categories -->
                     <div v-if="restaurant.categories.length" class="details__categories d-flex align-center">
@@ -53,10 +52,13 @@
                     </div>
 
                     <!-- rating -->
-                    <restaurant-rating :restaurant="restaurant" class="details__rating ml-auto"></restaurant-rating>
+                    <div class="details__rating-container pos-relative ml-auto">
+                        <restaurant-rating :restaurant="restaurant" class="details__rating"></restaurant-rating>
+                    </div>
+
 
                     <!-- close button -->
-                    <button @click="closeDetails" class="toggle">
+                    <button @click="closeDetails" class="toggle details__toggle">
                         <i class="icon-x"></i>
                     </button>
                 </div>
@@ -64,19 +66,27 @@
               <details-photos :restaurant="restaurant"></details-photos>
 
                 <div class="details__secondary-wrap d-flex p-6">
-                    <!-- left nav button -->
-                    <button v-if="index > 0 && !shared.forcedRestaurant" @click="updateIndex( -1 )" class="details__nav-button left">
-                        <i class="icon-prev"></i>
-                    </button>
+
+                    <div v-if="!shared.forcedRestaurant && (index > 0 || index < maxIndex)" class="details__nav-buttons">
+                        <!-- left nav button -->
+                        <button v-if="index > 0 && !shared.forcedRestaurant" @click="updateIndex( -1 )" class="details__nav-button left">
+                            <i class="icon-prev"></i>
+                        </button>
+
+                        <div class="grow-1"></div>
+
+                        <!-- right nav button -->
+                        <button v-if="index < maxIndex  && !shared.forcedRestaurant" @click="updateIndex( 1 )" class="details__nav-button right">
+                            <i class="icon-next"></i>
+                        </button>
+                    </div>
+
 
                     <!-- secondary content -->
-                    <details-posts :restaurant="restaurant"></details-posts>
-                    <details-locations :restaurant="restaurant"></details-locations>
+                    <details-posts :restaurant="restaurant" class="details__secondary"></details-posts>
+                    <details-locations :restaurant="restaurant" class="details__secondary"></details-locations>
 
-                    <!-- right nav button -->
-                    <button v-if="index < maxIndex  && !shared.forcedRestaurant" @click="updateIndex( 1 )" class="details__nav-button right">
-                        <i class="icon-next"></i>
-                    </button>
+
                 </div>
 
             </div>
@@ -94,7 +104,7 @@
             return {
                 shared : App.state,
                 index : null,
-                openEditName : false,
+                editName : false,
             };
         },
 
@@ -133,6 +143,10 @@
 
         methods : {
 
+            openEditName(){
+                if( this.shared.user.admin ) this.editName = true;
+            },
+
             forceRestaurant( rest ){
                 let listRestaurant = this.shared.restaurants.find( obj => obj.id === rest.id );
                 this.shared.forcedRestaurant = listRestaurant ? listRestaurant : rest;
@@ -140,7 +154,7 @@
 
             nameChanged(){
                 App.event.emit( 'updateRestaurant', this.restaurant, { column : 'name', value : this.restaurant.name });
-                this.openEditName = false;
+                this.editName = false;
             },
 
             closeDetails(){
@@ -189,6 +203,7 @@
 
 
 <style lang="scss">
+    @import 'resources/sass/utilities/_mq.scss';
 
     .details {
         background-image : url('/images/main-background.jpg');
@@ -198,11 +213,14 @@
         color: var(--primary-light-color);
         transition: transform .3s;
 
-         .details__rating {
-             font-size: 1.4rem;
-             padding-right: 1em;
-             position: relative;
-         }
+        @include mobile {
+        }
+    }
+
+    .details__rating {
+        font-size: 1.4rem;
+        padding-right: 1em;
+        position: relative;
     }
 
     .details__name {
@@ -217,19 +235,108 @@
         box-shadow: 0px 3px 0px 0px rgba( 0, 0, 0, .39 );
         background-color: var(--primary-dark);
 
-        .details__name-input {
-            background-color: transparent;
-            color: white;
-            border: 0;
+        @include mobile {
+            flex-wrap: wrap;
+            height: auto;
+            padding: 0;
+            background-color: var(--primary-darkest);
+        }
+    }
 
-            &:focus {
-                outline: none;
-            }
+    .details__name-name {
+        @include mobile {
+            flex-grow: 1;
+            order: 1;
+        }
+    }
+
+    .details__edit-button {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        padding: 0 .5rem 0 0;
+
+        @include mobile {
+            font-size: 1.4rem;
+            order: 2;
+            padding: .5rem;
+        }
+    }
+
+    .details__toggle {
+        position: relative;
+        background-color: var(--primary-darkest);
+
+        @include mobile {
+            padding: .5rem 1rem;
+            height: 3.8rem;
+        }
+    }
+
+
+    .details__name-input {
+        background-color: transparent;
+        color: white;
+        border: 0;
+        display: block;
+        text-align: left;
+        display: flex;
+        align-items: center;
+
+        &:focus {
+            outline: none;
         }
 
-        & .toggle {
-            position: relative;
+        @include mobile {
+            width: 100%;
+            height: auto;
+            padding: 1.25rem .75rem;
+            font-size: 3.5rem;
+            border-top: 1px solid var(--primary-darkest);
+            box-shadow: 0 0 5px rgb(9, 28, 29);
+            background-color: var(--primary-dark);
+        }
+    }
+
+    .details__categories {
+        @include mobile {
+            width: 100%;
+            overflow: auto;
+            white-space: nowrap;
+            padding: .5rem;
             background-color: var(--primary-darkest);
+        }
+    }
+
+    .details__rating-container {
+        @include mobile {
+            overflow: hidden;
+            flex-grow: 1;
+            height: 3.8rem;
+        }
+    }
+
+    .details__rating {
+        @include mobile {
+            font-size: .8rem;
+            padding-right: 0;
+        }
+    }
+
+
+    .details .action-button.shift-down {
+        @include mobile {
+            transform: translate(10%, 10%);
+        }
+    }
+
+    .details__nav-buttons {
+        @include mobile {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 0 5px rgba(0,0,0,.5);
+            padding: 1.5rem;
+            font-size: 2rem;
         }
     }
 
@@ -250,17 +357,51 @@
         &:hover { color : var(--highlight-color) }
         &.left { left: 1rem }
         &.right { right: 1rem }
+
+        @include mobile {
+            position: static;
+        }
     }
 
-    .details__delete-restaurant {
-        font-size: .5em;
-        color: rgba(255,255,255,.2);
+    .details__edit-button {
+        position: initial;
+    }
+
+    .details__secondary-wrap {
+        @include mobile {
+            flex-wrap: wrap;
+            padding: 0;
+        }
+    }
+
+    .details__secondary {
+        @include mobile {
+            width: 100%;
+            padding: 2rem;
+        }
+    }
+
+    // Ordering
+    @include mobile {
+        .details__edit-button { order : 2 }
+        .details__rating-container { order : 1 }
+        .details__toggle { order : 2 }
+        .details__name-input { order : 3 }
+        .details__categories { order : 4 }
     }
 
 
     .details__combined-container {
         position: relative;
         margin-left: 1.5rem;
+
+        @include mobile {
+            margin-left: 0rem;
+            width: 40%;
+            overflow: hidden;
+            position: absolute;
+            height: 3.8rem;
+        }
     }
 
     .details__combined-rating {

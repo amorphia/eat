@@ -137,4 +137,74 @@
 
 <style lang="scss">
     @import 'resources/sass/utilities/_mq.scss';
+
+    .nav-search {
+        @include mobile {
+            position: unset;
+        }
+    }
+
+    .nav-search-wrap {
+        @include mobile {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: var(--primary-darkest);
+            display: none;
+            z-index: 5;
+            padding: 1rem;
+
+            &.open {
+                display: flex;
+            }
+        }
+    }
+
+    .search-input {
+        @include mobile {
+            font-size: 1.8rem;
+            flex-grow: 1;
+        }
+    }
+
+    .nav-search-close {
+        color: var(--primary-color);
+        font-size: 1.5em;
+
+        @include mobile {
+            font-size: 3rem;
+        }
+    }
+
+    .autocomplete {
+        top: 100%;
+        left: 0;
+        background-color: var(--primary-darkest);
+        padding: 1rem;
+        border-top: 0;
+        color: var(--light-text);
+        font-family: var( --secondary-font);
+        letter-spacing: 1px;
+    }
+
+    .autocomplete__item {
+        margin-bottom: .5rem;
+        font-size: 1.4rem;
+        cursor: pointer;
+
+        &.selected {
+            color: gold;
+        }
+
+        @include mobile {
+            font-size: 1.8rem;
+        }
+
+        span {
+            font-family: var(--secondary-font);
+            font-size: .8em;
+            opacity: .7;
+        }
+    }
+
 </style>

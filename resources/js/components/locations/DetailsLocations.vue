@@ -46,7 +46,17 @@
     @import 'resources/sass/utilities/_mq.scss';
 
     .locations {
+        @include mobile {
+            padding: 1rem 1.5rem;
+            order: 1;
+        }
+    }
 
+    .locations__container {
+        @include mobile {
+            padding: 1rem .5rem;
+            font-size: 1.2em;
+        }
     }
 </style>
 

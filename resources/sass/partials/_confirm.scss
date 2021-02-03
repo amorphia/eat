@@ -11,9 +11,13 @@
         background-size: cover;
         background-position: center;
         border-radius: 0;
-        width: 30rem;
+        width: 40vw;
         font-family: var(--secondary-font);
         position: relative;
+
+        @include mobile {
+            width: 90vw;
+        }
 
         &:before{
             content: '';

@@ -3,11 +3,10 @@
 
     <nav class="nav__core d-flex align-center">
 
+        <!-- logo -->
         <a href="/" class="nav-logo desktop-only pull-left">
             <img class="nav-logo__full" src="/images/svg/logo.svg">
         </a>
-
-
 
         <!-- sort select -->
         <nav-sort></nav-sort>
@@ -24,38 +23,7 @@
         <!-- search -->
         <restaurant-search></restaurant-search>
 
-        <!--
-        <div class="view-recents nav__item pointer" @click="recentOpen = true">
-            <i class="nav__icon icon-recent"></i>
-        </div>
-
-
-        <div class="view-year nav__item grow-2 pos-relative" title="Switch years">
-            <i class="nav__icon icon-year"></i>
-            <select v-if="shared.movies" class="nav__input mobile-cover year-select" :value="shared.currentYear" @change="setYear">
-                <option v-for="year in movieYears" :value='year' v-text="year"></option>
-            </select>
-        </div>
-
-
-
-        <movie-search></movie-search>
-
-
-
-        <div class="view-filter nav__item grow-1" title="Filter movies">
-            <i class="nav__icon icon-show"></i>
-            <select class="nav__input nav-select mobile-cover" v-model="shared.filter">
-                <option value="all">all</option>
-                <option value="unseen">unseen</option>
-                <option value="seen">seen</option>
-            </select>
-        </div>
-
-        <div class="total-movies nav__item" v-text="shared.seenTotal" @click="shared.editMode = !shared.editMode"></div>
-        -->
-
-
+        <!-- account -->
         <nav-account></nav-account>
     </nav>
 
@@ -111,7 +79,7 @@
         width: 100%;
 
         @include mobile {
-            padding: 1.2rem .5rem;
+            padding: 1rem .5rem;
         }
     }
 
@@ -137,6 +105,15 @@
     .nav__icon {
         color: var(--primary-light);
         font-size: 1.4rem;
+
+        &.active {
+            color: var(--highlight-color);
+        }
+
+        @include mobile {
+            font-size: 1.8rem;
+        }
+
     }
 
     .nav__select {
@@ -145,6 +122,12 @@
         padding: .35rem .55rem;
         border-radius: .2em;
         border: 1px solid  rgba(101, 155, 145, .42 );
+
+        @include mobile {
+            width: 100%;
+            justify-content: center;
+            padding: .65rem .35rem;
+        }
     }
 
     .nav__input {
@@ -173,78 +156,6 @@
             }
         }
     }
-
-
-    .nav-search {
-        @include mobile {
-            position: unset;
-        }
-    }
-
-    .nav-search-wrap {
-        @include mobile {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: var(--near-white);
-            display: none;
-            z-index: 5;
-            padding: 1rem;
-
-            &.open {
-                display: flex;
-            }
-        }
-    }
-
-    .search-input {
-        @include mobile {
-            font-size: 1.8rem;
-        }
-    }
-
-    .nav-search-close {
-        color: var(--primary-color);
-        font-size: 1.5em;
-
-        @include mobile {
-            font-size: 3rem;
-        }
-    }
-
-    .autocomplete {
-        top: 100%;
-        left: 0;
-        background-color: var(--primary-darkest);
-        padding: 1rem;
-        border-top: 0;
-        color: var(--light-text);
-        font-family: var( --secondary-font);
-        letter-spacing: 1px;
-    }
-
-    .autocomplete__item {
-        margin-bottom: .5rem;
-        font-size: 1.4rem;
-        cursor: pointer;
-
-        &.selected {
-            color: gold;
-        }
-
-        @include mobile {
-            font-size: 1.8rem;
-        }
-
-        span {
-            font-family: var(--secondary-font);
-            font-size: .8em;
-            opacity: .7;
-        }
-    }
-
-
-
 
 </style>
 

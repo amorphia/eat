@@ -49,6 +49,14 @@
         padding: .2rem .6rem;
         font-weight: bold;
 
+        @include mobile {
+            border: 0;
+            font-size: .9rem;
+            white-space: nowrap;
+            padding: .4rem;
+            margin-right: .75rem;
+        }
+
         &.active {
             color: var(--primary-dark);
             background-color: var(--highlight-color);

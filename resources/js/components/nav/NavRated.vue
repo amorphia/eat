@@ -2,9 +2,9 @@
     <div class="rated-filter nav__item pos-relative" title="Set Rated Filter" :class="{ 'opacity-3' : shared.match }">
 
         <div class="nav__select">
-            <i class="nav__icon icon-star_half"></i>
+            <label class="nav__icon icon-star_half" :class="{ active : shared.rated !== this.default }"></label>
 
-            <select class="rated-filter__select nav__input"
+            <select class="rated-filter__select nav__input  mobile-cover"
                     v-model="shared.rated"
                     @change="setRatedFilter"
                     :disabled="shared.match">
@@ -28,13 +28,14 @@
                     'all',
                     'unrated',
                     'rated'
-                ]
+                ],
+                default : 'all'
             };
         },
 
         created(){
             // set sort
-            this.shared.init( 'rated', 'all' );
+            this.shared.init( 'rated', this.default );
         },
 
         methods : {

@@ -62,8 +62,10 @@
         font-size: 4em;
         cursor: pointer;
 
-        &:hover{
-            color: var(--highlight-color);
+        @include tablet-up {
+            &:hover{
+                color: var(--highlight-color);
+            }
         }
     }
 </style>

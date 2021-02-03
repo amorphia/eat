@@ -1,10 +1,10 @@
 <template>
     <div class="location py-4 subtle">
-        <div class="location__address mb-3">
+        <div class="location__address mb-3 ellipses location__line">
             <a v-if="addressText" :href="addressLink" target="_blank">{{ addressText }}</a>
         </div>
 
-        <div v-if="location.phone" class="location__phone mb-3">
+        <div v-if="location.phone" class="location__phone mb-3 ellipses location__line">
             <a :href="`tel:${location.phone}`" class="d-block">{{ formattedPhone }}</a>
         </div>
 
@@ -14,9 +14,9 @@
             </div>
         </transition>
 
-        <div class="location__actions d-flex">
-            <a :href="location.yelp_url" target="_blank" class="icon-clip mr-2" title="View on Yelp"></a>
-            <button v-if="hours && hours.length" class="icon-clock" @click="openHours = !openHours" title="View hours"></button>
+        <div class="location__actions d-flex location__line">
+            <a :href="location.yelp_url" target="_blank" class="icon-clip mr-3 location__actions-icon" title="View on Yelp"></a>
+            <button v-if="hours && hours.length" class="icon-clock location__actions-icon" @click="openHours = !openHours" title="View hours"></button>
         </div>
 
     </div>
@@ -75,6 +75,19 @@
         padding-top: .5rem;
         font-size: 1rem;
         color: var(--subtle-text);
+    }
+
+    .location__line {
+        margin-bottom: .5rem;
+    }
+
+    .location__actions-icon {
+        display: inline-block;
+        margin-right: .5rem;
+
+        @include mobile {
+            font-size: 1.5rem;
+        }
     }
 </style>
 

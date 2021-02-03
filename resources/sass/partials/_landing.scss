@@ -4,14 +4,19 @@
     position: absolute;
     top: 1em;
     left: 1em;
-    fill: #fff;
 }
 
 .landing-main-logo {
-    width: 35rem;
+    width: 30vw;
     fill: #fff;
     display: block;
     margin: auto;
+    position: relative;
+
+    @include mobile {
+        width: 80vw;
+    }
+
 }
 
 
@@ -48,7 +53,7 @@ body.landing {
 
 .splash__buttons {
     @include mobile {
-        width: 80%;
+        width: 100%;
     }
 }
 

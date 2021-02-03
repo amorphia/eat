@@ -2,9 +2,9 @@
     <div class="friend-match nav__item pos-relative" title="Set Friend Match">
 
         <div class="nav__select">
-            <i class="nav__icon icon-user"></i>
+            <i class="nav__icon icon-user" :class="{ active : shared.match !== this.default }"></i>
 
-            <select class="rated-filter__select nav__input" v-model="shared.match" @change="loadRestaurants">
+            <select class="rated-filter__select nav__input  mobile-cover" v-model="shared.match" @change="loadRestaurants">
                 <option :value="null">None</option>
                 <option
                     v-for="user in users"
@@ -27,13 +27,14 @@
         data() {
             return {
                 shared : App.state,
-                users : []
+                users : [],
+                default : null
             };
         },
 
         created(){
             // set sort
-            this.shared.init( 'match', null );
+            this.shared.init( 'match', this.default );
 
             // get category list
             App.ajax.get( '/api/users', false ).then( response => this.users = response.data );

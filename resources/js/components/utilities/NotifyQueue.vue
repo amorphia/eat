@@ -70,6 +70,10 @@
         width: 15vw;
         text-align: center;
         z-index: 10001;
+
+        @include mobile {
+            width: 40vw;
+        }
     }
 
     .notify-item {

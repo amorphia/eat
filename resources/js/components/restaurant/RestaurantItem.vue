@@ -92,7 +92,7 @@
 
             @include mobile {
                 box-shadow: none;
-                padding: 1.2rem .9rem 1.2rem 3.4rem;
+                padding: 1.2rem .9rem 1.2rem 1.6rem;
             }
         }
 

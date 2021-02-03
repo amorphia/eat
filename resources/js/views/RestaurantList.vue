@@ -21,7 +21,8 @@
                     </infinite-loading>
                 </div>
                 <div v-if="!hasRestaurants" class="p-6 center-text width-100">
-                    No Results
+                    <div class="loader" v-if="waiting"></div>
+                    <div v-else class="">No Results</div>
                 </div>
             </section>
     </div>
@@ -37,6 +38,8 @@
             return {
                 shared : App.state,
                 selectedRestaurant : null,
+                waiting : true,
+                waitingDelay : 1, // in seconds
             };
         },
 
@@ -73,6 +76,8 @@
 
 
             loadRestaurants(){
+                this.waiting = true;
+                //setTimeout( () => this.waiting = false, this.waitingDelay * 1000 );
                 this.resetPage();
                 this.nextPage();
             },
@@ -126,6 +131,8 @@
                     this.shared.page.state.complete();
                 }
 
+                this.$nextTick( () => this.waiting = false );
+
                 // if we didn't have any results we are done here
                 if ( !data.data.length ) return;
 
@@ -155,7 +162,7 @@
         padding: 1.5rem 2.5rem;
 
         @include mobile {
-            padding: 6.4rem .1rem .75rem;
+            padding: 1.75rem .1rem .75rem;
         }
 
         display: flex;
