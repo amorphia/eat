@@ -204,24 +204,11 @@ class ScannerService
     public function closeLocation( $location )
     {
         if( $this->console ) $this->console->error( "Closing location for {$location->name}" );
-        $location->close();
-
         if( $this->summary ) $this->closedLocations[] = $location;
 
-        // check if restaurant parent needs to close
-        $openLocationCount = Location::where( 'name', $location->name )
-                            ->where( 'active', true )
-                            ->count();
-
-        if( !$openLocationCount )$this->closeRestaurant( $location->name );
+        $result = $location->close();
+        if( $result ) if( $this->console ) $this->console->error( "Closing restaurant: {$location->name}" );
     }
 
-
-    public function closeRestaurant( $name )
-    {
-        if( $this->console ) $this->console->error( "Closing restaurant: {$name}" );
-        $restaurant = Restaurant::where( 'name', $name )->first();
-        $restaurant->close();
-    }
 
 }

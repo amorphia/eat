@@ -23,26 +23,27 @@ class Restaurant extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class )
-            ->where('active', 1 )
-            ->orderBy( 'priority', 'desc' );
+                    ->where('active', 1 )
+                    ->orderBy( 'priority', 'desc' );
     }
 
     public function posts()
     {
         return $this->hasMany( Post::class )
-            ->orderBy( 'created_at', 'desc' );
+                    ->orderBy( 'created_at', 'desc' );
     }
 
     public function photos()
     {
         return $this->hasMany( Photo::class )
-            ->where('active', 1 )
-            ->orderBy( 'priority', 'desc' );
+                    ->where('active', true )
+                    ->orderBy( 'priority', 'desc' );
     }
 
     public function locations()
     {
-        return $this->hasMany( Location::class );
+        return $this->hasMany( Location::class )
+                    ->where( 'active', true );
     }
 
     public function ratings()

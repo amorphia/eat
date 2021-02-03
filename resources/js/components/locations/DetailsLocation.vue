@@ -17,6 +17,8 @@
         <div class="location__actions d-flex location__line">
             <a :href="location.yelp_url" target="_blank" class="icon-clip mr-3 location__actions-icon" title="View on Yelp"></a>
             <button v-if="hours && hours.length" class="icon-clock location__actions-icon" @click="openHours = !openHours" title="View hours"></button>
+            <button v-if="shared.user.admin" class="icon-trash location__actions-icon" @click="confirmDeleteLocation" title="Delete Location"></button>
+
         </div>
 
     </div>
@@ -34,6 +36,15 @@
                 shared : App.state,
                 openHours : false,
             };
+        },
+
+        methods : {
+            confirmDeleteLocation(){
+                App.confirm( () => App.event.emit( 'deleteLocation', this.location ),
+                    {
+                        message: 'Are you sure you want to delete this location?'
+                    });
+            }
         },
 
         computed : {

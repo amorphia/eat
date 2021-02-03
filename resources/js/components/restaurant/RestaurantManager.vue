@@ -19,6 +19,7 @@
             App.event.on( 'updatePhoto', this.updatePhoto );
             App.event.on( 'editRestaurants', this.editRestaurants );
             App.event.on( 'updateRestaurant', this.updateRestaurant );
+            App.event.on( 'deleteLocation', this.deleteLocation );
         },
 
         methods : {
@@ -28,6 +29,17 @@
                 else id = restaurant;
 
                 return this.shared.restaurants.find( obj => obj.id === id );
+            },
+
+            deleteLocation( location ){
+                let restaurant = this.findRestaurant( location.restaurant_id );
+                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
+
+                App.ajax.delete( `/api/locations/${location.id}` ).then( result => {
+                    // remove location from restaurant locations
+                    restaurant.locations = restaurant.locations.filter( obj => obj.id !== location.id );
+                });
+
             },
 
             updateRating( rest, params ){

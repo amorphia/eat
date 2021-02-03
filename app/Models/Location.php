@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -67,6 +68,17 @@ class Location extends Model
     public function close()
     {
         $this->update([ 'active' => false ]);
+
+        // check if restaurant parent needs to close
+        $openLocationCount = Location::where( 'restaurant_id', $this->restaurant_id )
+            ->where( 'active', true )
+            ->count();
+
+        if( !$openLocationCount ){
+            $restaurant = Restaurant::find( $this->restaurant_id );
+            $restaurant->close();
+            return true;
+        }
     }
 
 }

@@ -78,8 +78,11 @@ class LocationController extends Controller
      * @param  \App\Models\Location  $location
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Location $location)
+    public function destroy( Location $location )
     {
-        //
+        if( !user()->can( 'update', $location) ) return error();
+
+        // deactivate
+        $location->close();
     }
 }
