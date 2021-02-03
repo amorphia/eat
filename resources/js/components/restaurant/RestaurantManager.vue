@@ -78,7 +78,6 @@
                     return;
                 }
 
-
                 // otherwise we update its properties
                 photo[params.column] = params.value;
                 App.ajax.patch( `/api/photos/${photo.id}`, photo );

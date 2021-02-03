@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Location;
 use App\Models\Photo;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
@@ -62,6 +63,32 @@ class PhotoController extends Controller
         // return model
         return $photo;
     }
+
+
+
+    public function yelp( Request $request )
+    {
+        $validated = $request->validate([
+            'url' => 'exists:locations,yelp_url',
+            'photo' => 'string',
+            'body' => 'string|nullable'
+        ]);
+
+        // get the appropriate location
+        $location = Location::where( 'yelp_url', $validated['url'] )->first();
+
+        // store in db
+        $photo = $location->restaurant->photos()->create([
+            'url' => $validated['photo'],
+            'body' => $validated['body'],
+            'user_id' => user()->id
+        ]);
+
+        // return model
+        return $photo;
+    }
+
+
 
     /**
      * Display the specified resource.

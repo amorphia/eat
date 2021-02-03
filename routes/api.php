@@ -48,6 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
      *  Photos
      */
     Route::post('/photos', [App\Http\Controllers\PhotoController::class, 'store'] );
+    Route::post('/photos/yelp', [App\Http\Controllers\PhotoController::class, 'yelp'] );
     Route::patch('/photos/{photo}', [App\Http\Controllers\PhotoController::class, 'update'] );
     Route::delete('/photos/{photo}', [App\Http\Controllers\PhotoController::class, 'destroy'] );
 

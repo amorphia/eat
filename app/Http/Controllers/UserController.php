@@ -21,4 +21,12 @@ class UserController extends Controller
         user()->load( 'blocked' );
         return user();
     }
+
+
+    public function token( Request $request )
+    {
+        $token = $request->user()->createToken( $request->token_name );
+        return ['token' => $token->plainTextToken];
+    }
+
 }

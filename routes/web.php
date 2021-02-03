@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Location;
 
@@ -21,6 +22,9 @@ use App\Models\Location;
  */
 Auth::routes();
 Route::get( 'logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'] );
+
+// get API token
+Route::get('/tokens/create', [App\Http\Controllers\UserController::class, 'token'] )->middleware( 'auth' );
 
 Route::get( 'welcome', function () {
     return view( 'welcome' );
