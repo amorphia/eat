@@ -14,7 +14,7 @@
 
     <!-- Icons -->
     <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png">
-    <link rel="stylesheet" href="https://i.icomoon.io/public/816144a5fb/Eat/style.css">
+
 
     <!-- Scripts -->
     <script>
