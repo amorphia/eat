@@ -20,7 +20,7 @@ use App\Models\Location;
  * Routes for authentication and logging out
  */
 Auth::routes();
-Route::get( 'logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'] )->name( 'logout' );
+Route::get( 'logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'] );
 
 Route::get( 'welcome', function () {
     return view( 'welcome' );
