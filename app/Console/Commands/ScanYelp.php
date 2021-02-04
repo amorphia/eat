@@ -15,7 +15,7 @@ class ScanYelp extends Command
      *
      * @var string
      */
-    protected $signature = "scanYelp {zip?} {--zipsCount=5} {--silent : don't send summary email} {--slow : slow the rate of api calls}";
+    protected $signature = "scanYelp {zip?} {--zipsCount=5} {--silent : don't send summary email} {--slow : slow the rate of api calls} {--hot : search hot and new}";
 
 
     /**
@@ -51,6 +51,16 @@ class ScanYelp extends Command
     {
         // sell scanner to send summary email
         if( $this->option( 'silent' ) ) $this->scanner->setSummary( false );
+
+        // if we are doing a hot n new search skip our usual jazz
+        if( $this->option( 'hot' ) ){
+
+            $options = [];
+            if( $this->argument('zip') ) $options['zip'] = $this->argument('zip');
+
+            $this->scanner->scanNewAndHot( $options );
+            return;
+        }
 
         // set how many zip codes to scan
         $this->scanner->setZipCount( $this->option( 'zipsCount' ) );

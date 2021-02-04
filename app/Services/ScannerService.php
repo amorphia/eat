@@ -28,6 +28,8 @@ class ScannerService
     protected $errorTimeout = 10;
     protected $sort;
     protected $zipCount = 5;
+    protected $dontMarkZip;
+    protected $setAttribute;
 
 
     public function __construct( YelpService $yelpService )
@@ -115,6 +117,25 @@ class ScannerService
         if( $this->console ) $this->console->info( "Sort set to {$this->sort}" );
     }
 
+
+
+    public function scanNewAndHot( $options = [] ){
+
+        $zip = $options['zip'] ?? 43201;
+
+        $this->sort = $options['sort'] ?? 'best_match';
+        $this->dontMarkZip = true;
+        $this->setAttribute = 'hot_and_new';
+
+        $this->scanZip( $zip );
+
+        if( $this->summary && ( $this->newLocations || $this->closedLocations ) ){
+            Mail::send( new ScanSummary( $this->newLocations, $this->closedLocations ) );
+        }
+
+    }
+
+
     /*
      * Run a scan for a single zip code
      */
@@ -122,8 +143,18 @@ class ScannerService
     {
         if( $this->console ) $this->console->info( "Begin scanning {$zip}" );
 
+        $options = [
+            'slow' => $this->slow,
+            'sort' => $this->sort
+        ];
+
+        if( $this->setAttribute ){
+            $options['attribute'] = $this->setAttribute;
+            if( $this->console ) $this->console->info( "Setting attribute: {$this->setAttribute}" );
+        }
+
         // grab our results for this zip code from yelp
-        $locations = $this->yelp->search( $zip, [ 'slow' => $this->slow, 'sort' => $this->sort ] );
+        $locations = $this->yelp->search( $zip, $options );
 
         // if we didn't get any results then we are done
         if( !is_array( $locations ) || !count( $locations ) ){
@@ -140,7 +171,7 @@ class ScannerService
         }
 
         // mark our zip code as scanned once done
-        Zip::where( 'zip', $zip )->update(['scanned' => true]);
+        if( !$this->dontMarkZip ) Zip::where( 'zip', $zip )->update(['scanned' => true]);
 
     }
 

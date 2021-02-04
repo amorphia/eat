@@ -26,6 +26,11 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command( 'scanYelp' )
             ->dailyAt( '18:15' )
+            ->emailOutputOnFailure('jeremy@jeremykalgreen.com' );
+
+
+        $schedule->command( 'scanYelp --hot' )
+            ->weekly()
             ->emailOutputTo('jeremy@jeremykalgreen.com' );
     }
 
