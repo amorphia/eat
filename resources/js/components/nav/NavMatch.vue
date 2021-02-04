@@ -8,7 +8,7 @@
 
             <div class="choose-match width-50">
 
-                <div class="choose-match__title mb-4">View {{ currentMatchName }}'s list</div>
+                <div class="choose-match__title pb-4">View {{ currentMatchName }}'s list</div>
 
                 <button v-for="type in matchTypes"
                         class="choose-match__button"
@@ -129,6 +129,16 @@
         display: flex;
         flex-direction: column;
         box-shadow: 0 0 10px rgba(0,0,0,.5);
+
+        @include mobile {
+            width: 90%;
+        }
+    }
+
+    .choose-match__title {
+        @include mobile {
+            margin-bottom: 1rem;
+        }
     }
 
     .choose-match__button  {
