@@ -25,6 +25,12 @@
 
                     <div class="details__name-input pr-6 d-flex align-center ellipses">
                         <button v-if="shared.user.admin"
+                                class="details__reload-restaurant details__edit-button mr-3"
+                                @click="loadRestaurantData">
+                            <i class="icon-upload"></i>
+                        </button>
+
+                        <button v-if="shared.user.admin"
                                 class="details__delete-restaurant details__edit-button mr-3"
                                 @click="confirmDeleteRestaurant">
                             <i class="icon-trash"></i>
@@ -117,13 +123,13 @@
 
         watch : {
             restaurant( val ){
-                let body = document.getElementById( 'top' );
 
-                if( val ){
-                    setTimeout( () => body.classList.add( 'overflow-hidden' ), 200 );
-                } else {
-                    body.classList.remove( 'overflow-hidden' );
-                }
+                // load restaurant data
+                //if( val ) this.loadRestaurantData();
+
+                // lock the scrollbars on the underlying page
+                this.lockPage( val );
+
             }
 
         },
@@ -142,6 +148,31 @@
         },
 
         methods : {
+
+            loadRestaurantData(){
+                // abort if we are using a forced restaurant, or it we've already loaded (unless we force)
+                if( this.shared.forcedRestaurant ) return;
+
+                App.ajax.get( `/api/restaurants/${this.restaurant.id}`, false )
+                        .then( response => {
+                            let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );
+                            if( restaurant ){
+                                Object.entries( response.data ).forEach( ([ key, val ]) => this.$set( restaurant, key, val ) );
+                                this.$set( restaurant, 'loaded', true );
+                            }
+                        });
+
+            },
+
+            lockPage( val ){
+                let body = document.getElementById( 'top' );
+
+                if( val ){
+                    setTimeout( () => body.classList.add( 'overflow-hidden' ), 200 );
+                } else {
+                    body.classList.remove( 'overflow-hidden' );
+                }
+            },
 
             openEditName(){
                 if( this.shared.user.admin ) this.editName = true;

@@ -1,6 +1,12 @@
 <template>
     <div class="restaurant-list overflow-hidden">
             <section>
+
+                <button v-if="shared.page.initial > 0"
+                        class="p-4 center-text primary-light-bg width-25 pull-center my-4 d-block restaurant-list__load-previous"
+                        @click="loadPreviousPage"
+                >Load Previous Page</button>
+
                 <div class="restaurant-block width-100 pos-relative">
 
                     <restaurant-item
@@ -79,33 +85,35 @@
 
                 // set page obj
                 this.shared.init( 'page', {
-                    current : this.$route.query.page ?? 1,
-                    last: this.$route.query.page ?? 1,
+                    current : this.$route.query.page ? +this.$route.query.page : 1,
+                    last: this.$route.query.page ? +this.$route.query.page : 1,
                     state : null,
                     complete : false,
-                    initial : this.$route.query.page ?? 1
+                    initial : this.$route.query.page > 1 ? this.$route.query.page - 1 : 0
                 });
             },
 
 
-            checkForPreviousPages(){
-                if( this.shared.page.initial <= 1 ) return console.log( 'no previous pages' );
-
-                console.log( 'have previous page' );
-
+            loadPreviousPage(){
                 let data = this.getPageParamData();
-                data.page = this.shared.page.initial - 1;
-                return App.ajax.get( `/api/restaurants`, false, data )
+                data.page = this.shared.page.initial;
+
+                return App.ajax.get( `/api/restaurants`, '', data )
                     .then( ({ data }) => this.processPageResultsTop( data ) );
+
+
             },
 
 
             processPageResultsTop( data ){
-                this.shared.restaurants.unshift( ...data.data.reverse() );
+                let restaurants = data.data.reverse();
 
-                this.$nextTick( () => this.waiting = false );
+                restaurants.forEach( restaurant => {
+                    this.shared.restaurants.unshift( restaurant );
+                });
+
+                this.shared.page.initial--;
             },
-
 
 
             loadRestaurants(){
@@ -146,9 +154,11 @@
 
 
             setNextPageParam(){
-                if( this.shared.page.current !== 1
-                    && this.shared.page.current !== this.shared.page.initial
-                ) App.query.set( 'page', this.shared.page.current );
+                if( this.shared.page.current === 1
+                    || this.shared.page.current === this.shared.page.initial + 1
+                ) return console.log( 'no need to push' );
+
+                App.query.set( 'page', this.shared.page.current );
             },
 
 
@@ -203,7 +213,9 @@
 <style lang="scss">
     @import 'resources/sass/utilities/_mq.scss';
 
-    .restaurant-list {
+    .restaurant-list__load-previous {
+        margin-top: 2rem;
+        margin-bottom: -.5rem;
     }
 
     .restaurant-block {

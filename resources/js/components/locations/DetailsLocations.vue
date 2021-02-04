@@ -4,7 +4,8 @@
             <span>Locations</span>
         </h2>
 
-        <div class="locations__container">
+        <div class="locations__container pos-relative">
+
             <details-location
                 v-for="location in restaurant.locations"
                 :key="location.id"

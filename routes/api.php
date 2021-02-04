@@ -34,6 +34,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
      *  Restaurants
      */
     Route::get('/restaurants', [App\Http\Controllers\RestaurantController::class, 'index'] );
+    Route::get('/restaurants/{restaurant}', [App\Http\Controllers\RestaurantController::class, 'show'] );
     Route::post('/restaurants/merge', [App\Http\Controllers\RestaurantController::class, 'merge'] );
     Route::post('/restaurants/delete', [App\Http\Controllers\RestaurantController::class, 'destroy'] );
     Route::patch('/restaurants/{restaurant}', [App\Http\Controllers\RestaurantController::class, 'update'] );

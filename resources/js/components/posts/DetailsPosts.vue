@@ -7,7 +7,7 @@
             </button>
         </h2>
 
-        <div v-if="restaurant.posts.length" class="posts__container">
+        <div v-if="restaurant.posts && restaurant.posts.length" class="posts__container">
             <details-post v-for="post in restaurant.posts" :post="post" :key="post.id"></details-post>
         </div>
         <div v-else class="posts__empty subtle p-4 py-6">You haven't made any notes yet</div>

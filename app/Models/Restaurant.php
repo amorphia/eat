@@ -40,6 +40,7 @@ class Restaurant extends Model
                     ->orderBy( 'priority', 'desc' );
     }
 
+
     public function locations()
     {
         return $this->hasMany( Location::class )
@@ -155,15 +156,26 @@ class Restaurant extends Model
     }
 
 
-    public function scopeWithRelations( $query )
+    public function scopeWithLimitedRelations( $query )
     {
         return $query->with([
+            'photos',
+            'categories'
+        ]);
+
+    }
+
+    public function scopeWithRelations( $query )
+    {
+
+        return $query->with([
                 'locations',
-                'photos.user',
+                'photos',
                 'categories',
                 'posts' => function ( $q ) {
                     return $q->where( 'user_id', request()->user()->id );
                 }]);
+
     }
 
 

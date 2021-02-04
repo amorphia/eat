@@ -16,7 +16,7 @@ class RestaurantController extends Controller
      */
     public function index( Request $request )
     {
-        return Restaurant::index()->paginate( 30 );
+        return Restaurant::index()->paginate( 102 );
     }
 
 
@@ -61,9 +61,17 @@ class RestaurantController extends Controller
      * @param  \App\Models\Restaurant  $restaurant
      * @return \Illuminate\Http\Response
      */
-    public function show(Restaurant $restaurant)
+    public function show( Restaurant $restaurant )
     {
-        //
+        $restaurant->load([
+            'locations',
+            'photos',
+            'categories',
+            'posts' => function ( $q ) {
+                return $q->where( 'user_id', request()->user()->id );
+            }]);
+
+        return $restaurant;
     }
 
     /**
