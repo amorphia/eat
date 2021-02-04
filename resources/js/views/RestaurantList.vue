@@ -2,6 +2,7 @@
     <div class="restaurant-list overflow-hidden">
             <section>
                 <div class="restaurant-block width-100 pos-relative">
+
                     <restaurant-item
                         v-for="(restaurant, index) in shared.restaurants"
                         :key="restaurant.id"
@@ -14,7 +15,8 @@
                             selectedIndex = index;
                         }"
                     ></restaurant-item>
-                    <infinite-loading :distance="500" ref="infinite" @infinite="nextPage">
+
+                    <infinite-loading :distance="750" ref="infinite" @infinite="nextPage">
                         <div slot="spinner"></div>
                         <div slot="no-more"></div>
                         <div slot="no-results"></div>
@@ -43,16 +45,26 @@
             };
         },
 
+
         created(){
             this.initPageManager();
         },
 
         mounted(){
-            this.shared.page.state = this.$refs.infinite.stateChanger;
-            this.loadRestaurants();
+            // set our event listeners
             App.event.on( 'loadRestaurants', this.loadRestaurants );
             App.event.on( 'nextPage', this.nextPage );
+
+            // store our infinite loader state manager
+            this.shared.page.state = this.$refs.infinite.stateChanger;
+
+            // turn on our spinner
+            this.waiting = true;
+
+            // load our initial page data
+            this.loadPage();
         },
+
 
         computed : {
             hasRestaurants(){
@@ -67,29 +79,51 @@
 
                 // set page obj
                 this.shared.init( 'page', {
-                    current : 0,
-                    last: 0,
+                    current : this.$route.query.page ?? 1,
+                    last: this.$route.query.page ?? 1,
                     state : null,
                     complete : false,
+                    initial : this.$route.query.page ?? 1
                 });
             },
 
 
+            checkForPreviousPages(){
+                if( this.shared.page.initial <= 1 ) return console.log( 'no previous pages' );
+
+                console.log( 'have previous page' );
+
+                let data = this.getPageParamData();
+                data.page = this.shared.page.initial - 1;
+                return App.ajax.get( `/api/restaurants`, false, data )
+                    .then( ({ data }) => this.processPageResultsTop( data ) );
+            },
+
+
+            processPageResultsTop( data ){
+                this.shared.restaurants.unshift( ...data.data.reverse() );
+
+                this.$nextTick( () => this.waiting = false );
+            },
+
+
+
             loadRestaurants(){
                 this.waiting = true;
-                //setTimeout( () => this.waiting = false, this.waitingDelay * 1000 );
                 this.resetPage();
-                this.nextPage();
+                this.loadPage();
             },
 
 
             resetPage(){
                 this.shared.page.current = 1;
-                this.shared.page.last = 0;
+                this.shared.page.last = 1;
                 this.shared.restaurants = [];
                 this.shared.page.state.reset();
                 this.shared.page.complete = false;
+                this.shared.page.initial = 1;
 
+                App.query.set( 'page', null );
                 App.event.emit( 'viewRestaurant', null );
             },
 
@@ -97,33 +131,44 @@
             nextPage(){
                 if( this.shared.page.complete ) return;
 
+                this.shared.page.current++;
+                this.loadPage();
+            },
+
+
+            loadPage( options = {} ){
+                if( this.shared.page.complete ) return;
+
                 let data = this.getPageParamData();
-                App.ajax.get( `/api/restaurants`, false, data )
-                    .then( ({ data }) => this.processPageResults( data ) );
+                return App.ajax.get( `/api/restaurants`, false, data )
+                    .then( ({ data }) => this.processPageResults( data, options ) );
+            },
+
+
+            setNextPageParam(){
+                if( this.shared.page.current !== 1
+                    && this.shared.page.current !== this.shared.page.initial
+                ) App.query.set( 'page', this.shared.page.current );
             },
 
 
             getPageParamData(){
+                // clear page from our query, since we will use our internal counter not the current param
+                let query = {...this.$route.query };
+                delete query['page'];
+
+                // merge our route params to our internal page counter
                 let data = { page : this.shared.page.current };
-
-                // add sort parameters
-                Object.assign( data, this.shared.sort );
-
-                // add rated filter
-                data.rated = this.shared.rated;
-
-                // category
-                data.category = this.shared.category;
-
-                // match
-                data.match = this.shared.match;
+                Object.assign( data, query );
 
                 return data;
             },
 
 
-            processPageResults( data ){
-                this.shared.page.current++;
+            processPageResults( data, options = {} ){
+
+                // update our query string
+                this.setNextPageParam();
 
                 // if we are on or past our last page, stop loading
                 if( data.current_page >= data.last_page ){
@@ -131,6 +176,7 @@
                     this.shared.page.state.complete();
                 }
 
+                // turn off the waiting spinner next tick
                 this.$nextTick( () => this.waiting = false );
 
                 // if we didn't have any results we are done here
@@ -142,10 +188,12 @@
                     this.shared.restaurants = data.data;
                 } else {
                     // otherwise push each result individually
-                    data.data.forEach(obj => this.shared.restaurants.push(obj));
+                    this.shared.restaurants.push( ...data.data );
                 }
 
+                // tell our infinite loader we are ready
                 this.shared.page.state.loaded();
+
             },
         },
     }

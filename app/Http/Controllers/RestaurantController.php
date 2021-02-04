@@ -16,7 +16,7 @@ class RestaurantController extends Controller
      */
     public function index( Request $request )
     {
-        return Restaurant::index()->paginate( 102 );
+        return Restaurant::index()->paginate( 30 );
     }
 
 

@@ -82,7 +82,6 @@
                 App.ajax.delete( `/api/posts/${this.post.id}` ).then( response => {
                     // remove photo from restaurant photos array
                     let index = _.findIndex( restaurant.posts, [ 'id', this.post.id ] );
-                    console.log( 'index', index );
                     this.$delete( restaurant.posts, index );
                 });
             }

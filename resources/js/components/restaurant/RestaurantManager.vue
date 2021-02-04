@@ -43,9 +43,6 @@
             },
 
             updateRating( rest, params ){
-
-                console.log( rest, params );
-
                 // get and update the restaurant in our list
                 let restaurant = this.findRestaurant( rest );
                 restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
@@ -96,7 +93,7 @@
                 let ids = response.data.ids;
                 if( !Array.isArray( ids ) ) ids = _.values( ids );
                 this.shared.restaurants = this.shared.restaurants.filter( obj => !ids.includes( obj.id ) );
-                this.shared.restaurants.forEach( obj => obj.selected = false );
+                this.shared.restaurants.forEach( obj => obj.checked = false );
             },
 
             updateRestaurant( rest, params ){

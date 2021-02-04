@@ -69,8 +69,10 @@ require( './partials/_state' ); // set up shared state
 require( './partials/_cookies' ); // Cookie handler
 require( './partials/_confirm' ); // Confirm dialog handler
 require( './partials/_date' ); // Date handler
+
 //require( './partials/_filters' ); // filters
 //require( './partials/_drag' ); // drag directive
+
 
 
 import routes from './routes';
@@ -85,3 +87,8 @@ const app = new Vue({
     el: '#app',
     router: new VueRouter( routes ),
 });
+
+
+window.vueApp = app;
+
+require( './partials/_query' ); // Query string handler

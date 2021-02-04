@@ -16,7 +16,16 @@ return [
 
     'yelp' => [
         'api_key' => env( 'YELP_API_KEY' ),
+
         'host' => env( 'YELP_HOST', 'api.yelp.com' ),
+
+        'sorts' => [
+            'best_match',
+            'rating',
+            'review_count',
+            'distance'
+        ],
+
         'zip_codes' => [
             43002, 43004, 43016, 43017, 43026, 43035, 43054, 43065, 43081,
             43082, 43085, 43119, 43201, 43202, 43203, 43204, 43205, 43206,

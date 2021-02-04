@@ -2,12 +2,12 @@
     <div class="rated-filter nav__item pos-relative" title="Set Rated Filter" :class="{ 'opacity-3' : shared.match }">
 
         <div class="nav__select">
-            <label class="nav__icon icon-star_half" :class="{ active : shared.rated !== this.default }"></label>
+            <label class="nav__icon icon-star_half" :class="{ active : isActive }"></label>
 
             <select class="rated-filter__select nav__input  mobile-cover"
-                    v-model="shared.rated"
+                    v-model="rated"
                     @change="setRatedFilter"
-                    :disabled="shared.match">
+                    :disabled="$route.query.match">
                 <option v-for="filter in ratedFilterOptions" class="sort__option" :value='filter' v-text="filter"></option>
             </select>
         </div>
@@ -29,23 +29,30 @@
                     'unrated',
                     'rated'
                 ],
-                default : 'all'
+                default : 'all',
+                rated : null
             };
         },
 
         created(){
             // set sort
-            this.shared.init( 'rated', this.default );
+            if( this.$route.query.rated ) this.rated = this.$route.query.rated;
+            else this.rated = this.default;
+
         },
 
         methods : {
             setRatedFilter(){
+                let val = this.default !== this.rated ? this.rated : null;
+                App.query.set( 'rated', val );
                 App.event.emit( 'loadRestaurants' );
             },
         },
 
         computed : {
-
+            isActive(){
+                return this.rated !== this.default;
+            }
         }
     }
 </script>

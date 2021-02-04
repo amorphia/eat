@@ -47,7 +47,6 @@
 
         methods : {
             postAdded( response ){
-                console.log( response );
                 this.openAddPost = false;
 
                 let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );

@@ -41,7 +41,7 @@ window.App.ajax = new class {
     axios( type, url, data, message, headers ){
 
         // start working slider
-        App.event.emit('working' );
+        if( message !== false ) App.event.emit('working' );
 
         // return an axios call wrapped in a promise
         return new Promise(function( resolve, reject ) {
@@ -73,7 +73,10 @@ window.App.ajax = new class {
                     // reject
                     reject( error );
                 } )
-                .then( () => App.event.emit('done') ); // end working slider
+                .then( () => {
+                    // end working slider
+                    if( message !== false ) App.event.emit('done')
+                });
 
         });
 

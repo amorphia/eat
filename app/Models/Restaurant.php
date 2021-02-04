@@ -181,11 +181,11 @@ class Restaurant extends Model
         // all match searches are sorted by combined rating
         if( request()->match ) return $query->orderBy( 'combined_rating', 'desc' );
 
-        $sort = request()->sort;
+        $sort = request()->sort ?? 'interest';
 
         // add our manual sort if included
         if( $sort ){
-            $query->orderBy( $sort, request()->direction );
+            $query->orderBy( $sort, request()->direction ?? 'desc' );
         }
 
         // add default sorts

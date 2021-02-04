@@ -78,7 +78,6 @@
             },
 
             photoAdded( response ){
-                console.log( response );
                 this.openAddPhoto = false;
                 let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );
                 restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;

@@ -36,7 +36,11 @@
     @import 'resources/sass/utilities/_mq.scss';
 
     .photo-priority.corner-tag {
-        font-size: 1em;
+        font-size: 1.5em;
+
+        @include mobile {
+            font-size: 2.5rem;
+        }
     }
 </style>
 

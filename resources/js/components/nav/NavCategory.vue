@@ -2,12 +2,12 @@
     <div class="category nav__item pos-relative" title="Set Category Filter" :class="{ 'opacity-3' : shared.match }">
 
         <div class="nav__select">
-            <i class="nav__icon icon-food" :class="{ active : shared.category !== this.default }"></i>
+            <i class="nav__icon icon-food" :class="isActive"></i>
 
             <select class="rated-filter__select nav__input  mobile-cover"
-                    v-model="shared.category"
+                    v-model="category"
                     @change="setFilter"
-                    :disabled="shared.match">
+                    :disabled="$route.query.match">
                 <option class="sort__option" value="all">all</option>
                 <option v-for="category in categories"
                         class="sort__option"
@@ -29,17 +29,19 @@
             return {
                 shared : App.state,
                 categories : [],
-                default : 'all'
+                default : 'all',
+                category : null,
             };
         },
 
         created(){
             // set selected category
-            this.shared.init( 'category', this.default );
+            if( this.$route.query.category ) this.category = this.$route.query.category;
+            else this.category = this.default;
 
             // setCategory event
             App.event.on( 'setCategory', cat => {
-                this.shared.category = cat;
+                this.category = cat;
                 this.setFilter();
             });
 
@@ -49,11 +51,16 @@
 
         methods : {
             setFilter(){
+                let val = this.default !== this.category ? this.category : null;
+                App.query.set( 'category', val );
                 App.event.emit( 'loadRestaurants' );
             },
         },
 
         computed : {
+            isActive(){
+                return this.category !== this.default;
+            }
 
         }
     }

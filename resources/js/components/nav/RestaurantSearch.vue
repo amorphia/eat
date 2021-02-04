@@ -96,7 +96,6 @@
 
             viewRestaurant( restaurant ){
 
-                console.log( 'restaurant', restaurant );
 
                 if( restaurant === 'selected'){
                     restaurant = this.results[ this.selectedItem ];
