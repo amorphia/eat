@@ -45,15 +45,20 @@ class YelpService
     }
 
 
-    public function searchYelp( $zip, $offset = 0 )
+    public function searchYelp( $zip, $offset = 0, $options = [] )
     {
         $parameters = [
             'location' => $zip,
             'limit' => $this->limit,
             'offset' => $offset,
             'categories' => 'restaurants',
-            'sort_by' => 'distance'
+            'sort_by' => $options['sort'] ?? 'distance'
         ];
+
+        // if we have any attributes to add, set them here
+        if( isset( $options['attributes'] ) ){
+            $parameters['attributes'] = $options['attributes'];
+        }
 
         $results = null;
 
@@ -88,7 +93,7 @@ class YelpService
             $continue = false;
 
             // hit the yelp api
-            $results = $this->searchYelp( $zip, $offset );
+            $results = $this->searchYelp( $zip, $offset, $options );
 
             if( $this->hasResults( $results ) ){
                 // if we have results add them to our collection

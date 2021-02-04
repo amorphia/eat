@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ScanSummary;
 use App\Services\YelpService;
+use App\Models\YelpSort;
 
 class ScannerService
 {
@@ -25,7 +26,9 @@ class ScannerService
     protected $errors = 0;
     protected $max_errors = 10;
     protected $errorTimeout = 10;
-    protected $zipCount = 2;
+    protected $sort;
+    protected $zipCount = 5;
+
 
     public function __construct( YelpService $yelpService )
     {
@@ -59,6 +62,10 @@ class ScannerService
         // check if we have any zips left to scan, if not, reset them
         if( Zip::where( 'scanned', false )->count() === 0 ){
             Zip::where( 'scanned', true )->update([ 'scanned' => false ]);
+
+            // if we have worked our way through all of our zips then time to switch sorts
+            $sort = YelpSort::where( 'scanned', false )->orderBy( 'id', 'asc' )->first();
+            $sort->update([ 'scanned' => true ]);
         }
 
         // get our array of zip codes
@@ -80,6 +87,9 @@ class ScannerService
         // get our zip codes array
         $zips = $this->getZips( $zip );
 
+        // set our scan sort
+        $this->setScanSort();
+
         foreach( $zips as $zip ){
             $this->scanZip( $zip );
         }
@@ -91,6 +101,20 @@ class ScannerService
     }
 
 
+    protected function setScanSort()
+    {
+        // check if we have any sorts left to scan, if not, reset them
+        if( YelpSort::where( 'scanned', false )->count() === 0 ){
+            YelpSort::where( 'scanned', true )->update([ 'scanned' => false ]);
+        }
+
+        // set our array of zip codes
+        $sort = YelpSort::where( 'scanned', false )->orderBy( 'id', 'asc' )->first();
+        $this->sort = $sort->sort;
+
+        if( $this->console ) $this->console->info( "Sort set to {$this->sort}" );
+    }
+
     /*
      * Run a scan for a single zip code
      */
@@ -99,7 +123,7 @@ class ScannerService
         if( $this->console ) $this->console->info( "Begin scanning {$zip}" );
 
         // grab our results for this zip code from yelp
-        $locations = $this->yelp->search( $zip, [ 'slow' => $this->slow ] );
+        $locations = $this->yelp->search( $zip, [ 'slow' => $this->slow, 'sort' => $this->sort ] );
 
         // if we didn't get any results then we are done
         if( !is_array( $locations ) || !count( $locations ) ){
