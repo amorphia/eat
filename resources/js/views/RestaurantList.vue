@@ -129,9 +129,9 @@
                 this.shared.restaurants = [];
                 this.shared.page.state.reset();
                 this.shared.page.complete = false;
-                this.shared.page.initial = 1;
+                this.shared.page.initial = 0;
 
-                App.query.set( 'page', null );
+                if( this.$route.query.page ) App.query.set( 'page', null );
                 App.event.emit( 'viewRestaurant', null );
             },
 
@@ -157,7 +157,6 @@
                 if( this.shared.page.current === 1
                     || this.shared.page.current === this.shared.page.initial + 1
                 ) return console.log( 'no need to push' );
-
                 App.query.set( 'page', this.shared.page.current );
             },
 

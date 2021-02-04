@@ -6,7 +6,7 @@ window.App.query = new class {
     }
 
     set( name, value = null ){
-
+        console.log( 'query set invoked' );
         let paramArray = [];
 
         // wrap parameters in an array if there is only one
@@ -17,20 +17,24 @@ window.App.query = new class {
         }
 
         // modify our parameters
-        let params = this.generateParams( paramArray );
+        let [ params, hasChange ] = this.generateParams( paramArray );
 
         // push the changes
-        this._vue.$router.push( { name: this._vue.$route.name, query: params } );
+        if( hasChange ) this._vue.$router.push( { name: this._vue.$route.name, query: params } );
     }
 
     generateParams( paramArray ){
         // grab our original query object and clone it
         let params =  {...this._vue.$route.query};
+        let hasChange = false;
 
         paramArray.forEach( param => {
 
             // if our query didn't change, then we don't need to do anything
             if( params[param.name] !== param.value ){
+
+                // flag that we changed somethings
+                hasChange = true;
 
                 // if we passed a value change the query to the new value
                 if( param.value !== null && param.value !== undefined ){
@@ -42,7 +46,7 @@ window.App.query = new class {
             }
         });
 
-        return params;
+        return [params, hasChange];
     }
 
     // helper that just calls set with a null value to delete the chosen parameter

@@ -110,29 +110,56 @@ class Restaurant extends Model
     public function scopeSetSelects( $query )
     {
 
+        $query->select('restaurants.*',
+            DB::raw('coalesce( ratings.rating, 0) as rating'),
+            DB::raw('coalesce( ratings.interest, 0) as interest'),
+        );
+
         if( !request()->match ){
-            return $query->select('restaurants.*',
-                DB::raw('coalesce( ratings.rating, 0) as rating'),
-                DB::raw('coalesce( ratings.interest, 0) as interest'),
-            );
+            return $query;
         } else {
-            return $query->select('restaurants.*',
-                DB::raw('coalesce( ratings.rating, 0) as rating'),
-                DB::raw('coalesce( ratings.interest, 0) as interest'),
-                DB::raw('coalesce( match.rating, 0) as match_rating'),
-                DB::raw('coalesce( match.interest, 0) as match_interest'),
-                DB::raw('coalesce( (match.interest * 5) + (ratings.interest * 5) + match.rating + ratings.rating, 0) as combined_rating'),
-            )->where( function($query) {
-                $query->where( function( $query ){
-                    $query->where( 'match.rating', '>=', 4 )
-                          ->orWhere( 'match.interest', '>=', 1 );
-                })->where( function( $query ){
-                    $query->where( 'ratings.rating', '>=', 4 )
-                        ->orWhere( 'ratings.interest', '>=', 1 );
-                }) ;
-            });
+            return $query->setMatchSelects();
         }
     }
+
+    public function scopeSetMatchSelects( $query ){
+
+        $query->addSelect(
+            DB::raw('coalesce( match.rating, 0) as match_rating'),
+            DB::raw('coalesce( match.interest, 0) as match_interest')
+        );
+
+        switch( request()->type ){
+            case "interest":
+                $query->addSelect(
+                    DB::raw('coalesce( (match.interest * 5), 0) as combined_rating'),
+                    )->where( 'match.interest', '>=', 1 );
+                break;
+
+            case "ratings":
+                $query->addSelect(
+                    DB::raw('coalesce( match.rating, 0) as combined_rating'),
+                    )->where( 'match.rating', '>=', 1 );
+                break;
+
+            default:
+                $query->addSelect(
+                    DB::raw('coalesce( (match.interest * 5) + (ratings.interest * 5) + match.rating + ratings.rating, 0) as combined_rating'),
+                    )->where( function($query) {
+                        $query->where( function( $query ){
+                            $query->where( 'match.rating', '>=', 4 )
+                                ->orWhere( 'match.interest', '>=', 1 );
+                        })->where( function( $query ){
+                            $query->where( 'ratings.rating', '>=', 4 )
+                                ->orWhere( 'ratings.interest', '>=', 1 );
+                        }) ;
+                });
+                break;
+        }
+
+        return $query;
+    }
+
 
     public function scopeSearch( $query, $searchTerm )
     {
