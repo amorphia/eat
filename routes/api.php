@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     /*
      *  Users
@@ -40,10 +40,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/restaurants/{restaurant}', [App\Http\Controllers\RestaurantController::class, 'update'] );
     Route::post('/restaurants/search', [App\Http\Controllers\RestaurantController::class, 'search'] );
 
-    /*
-     *  Ratings
-     */
-    Route::patch('/ratings/{restaurant}', [App\Http\Controllers\RatingController::class, 'update'] )->middleware('throttle:ratings');
 
     /*
      *  Photos
@@ -69,3 +65,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 
+Route::middleware(['auth:sanctum', 'throttle:ratings'])->group(function () {
+        /*
+       *  Ratings
+       */
+    Route::patch('/ratings/{restaurant}', [App\Http\Controllers\RatingController::class, 'update'] )->middleware('throttle:ratings');
+});
