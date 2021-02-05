@@ -27,7 +27,7 @@
         },
 
         methods : {
-            createNote( note ){
+            createNote( note = {} ){
 
                 // generate an id from a timestamp
                 note.id = new Date().getTime();
@@ -35,6 +35,10 @@
                 if( note.error ){
                     note.class = "error";
                     note.persist = true;
+                }
+
+                if( !note.message ){
+                    note.message = '<i class="notify-success icon-check"></i>';
                 }
 
                 // add new note to front of queue
