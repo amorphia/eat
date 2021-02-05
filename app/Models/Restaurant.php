@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Malhal\Geographical\Geographical;
 
 class Restaurant extends Model
 {
-    use HasFactory;
+    use HasFactory, Geographical;
 
     protected $guarded = [];
     protected $appends = ['checked'];
     protected $match_id = null;
-
+    protected $min_rating = 4;
 
     /**
      *
@@ -53,15 +54,6 @@ class Restaurant extends Model
         return $this->hasMany( Rating::class );
     }
 
-
-    /*
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'ratings' )
-                    ->as( 'rating' )
-                    ->withPivot('visited', 'rating', 'priority' );
-    }
-    */
 
 
     /**
@@ -148,10 +140,10 @@ class Restaurant extends Model
                     DB::raw('coalesce( (match.interest * 5) + (ratings.interest * 5) + match.rating + ratings.rating, 0) as combined_rating'),
                     )->where( function($query) {
                         $query->where( function( $query ){
-                            $query->where( 'match.rating', '>=', 4 )
+                            $query->where( 'match.rating', '>=', $this->min_rating  )
                                 ->orWhere( 'match.interest', '>=', 1 );
                         })->where( function( $query ){
-                            $query->where( 'ratings.rating', '>=', 4 )
+                            $query->where( 'ratings.rating', '>=', $this->min_rating )
                                 ->orWhere( 'ratings.interest', '>=', 1 );
                         }) ;
                 });
@@ -216,6 +208,19 @@ class Restaurant extends Model
     }
 
 
+    public function scopeSortByDistance( $query )
+    {
+        $latitude = request()->latitude;
+        $longitude = request()->longitude;
+
+        if( !$latitude || !$longitude ) return $query;
+
+        return $query->distance( $latitude, $longitude )
+                     ->whereNotNull( 'latitude' )
+                     ->whereNotNull( 'longitude' )
+                     ->orderBy( 'distance', request()->direction ?? 'asc' );
+    }
+
     public function scopeSetOrder( $query )
     {
         // all match searches are sorted by combined rating
@@ -223,12 +228,14 @@ class Restaurant extends Model
 
         $sort = request()->sort ?? 'interest';
 
-        // add our manual sort if included
-        if( $sort ){
+        if( $sort === 'distance' ){
+            $query->sortByDistance();
+        } else {
+            // add first sort
             $query->orderBy( $sort, request()->direction ?? 'desc' );
         }
 
-        // add default sorts
+        // add default secondary sorts
         if( $sort !== 'rating' ) $query->orderBy( 'rating', 'desc' );
         if( $sort !== 'interest' ) $query->orderBy( 'interest', 'desc' );
         if( $sort !== 'name' ) $query->orderBy( 'name', 'asc' );
@@ -291,6 +298,7 @@ class Restaurant extends Model
           return $this->match_id;
     }
 
+
     public function close()
     {
         $this->update([ 'active' => false ]);
@@ -308,12 +316,15 @@ class Restaurant extends Model
         $this->update([ 'active' => false, 'name' => $this->name . 'x' ]);
     }
 
+
     public static function addRestaurant( $location )
     {
         // create restaurant
         $restaurant = self::create([
             'name' => $location->name,
-            'image' => $location->image_url
+            'image' => $location->image_url,
+            'latitude' => $location->coordinates->latitude,
+            'longitude' => $location->coordinates->longitude,
         ]);
 
         // create array of categories

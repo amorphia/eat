@@ -15,6 +15,26 @@ use App\Models\Location;
 |
 */
 
+Route::get( 'coordinates', function(){
+    \App\Models\Restaurant::with( 'locations' )->chunk(100, function( $restaurants ) {
+        foreach ( $restaurants as $restaurant ) {
+
+            $location = $restaurant->locations->first();
+            if( !$location || !$restaurant->exists ) return;
+
+
+            $latitude = $location->latitude;
+            $longitude = $location->longitude;
+            if( !$latitude || !$latitude ) return;
+
+            $restaurant->update([
+                'latitude' =>  $latitude,
+                'longitude' => $longitude
+            ]);
+
+        }
+    });
+});
 
 
 /*

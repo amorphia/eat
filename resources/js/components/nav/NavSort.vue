@@ -32,6 +32,7 @@
                     { name : 'rating', column : 'rating', direction : 'desc' },
                     { name : 'name', column : 'name', direction : 'asc' },
                     { name : 'newest', column : 'created_at', direction : 'desc' },
+                    { name : 'distance', column : 'distance', direction : 'asc' },
                 ],
                 sort : null,
                 direction : null,

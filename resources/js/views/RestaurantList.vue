@@ -144,10 +144,12 @@
             },
 
 
-            loadPage( options = {} ){
+            async loadPage( options = {} ){
                 if( this.shared.page.complete ) return;
 
-                let data = this.getPageParamData();
+                let data = await this.getPageParamData();
+
+                console.log( 'hit restaurants api', data );
                 return App.ajax.get( `/api/restaurants`, false, data )
                     .then( ({ data }) => this.processPageResults( data, options ) );
             },
@@ -161,7 +163,7 @@
             },
 
 
-            getPageParamData(){
+            async getPageParamData(){
                 // clear page from our query, since we will use our internal counter not the current param
                 let query = {...this.$route.query };
                 delete query['page'];
@@ -170,6 +172,19 @@
                 let data = { page : this.shared.page.current };
                 Object.assign( data, query );
 
+                // if sorting by distance get user coordinates
+                if( data.sort === 'distance' ){
+                    let coordinates = await App.location.get();
+                    if( !coordinates ) return App.event.emit( 'notify', {
+                        message : 'Geolocation failed',
+                        error : true
+                    });
+
+                    data.latitude = coordinates.latitude;
+                    data.longitude = coordinates.longitude;
+                }
+
+                console.log( 'param data', data );
                 return data;
             },
 
