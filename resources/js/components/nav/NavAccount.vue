@@ -10,7 +10,7 @@
                 method="post"
                 :action="pageAction"
                 submitclass="width-100"
-                @success="openAddPage = false"
+                @success="addedNewRestaurant"
                 :schema="pageSchema"></vue-form>
         </modal-wrap>
 
@@ -63,6 +63,13 @@
         },
 
         methods : {
+
+            addedNewRestaurant( response ){
+                console.log( response );
+                this.openAddPage = false;
+                this.shared.forcedRestaurant = response;
+            },
+
             toggleEditMode(){
                 this.shared.editMode = !this.shared.editMode;
                 this.dropdown = false;

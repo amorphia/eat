@@ -1,7 +1,7 @@
 <template>
     <div class="restaurant__rating">
         <div class="restaurant_ratings"
-             :class="{ open : open }"
+             :class="{ open : open  }"
         >
             <rating-number
                 v-for="val in values"
@@ -19,20 +19,26 @@
 <script>
     export default {
         name: 'restaurant-rating',
-        props : [ 'restaurant' ],
+        props : [ 'restaurant', 'open' ],
 
         data() {
             return {
                 values: [0,1,2,3,4,5,6,7,8,9,10],
-                open : false,
                 shared : App.state
             };
         },
 
+        created(){
+            App.event.on( 'detailsChanged', () => {
+                this.$emit( 'closed' );
+            });
+        },
+
         methods : {
             numberClicked( rating ){
-                this.open = !this.open;
-            }
+                if( this.open ) this.$emit( 'closed' );
+                else this.$emit( 'opened' );
+            },
         }
     }
 </script>

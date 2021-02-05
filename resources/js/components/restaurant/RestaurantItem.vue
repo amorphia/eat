@@ -1,5 +1,9 @@
 <template>
-    <div class="restaurant-wrap" :class="{ selected : isSelected, visited : restaurant.visited }">
+    <div class="restaurant-wrap"
+         :class="{ selected : isSelected, visited : restaurant.visited }"
+         v-touch:swipe.left="() => ratingOpen = true"
+         v-touch:swipe.right="() => ratingOpen = false"
+    >
         <div class="restaurant">
 
             <restaurant-interest :restaurant="restaurant"></restaurant-interest>
@@ -17,7 +21,11 @@
                         <i :class="checkIcon"></i>
                 </div>
                 <div class='pad-buffer restaurant__name' @click="openViewRestaurant">{{ restaurant.name }}</div>
-                <restaurant-rating :restaurant="restaurant"></restaurant-rating>
+                <restaurant-rating :restaurant="restaurant"
+                                   :open="ratingOpen"
+                                   @opened="ratingOpen = true"
+                                   @closed="ratingOpen = false">
+                </restaurant-rating>
 
 
             </div>
@@ -34,7 +42,8 @@
         props: [ 'restaurant', 'selected', 'index' ],
         data() {
             return {
-                shared : App.state
+                shared : App.state,
+                ratingOpen : false,
             };
         },
         computed : {

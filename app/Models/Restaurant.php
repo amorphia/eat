@@ -12,6 +12,7 @@ class Restaurant extends Model
 
     protected $guarded = [];
     protected $appends = ['checked'];
+    protected $match_id = null;
 
 
     /**
@@ -102,7 +103,7 @@ class Restaurant extends Model
 
         return $query->leftJoin( 'ratings AS match', function( $join ) {
             $join->on( 'restaurants.id', '=', 'match.restaurant_id' )
-                ->where( 'match.user_id', '=', request()->match );
+                ->where( 'match.user_id', '=', $this->getMatchId() );
         });
     }
 
@@ -280,6 +281,16 @@ class Restaurant extends Model
      *  Methods
      *
      */
+
+    protected function getMatchId(){
+          if( $this->match_id ) return $this->match_id;
+
+          $match = User::where( 'uuid', request()->match )->first();
+          $this->match_id = $match->id;
+
+          return $this->match_id;
+    }
+
     public function close()
     {
         $this->update([ 'active' => false ]);

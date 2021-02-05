@@ -61,17 +61,16 @@ class RestaurantController extends Controller
      * @param  \App\Models\Restaurant  $restaurant
      * @return \Illuminate\Http\Response
      */
-    public function show( Restaurant $restaurant )
+    public function show( Request $request )
     {
-        $restaurant->load([
-            'locations',
-            'photos',
-            'categories',
-            'posts' => function ( $q ) {
-                return $q->where( 'user_id', request()->user()->id );
-            }]);
 
-        return $restaurant;
+        return Restaurant::active()
+                    ->withRelations()
+                    ->joinRatings()
+                    ->setMatches()
+                    ->setSelects()
+                    ->setRatedFilter()
+                    ->find( $request->restaurant );
     }
 
     /**

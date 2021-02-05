@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
+use Webpatser\Uuid\Uuid;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
 
     /**
      * The attributes that are mass assignable.
@@ -43,6 +44,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+
+    /**
+     *
+     *  Events
+     *
+     */
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating( function ( $model ) {
+            $model->uuid = (string) Uuid::generate( 4 );
+        });
+
+    }
 
 
     /**

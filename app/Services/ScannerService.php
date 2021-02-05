@@ -121,8 +121,11 @@ class ScannerService
 
     public function scanNewAndHot( $options = [] ){
 
-        $zip = $options['zip'] ?? 43201;
+        // get our zip code
+        $this->zipCount = 1;
+        $zip = $options['zip'] ?? $this->getZips();
 
+        // set some attributes
         $this->sort = $options['sort'] ?? 'best_match';
         $this->dontMarkZip = true;
         $this->setAttribute = 'hot_and_new';
@@ -141,6 +144,8 @@ class ScannerService
      */
     protected function scanZip( $zip )
     {
+        // just in case I pass an array just grab the first element
+        if( is_array( $zip ) ) $zip = $zip[0];
         if( $this->console ) $this->console->info( "Begin scanning {$zip}" );
 
         $options = [

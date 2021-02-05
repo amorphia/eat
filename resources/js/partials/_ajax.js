@@ -50,7 +50,7 @@ window.App.ajax = new class {
                     // notify success
 
                     if( message !== false ){
-                        let successMessage = message ? message : 'Success';
+                        let successMessage = message ? message : '<i class="notify-success icon-check"></i>';
                         App.event.emit( 'notify', { message : successMessage });
                     }
 

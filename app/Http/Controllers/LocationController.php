@@ -76,7 +76,7 @@ class LocationController extends Controller
 
         if( $count > 0 ) return error( 'This location already exists' );
 
-        Location::addByYelpPage( $url, $this->yelp );
+        return Location::addByYelpPage( $url, $this->yelp );
     }
 
 

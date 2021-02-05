@@ -58,8 +58,15 @@
                     </div>
 
                     <!-- rating -->
-                    <div class="details__rating-container pos-relative ml-auto">
-                        <restaurant-rating :restaurant="restaurant" class="details__rating"></restaurant-rating>
+                    <div class="details__rating-container pos-relative ml-auto"
+                         v-touch:swipe.left="() => ratingOpen = true"
+                         v-touch:swipe.right="() => ratingOpen = false">
+                        <restaurant-rating :restaurant="restaurant"
+                                           class="details__rating"
+                                           :open="ratingOpen"
+                                           @opened="ratingOpen = true"
+                                           @closed="ratingOpen = false"
+                        ></restaurant-rating>
                     </div>
 
 
@@ -71,7 +78,9 @@
 
               <details-photos :restaurant="restaurant"></details-photos>
 
-                <div class="details__secondary-wrap d-flex p-6">
+                <div class="details__secondary-wrap d-flex p-6"
+                     v-touch:swipe.left="() => updateIndex( 1 )"
+                     v-touch:swipe.right="() => updateIndex( -1 )">
 
                     <div v-if="!shared.forcedRestaurant && (index > 0 || index < maxIndex)" class="details__nav-buttons">
                         <!-- left nav button -->
@@ -111,25 +120,29 @@
                 shared : App.state,
                 index : null,
                 editName : false,
+                restaurantsLoaded : false,
+                ratingOpen : false,
             };
         },
 
         created(){
             this.shared.init( 'forcedRestaurant', null );
 
-            App.event.on( 'viewRestaurant', index => this.index = index );
+            App.event.on( 'viewRestaurant', this.viewRestaurant );
             App.event.on( 'forceViewRestaurant', this.forceRestaurant );
+            App.event.on( 'initRestaurantLoad', this.loadDetailsFromParam );
         },
+
 
         watch : {
             restaurant( val ){
-
-                // load restaurant data
-                //if( val ) this.loadRestaurantData();
-
                 // lock the scrollbars on the underlying page
                 this.lockPage( val );
 
+                // ad query parameters
+                this.setDetailsParam( val );
+
+                if( val) App.event.emit( 'detailsChanged' );
             }
 
         },
@@ -148,6 +161,30 @@
         },
 
         methods : {
+
+            loadDetailsFromParam(){
+                if( !this.$route.query.details )  return;
+
+                let restaurantIndex = _.findIndex( this.shared.restaurants, [ 'id', +this.$route.query.details ] );
+
+                // if we already have this restaurant in our restaurants array, set the index
+                if( restaurantIndex !== -1 ){
+                    this.viewRestaurant( restaurantIndex );
+                    return;
+                }
+
+                // otherwise fetch restaurant from api if not already in our list
+                App.ajax.get( `/api/restaurants/${this.$route.query.details}`, false )
+                    .then( response =>  this.shared.forcedRestaurant = response.data );
+            },
+
+            setDetailsParam( val ){
+                let paramVal = null;
+                if( val ) paramVal = val.id;
+
+                if( +this.$route.query.details === paramVal ) return;
+                App.query.set( 'details', paramVal );
+            },
 
             loadRestaurantData(){
                 // abort if we are using a forced restaurant, or it we've already loaded (unless we force)
@@ -176,6 +213,10 @@
 
             openEditName(){
                 if( this.shared.user.admin ) this.editName = true;
+            },
+
+            viewRestaurant( index ){
+                this.index = index;
             },
 
             forceRestaurant( rest ){

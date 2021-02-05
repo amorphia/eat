@@ -26,7 +26,7 @@
                 <option
                     v-for="user in users"
                     class="sort__option"
-                    :value='user.id'
+                    :value='user.uuid'
                     v-text="user.name">
                 </option>
             </select>
@@ -107,7 +107,7 @@
             currentMatchName(){
                 if( !this.match ) return;
 
-                let user = this.users.find( obj => obj.id === this.match );
+                let user = this.users.find( obj => obj.uuid === this.match );
                 if( user ) return user.name;
             }
         }

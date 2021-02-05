@@ -2,7 +2,7 @@
     <div class="category nav__item pos-relative" title="Set Category Filter" :class="{ 'opacity-3' : shared.match }">
 
         <div class="nav__select">
-            <i class="nav__icon icon-food" :class="isActive"></i>
+            <i class="nav__icon icon-food" :class="{ active : isActive }"></i>
 
             <select class="rated-filter__select nav__input  mobile-cover"
                     v-model="category"
@@ -30,7 +30,7 @@
                 shared : App.state,
                 categories : [],
                 default : 'all',
-                category : null,
+                category : 'all',
             };
         },
 

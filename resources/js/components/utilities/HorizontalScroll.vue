@@ -45,6 +45,11 @@
                 else this.$refs.container.scrollLeft -= this.wheelScroll;
             },
 
+            resetScroll(){
+                console.log( 'reset scroll' );
+                this.$refs.container.scrollLeft = 0;
+            },
+
             scroll( sign ){
                 let buttonScroll = this.$refs.container.firstChild.clientWidth * this.buttonScrollCards;
                 this.scrollTo( this.$refs.container, sign * buttonScroll );
@@ -84,6 +89,7 @@
 <style>
     .horizontal-scroll {
         max-width: 100%;
+        scroll-behavior: smooth;
     }
 </style>
 

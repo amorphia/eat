@@ -2572,6 +2572,16 @@ body {
   height: 2em;
 }
 
+@media (max-width: 767px) {
+  .edit-panel__button {
+    width: 3em;
+    height: 3em;
+  }
+  .edit-panel__button i {
+    font-size: 1.5em;
+  }
+}
+
 .action-button {
   background-color: var(--highlight-color);
   display: flex;

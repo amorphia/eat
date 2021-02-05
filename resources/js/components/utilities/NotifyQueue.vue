@@ -3,7 +3,7 @@
         <transition-group name="slide" tag="ul">
             <li class="notify-item"
                  v-for="note in queue"
-                 v-text="note.message"
+                 v-html="note.message"
                 :key="note.id"
                 :class="note.class"
                  @click="removeNote( note )"
@@ -67,7 +67,7 @@
         position: fixed;
         bottom: 1rem;
         right: 1rem;
-        width: 15vw;
+        max-width: 15vw;
         text-align: center;
         z-index: 10001;
 
@@ -89,6 +89,10 @@
 
     .notify-item.error {
         background-color: #c40c0c;
+    }
+
+    .notify-success {
+        font-size: 1.5rem;
     }
 
 </style>

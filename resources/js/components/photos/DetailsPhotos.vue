@@ -1,7 +1,7 @@
 <template>
     <div class="details__photos-container pos-relative">
         <div v-if="photos.length" class="details__photos">
-            <horizontal-scroll classes="height-100">
+            <horizontal-scroll classes="height-100" ref="container">
                 <details-photo v-for="(photo, index) in photos"
                                :photo="photo"
                                :key="photo.id"
@@ -72,9 +72,17 @@
             };
         },
 
+        created(){
+            App.event.on( 'detailsChanged', this.resetPhotoScroll );
+        },
+
         methods : {
             openLightbox( index ){
                 this.$refs.lightbox.showImage( index );
+            },
+
+            resetPhotoScroll(){
+                if( this.$refs.container ) this.$refs.container.resetScroll();
             },
 
             photoAdded( response ){

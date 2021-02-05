@@ -71,7 +71,7 @@ class Location extends Model
         if( !$id ) return;
 
         // store
-        self::addByYelpId( $id, $yelp );
+        return self::addByYelpId( $id, $yelp );
     }
 
 
@@ -95,6 +95,10 @@ class Location extends Model
                 $restaurant->photos()->create([ 'url' => $photo ]);
             }
         }
+
+        // hit the database for the same restaurant again, with with all of the
+        // adjustments / relations / joins I make when searching so I can return it
+        return Restaurant::search( $restaurant->name )->first();
     }
 
 

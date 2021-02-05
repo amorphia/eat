@@ -12,13 +12,15 @@ require('./dependencies');
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueConfirmDialog from 'vue-confirm-dialog';
-import VueLazyLoad from 'vue-lazyload'
-import vSelect from 'vue-select'
+import VueLazyLoad from 'vue-lazyload';
+import vSelect from 'vue-select';
+import Vue2TouchEvents from 'vue2-touch-events';
 
 window.Vue = Vue;
 Vue.use( VueRouter );
 Vue.use( VueConfirmDialog );
 Vue.use( VueLazyLoad );
+Vue.use( Vue2TouchEvents );
 
 Vue.component('v-select', vSelect);
 Vue.component('InfiniteLoading', require('vue-infinite-loading'));

@@ -48,6 +48,7 @@
                 selectedRestaurant : null,
                 waiting : true,
                 waitingDelay : 1, // in seconds
+                initRestaurantLoad  : false,
             };
         },
 
@@ -100,7 +101,6 @@
 
                 return App.ajax.get( `/api/restaurants`, '', data )
                     .then( ({ data }) => this.processPageResultsTop( data ) );
-
 
             },
 
@@ -203,6 +203,11 @@
                 // tell our infinite loader we are ready
                 this.shared.page.state.loaded();
 
+                // emit that we've loaded our restaurants, if this is our first time
+                if( !this.initRestaurantLoad ){
+                    this.initRestaurantLoad = true;
+                    App.event.emit( 'initRestaurantLoad' );
+                }
             },
         },
     }
