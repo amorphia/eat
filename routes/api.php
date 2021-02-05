@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     /*
      *  Ratings
      */
-    Route::patch('/ratings/{restaurant}', [App\Http\Controllers\RatingController::class, 'update'] );
+    Route::patch('/ratings/{restaurant}', [App\Http\Controllers\RatingController::class, 'update'] )->middleware('throttle:ratings');
 
     /*
      *  Photos
