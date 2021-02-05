@@ -49,9 +49,12 @@
                 restaurant[params.column] = params.value;
 
                 App.ajax.patch( `/api/ratings/${restaurant.id}`, {
-                    rating : restaurant.rating,
-                    interest : restaurant.interest
-                }).then( response => {
+                        rating : restaurant.rating,
+                        interest : restaurant.interest,
+                        viewed : restaurant.viewed
+                    },
+                    params.message
+                ).then( response => {
                     // delete restaurant from array if we set interest to -1
                     if( params.column === 'interest' && params.value === -1 ) {
                         this.shared.restaurants = this.shared.restaurants.filter( obj => obj.id !== restaurant.id );

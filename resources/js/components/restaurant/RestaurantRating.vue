@@ -64,7 +64,7 @@
             width: 6em;
             height: 6em;
             border-radius: 50%;
-            transform: translate(-25%, -50%);
+            transform: translate3d(-25%, -50%, 0);
         }
     }
 

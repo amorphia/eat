@@ -61,15 +61,20 @@ window.App.ajax = new class {
                 .catch( error => {
                     console.log(error.response);
 
-                    // refresh if our session has times out
-                    if( error?.response?.status === 419 ){
-                        window.location.reload()
+                    switch (error.response.status) {
+                        case 401: // Not logged in
+                        case 419: // Session expired
+                        case 503: // Down for maintenance
+                            // Bounce the user to the login screen with a redirect back
+                            window.location.reload();
+                            break;
+                        case 500:
+                            // notify error
+                            let message = error.response.data.message ?? error.response.statusText;
+                            App.event.emit( 'notify', { message : message, error : true });
+                            break;
+                        default:
                     }
-
-                    let message = error.response.data?.error ?? error.response.statusText;
-
-                    // notify error
-                    App.event.emit( 'notify', { message : message, error : true });
 
                     // reject
                     reject( error );

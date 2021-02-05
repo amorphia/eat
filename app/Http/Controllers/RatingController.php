@@ -72,7 +72,8 @@ class RatingController extends Controller
     {
         $validated = $request->validate([
             'rating' => 'integer',
-            'interest' => 'integer'
+            'interest' => 'integer',
+            'viewed' => 'boolean'
         ]);
 
         // get or create rating

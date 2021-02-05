@@ -2517,6 +2517,15 @@ body {
   }
 }
 
+@media (max-width: 767px) {
+  .vue-lb-button-close {
+    transform: translate3d(0, 75%, 0);
+    z-index: 1;
+    height: 3rem;
+    width: 3rem;
+  }
+}
+
 body {
   background-color: var(--near-white);
   font-family: var(--primary-font);

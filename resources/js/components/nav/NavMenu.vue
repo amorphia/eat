@@ -95,6 +95,11 @@
         align-items: center;
         max-width: 30%;
 
+        &.disabled {
+            opacity: .3;
+            filter: saturate( .3 );
+        }
+
         @include mobile {
             flex-grow: 1;
             justify-content: center;

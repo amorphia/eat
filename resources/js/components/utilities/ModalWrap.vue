@@ -70,7 +70,7 @@
 
     .modalfade-enter .modal-wrap__content,
     .modalfade-leave-to .modal-wrap__content {
-        transform: translate( -50%, -55% );
+        transform: translate3d( -50%, -55%, 0 );
     }
 
     .modal-wrap__content {

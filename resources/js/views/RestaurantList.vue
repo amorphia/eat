@@ -235,6 +235,13 @@
     .restaurant-list__load-previous {
         margin-top: 2rem;
         margin-bottom: -.5rem;
+
+        @include mobile {
+            padding: 1.5rem;
+            font-size: 1.3em;
+            margin-top: 3rem;
+            margin-bottom: -1rem;
+        }
     }
 
     .restaurant-block {

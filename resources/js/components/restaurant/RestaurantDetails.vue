@@ -142,7 +142,12 @@
                 // ad query parameters
                 this.setDetailsParam( val );
 
-                if( val) App.event.emit( 'detailsChanged' );
+
+
+                if( val ){
+                    App.event.emit( 'detailsChanged' );
+                    this.markAsViewed( val );
+                }
             }
 
         },
@@ -161,6 +166,10 @@
         },
 
         methods : {
+            markAsViewed( restaurant ){
+                if( restaurant.viewed ) return;
+                App.event.emit( 'updateRating', this.restaurant, { column : 'viewed', value : true, message : false } );
+            },
 
             loadDetailsFromParam(){
                 if( !this.$route.query.details )  return;
@@ -397,7 +406,7 @@
 
     .details .action-button.shift-down {
         @include mobile {
-            transform: translate(10%, 10%);
+            transform: translate3d(10%, 10%, 0);
         }
     }
 
@@ -489,7 +498,7 @@
         font-size: 5rem;
         top: 56%;
         left: 0;
-        transform: translateY(-50%);
+        transform: translate3d(0, -50%, 0);
     }
 </style>
 

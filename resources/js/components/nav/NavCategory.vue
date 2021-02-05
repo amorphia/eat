@@ -1,5 +1,5 @@
 <template>
-    <div class="category nav__item pos-relative" title="Set Category Filter" :class="{ 'opacity-3' : shared.match }">
+    <div class="category nav__item pos-relative" title="Set Category Filter" :class="{ disabled  : $route.query.match }">
 
         <div class="nav__select">
             <i class="nav__icon icon-food" :class="{ active : isActive }"></i>

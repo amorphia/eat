@@ -106,6 +106,7 @@ class Restaurant extends Model
         $query->select('restaurants.*',
             DB::raw('coalesce( ratings.rating, 0) as rating'),
             DB::raw('coalesce( ratings.interest, 0) as interest'),
+            DB::raw('coalesce( ratings.viewed, 0) as viewed'),
         );
 
         if( !request()->match ){
@@ -253,6 +254,12 @@ class Restaurant extends Model
         switch( $filter ){
             // if we are filtering by rated only say our rating has to be equal to non-zero
             case 'rated': return $query->where( 'rating', '!=', 0 );
+
+            // if we are filtering unviewed then allow only null or viewed 0
+            case 'unviewed':  return $query->where( function( $query ) {
+                $query->where( 'viewed', 0 )
+                    ->orWhereNull( 'rating' );
+            });
 
             // if we are filtering by unrated only then allow ratings of 0 or null
             case 'unrated': return $query->where( function( $query ) {

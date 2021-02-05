@@ -1,5 +1,5 @@
 <template>
-    <div class="sort nav__item pos-relative" title="Switch Sort" :class="{ 'opacity-3' : shared.match }">
+    <div class="sort nav__item pos-relative" title="Switch Sort" :class="{ disabled : $route.query.match }">
 
         <div class="nav__select">
             <i class="nav__icon icon-sort" :class="{ active : isSortActive }"></i>

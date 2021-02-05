@@ -1,5 +1,5 @@
 <template>
-    <div class="rated-filter nav__item pos-relative" title="Set Rated Filter" :class="{ 'opacity-3' : shared.match }">
+    <div class="rated-filter nav__item pos-relative" title="Set Rated Filter" :class="{ disabled  : $route.query.match }">
 
         <div class="nav__select">
             <label class="nav__icon icon-star_half" :class="{ active : isActive }"></label>
@@ -27,7 +27,8 @@
                 ratedFilterOptions : [
                     'all',
                     'unrated',
-                    'rated'
+                    'rated',
+                    'unviewed'
                 ],
                 default : 'all',
                 rated : null

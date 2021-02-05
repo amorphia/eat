@@ -72,7 +72,7 @@
                 this.match = this.default;
             },
 
-            matchChanged(){
+            matchChanged( e ){
                 // if we changed to the default, then reset
                 if( this.default === this.match ){
                     App.query.set([

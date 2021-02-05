@@ -3,11 +3,13 @@
         <transition-group name="slide" tag="ul">
             <li class="notify-item"
                  v-for="note in queue"
-                 v-html="note.message"
                 :key="note.id"
                 :class="note.class"
                  @click="removeNote( note )"
-            ></li>
+            >
+                <i class="notify-item__icon" :class="note.class === 'error' ? 'icon-block' : 'icon-check'"></i>
+                <span v-if="note.message" class="notify-item__message" v-html="note.message"></span>
+            </li>
         </transition-group>
     </div>
 </template>
@@ -35,10 +37,8 @@
                 if( note.error ){
                     note.class = "error";
                     note.persist = true;
-                }
-
-                if( !note.message ){
-                    note.message = '<i class="notify-success icon-check"></i>';
+                } else {
+                    note.class = "success";
                 }
 
                 // add new note to front of queue
@@ -71,12 +71,12 @@
         position: fixed;
         bottom: 1rem;
         right: 1rem;
-        max-width: 15vw;
+        max-width: 18vw;
         text-align: center;
         z-index: 10001;
 
         @include mobile {
-            width: 40vw;
+            max-width: 40vw;
         }
     }
 
@@ -89,14 +89,31 @@
         letter-spacing: 1px;
         border-radius: 3px;
         margin-top: .5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .notify-item__message {
+        @include mobile {
+            display: none;
+        }
     }
 
     .notify-item.error {
         background-color: #c40c0c;
     }
 
-    .notify-success {
+    .notify-item__icon {
         font-size: 1.5rem;
+    }
+
+    .notify-item__message {
+        padding: 0 .5rem;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
 </style>

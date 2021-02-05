@@ -119,6 +119,7 @@
             color: white;
 
             @include mobile{
+                max-width: 80vw;
             }
         }
 
@@ -145,7 +146,7 @@
                 width: 2em;
                 height: 2em;
                 border-radius: 50%;
-                transform: translate(20%, -54%);
+                transform: translate3d(20%, -54%, 0);
                 z-index: 0;
             }
         }
@@ -184,7 +185,7 @@
             position: absolute;
             top: 50%;
             z-index: 1;
-            transform: translateY(-50%);
+            transform: translate3d(0,-50%,0);
             padding: 0;
             right: 0;
             font-size: 7rem;
