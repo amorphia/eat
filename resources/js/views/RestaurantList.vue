@@ -22,7 +22,7 @@
                         }"
                     ></restaurant-item>
 
-                    <infinite-loading :distance="750" ref="infinite" @infinite="nextPage">
+                    <infinite-loading :distance="1000" ref="infinite" @infinite="nextPage">
                         <div slot="spinner"></div>
                         <div slot="no-more"></div>
                         <div slot="no-results"></div>
