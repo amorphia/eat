@@ -246,13 +246,14 @@
 
     .restaurant-block {
         padding: 1.5rem 2.5rem;
+        max-width: 100vw;
+        display: flex;
+        flex-wrap: wrap;
 
         @include mobile {
             padding: 1.75rem .1rem .75rem;
         }
-
-        display: flex;
-        flex-wrap: wrap;
+        
     }
 
 </style>

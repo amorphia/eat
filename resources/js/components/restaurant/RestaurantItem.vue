@@ -85,6 +85,8 @@
 
         .restaurant__main {
             width: 100%;
+            max-width: 100%;
+            overflow: hidden;
             padding: 1.2rem .9rem 1.2rem 1.8rem;
             background-color: var(--primary-dark);
             background-image: linear-gradient(45deg, var(--primary-dark), #162e34);
@@ -92,7 +94,6 @@
             color: white;
             position: relative;
             transition: background-color .4s;
-            overflow:hidden;
             align-items: center;
 
             &.placeholder {
@@ -109,7 +110,9 @@
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
-            width: 85%;
+            flex-grow: 1;
+            flex-shrink: 1;
+            margin-right: 4rem;
             z-index: 2;
             font-family: var(--secondary-font);
             letter-spacing: 1px;
