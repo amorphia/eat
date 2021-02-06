@@ -196,9 +196,6 @@
             },
 
             loadRestaurantData(){
-                // abort if we are using a forced restaurant, or it we've already loaded (unless we force)
-                if( this.shared.forcedRestaurant ) return;
-
                 App.ajax.get( `/api/restaurants/${this.restaurant.id}`, false )
                         .then( response => {
                             let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );
@@ -207,7 +204,6 @@
                                 this.$set( restaurant, 'loaded', true );
                             }
                         });
-
             },
 
             lockPage( val ){
