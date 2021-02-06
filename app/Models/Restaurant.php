@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Malhal\Geographical\Geographical;
+use App\Traits\Geographical;
 
 class Restaurant extends Model
 {
@@ -169,7 +169,7 @@ class Restaurant extends Model
 
     public function scopeActive( $query )
     {
-        return $query->where( 'active', true )
+        return $query->where( 'restaurants.active', true )
                 ->where( function($query) {
                     $query->where( 'ratings.interest', '!=', -1 )
                         ->orWhereNull( 'ratings.interest' );
@@ -208,6 +208,13 @@ class Restaurant extends Model
                 });
     }
 
+    public function scopeJoinCoordinates( $query )
+    {
+        return $query->rightJoin( 'locations', function( $join ) {
+            $join->on( 'restaurants.id', '=', 'locations.restaurant_id' );
+        });
+    }
+
 
     public function scopeSortByDistance( $query )
     {
@@ -216,7 +223,9 @@ class Restaurant extends Model
 
         if( !$latitude || !$longitude ) return $query;
 
-        return $query->distance( $latitude, $longitude )
+        return $query->joinCoordinates()
+                     ->distance( $latitude, $longitude, 'locations' )
+                     ->addSelect( 'locations.yelp_id' )
                      ->whereNotNull( 'latitude' )
                      ->whereNotNull( 'longitude' )
                      ->orderBy( 'distance', request()->direction ?? 'asc' );
@@ -330,8 +339,6 @@ class Restaurant extends Model
         $restaurant = self::create([
             'name' => $location->name,
             'image' => $location->image_url,
-            'latitude' => $location->coordinates->latitude,
-            'longitude' => $location->coordinates->longitude,
         ]);
 
         // create array of categories

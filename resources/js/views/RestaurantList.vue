@@ -11,7 +11,7 @@
 
                     <restaurant-item
                         v-for="(restaurant, index) in shared.restaurants"
-                        :key="restaurant.id"
+                        :key="restaurant.yelp_id ? restaurant.yelp_id : restaurant.id"
                         :index="index"
                         :restaurant.sync="restaurant"
                         @checked="restaurant.checked = !restaurant.checked"
