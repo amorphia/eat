@@ -57,12 +57,13 @@
     .rating-number {
         max-width: 0px;
         overflow: hidden;
-        transition: all .3s;
         font-family: 'teko';
         font-size: 4em;
         cursor: pointer;
 
         @include tablet-up {
+            transition: all .3s;
+
             &:hover{
                 color: var(--highlight-color);
             }

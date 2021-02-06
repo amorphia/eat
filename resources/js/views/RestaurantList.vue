@@ -253,7 +253,7 @@
         @include mobile {
             padding: 1.75rem .1rem .75rem;
         }
-        
+
     }
 
 </style>

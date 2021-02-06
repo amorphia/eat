@@ -122,7 +122,7 @@
             color: white;
 
             @include mobile{
-                max-width: 70vw;
+               // max-width: 70vw;
             }
         }
 
