@@ -25,7 +25,7 @@
 
                     <div class="details__name-input pr-6 d-flex align-center ellipses">
                         <button v-if="shared.user.admin"
-                                class="details__reload-restaurant details__edit-button mr-3"
+                                class="details__reload-restaurant details__edit-button mr-3 tablet-up-only"
                                 @click="loadRestaurantData">
                             <i class="icon-upload"></i>
                         </button>
