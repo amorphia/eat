@@ -261,8 +261,11 @@ class Restaurant extends Model
         $filter = request()->rated;
 
         switch( $filter ){
-            // if we are filtering by rated only say our rating has to be equal to non-zero
+            // if we are filtering by rated our rating has to be equal to non-zero
             case 'rated': return $query->where( 'rating', '!=', 0 );
+
+            // if we are filtering by interested our interest has to be equal to non-zero
+            case 'interested': return $query->where( 'interest', '!=', 0 );
 
             // if we are filtering unviewed then allow only null or viewed 0
             case 'unviewed':  return $query->where( function( $query ) {

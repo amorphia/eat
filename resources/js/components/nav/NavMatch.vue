@@ -62,6 +62,9 @@
             if( this.$route.query.match ) this.match = this.$route.query.match;
             else this.match = this.default;
 
+            // reset filter
+            App.event.on( 'resetFilters', () => this.match = this.default );
+
             // get users list
             App.ajax.get( '/api/users', false ).then( response => this.users = response.data );
         },

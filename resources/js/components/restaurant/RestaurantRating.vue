@@ -28,9 +28,19 @@
             };
         },
 
+        watch : {
+            open( val ){
+                    if( val ) App.event.emit( 'ratingOpened', this.restaurant.id );
+            }
+        },
+
         created(){
             App.event.on( 'detailsChanged', () => {
                 this.$emit( 'closed' );
+            });
+
+            App.event.on( 'ratingOpened', id => {
+                if( this.restaurant.id !==  id ) this.$emit( 'closed' );
             });
         },
 

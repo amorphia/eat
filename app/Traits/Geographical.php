@@ -12,16 +12,20 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Geographical
 {
-
+    /**
+     * Used to store optional table parameter for use when joining in your latitude/longitude values
+     * @var string|null
+     */
     protected $geographical_table;
 
     /**
      * @param Builder $query
      * @param float $latitude Latitude
      * @param float $longitude Longitude
+     * @param string|null $table
      * @return Builder
      */
-    public function scopeDistance( $query, $latitude, $longitude, $table = null )
+    public function scopeDistance( Builder $query, $latitude, $longitude, $table = null )
     {
 
         $this->geographical_table = $table;
@@ -64,20 +68,17 @@ trait Geographical
 
     protected function getQualifiedLatitudeColumn()
     {
-        $column = $this->getConnection()->getTablePrefix();
-        $column .= $this->geographical_table ?? $this->getTable();
-        $column .=  '.' . $this->getLatitudeColumn();
-
-        return $column;
+        return $this->getConnection()->getTablePrefix() . $this->getTableName() . '.' . $this->getLatitudeColumn();
     }
 
     protected function getQualifiedLongitudeColumn()
     {
-        $column = $this->getConnection()->getTablePrefix();
-        $column .= $this->geographical_table ?? $this->getTable();
-        $column .=  '.' . $this->getLongitudeColumn();
+        return $this->getConnection()->getTablePrefix() . $this->getTableName() . '.' . $this->getLongitudeColumn();
+    }
 
-        return $column;
+    protected function getTableName()
+    {
+        return $this->geographical_table ?? $this->getTable();
     }
 
     public function getLatitudeColumn()

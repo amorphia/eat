@@ -45,6 +45,9 @@
                 this.setFilter();
             });
 
+            // reset filter
+            App.event.on( 'resetFilters', () => this.category = this.default );
+
             // get category list
             App.ajax.get( '/api/categories', false ).then( response => this.categories = response.data );
         },

@@ -48,6 +48,12 @@
             // set initial direction
             if( this.$route.query.direction ) this.direction = this.$route.query.direction;
             else this.direction = this.getDefaultDirection( this.sort );
+
+            // reset filter
+            App.event.on( 'resetFilters', () => {
+                this.sort = this.default;
+                this.direction = this.getDefaultDirection( this.sort );
+            });
         },
 
         methods : {

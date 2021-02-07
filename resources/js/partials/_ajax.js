@@ -63,7 +63,6 @@ window.App.ajax = new class {
 
                     switch (error.response.status) {
                         case 401: // Not logged in
-                            break;
                         case 419: // Session expired
                         case 503: // Down for maintenance
                             // Bounce the user to the login screen with a redirect back

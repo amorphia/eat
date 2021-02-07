@@ -53,8 +53,8 @@
             },
 
             addressText(){
-                if( !this.location.street || !this.location.city || !this.location.zip ) return false;
-                return `${this.location.street}. ${this.location.city}, ${this.location.zip}`;
+                if( !this.location.street || !this.location.city ) return false;
+                return `${this.location.street}. ${this.location.city}`;
             },
 
             addressLink(){
@@ -91,6 +91,11 @@
     .location__line {
         margin-bottom: .5rem;
         line-height: 1.4;
+
+        @include mobile {
+            font-size: 1.2em;
+            margin-bottom: 1;
+        }
     }
 
     .location__actions-icon {
@@ -98,7 +103,8 @@
         margin-right: .5rem;
 
         @include mobile {
-            font-size: 1.5rem;
+            font-size: 2rem;
+            margin-right: 1.25rem;
         }
     }
 </style>

@@ -28,6 +28,7 @@
                     'all',
                     'unrated',
                     'rated',
+                    'interested',
                     'unviewed'
                 ],
                 default : 'all',
@@ -39,6 +40,9 @@
             // set sort
             if( this.$route.query.rated ) this.rated = this.$route.query.rated;
             else this.rated = this.default;
+
+            // reset filter
+            App.event.on( 'resetFilters', () => this.rated = this.default );
 
         },
 

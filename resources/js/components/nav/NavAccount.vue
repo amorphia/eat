@@ -21,11 +21,21 @@
             <div class="nav-account__dropdown pos-absolute top-100" v-if="dropdown">
                 <div class="nav-account__dropdown-content p-4 d-flex flex-column">
 
+                    <!-- close button -->
                     <button class="toggle mobile-only pos-absolute" @click="dropdown = false"><i class="icon-x"></i></button>
 
+                    <!-- logout -->
                     <a class="nav-account__dropdown-item" href="/logout">logout</a>
 
-                    <button class="nav-account__dropdown-item left-text" @click="openAddPage = true">add location</button>
+                    <!-- reset filters -->
+                    <button class="nav-account__dropdown-item left-text" @click="resetFilters">
+                        reset filters
+                    </button>
+
+
+                    <button class="nav-account__dropdown-item left-text" @click="openAddPage = true">
+                        add location
+                    </button>
 
                     <!-- <a class="nav-account__dropdown-item" href="/account">account</a> -->
 
@@ -63,6 +73,13 @@
         },
 
         methods : {
+
+            resetFilters(){
+                this.$router.push( { name: this.$route.name, query: {} } );
+                this.dropdown = false;
+                App.event.emit( 'resetFilters' );
+                App.event.emit( 'loadRestaurants' );
+            },
 
             addedNewRestaurant( response ){
                 console.log( response );
