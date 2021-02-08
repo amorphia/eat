@@ -103,6 +103,7 @@
     .post__body {
         border-bottom: 1px solid var(--subtle-text);
         padding-bottom: 1rem;
+        line-height: 1.35;
 
         &::first-letter {
             text-transform: uppercase;
