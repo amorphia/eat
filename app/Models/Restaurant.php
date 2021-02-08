@@ -136,6 +136,25 @@ class Restaurant extends Model
                     )->where( 'match.rating', '>=', 1 );
                 break;
 
+
+            case "interest-overlap":
+                $query->addSelect(
+                    DB::raw('coalesce( (match.interest * 5) + (ratings.interest * 5), 0) as combined_rating'),
+                    )->where( function($query) {
+                        $query->where( 'match.interest', '>=', 1 )
+                        ->where( 'ratings.interest', '>=', 1 ) ;
+                    }) ;
+                break;
+
+            case "ratings-overlap":
+                $query->addSelect(
+                    DB::raw('coalesce( match.rating + ratings.rating, 0) as combined_rating'),
+                    )->where( function($query) {
+                        $query->where( 'match.rating', '>=', $this->min_rating  )
+                            ->where( 'ratings.rating', '>=', $this->min_rating ) ;
+                    }) ;
+                break;
+
             default:
                 $query->addSelect(
                     DB::raw('coalesce( (match.interest * 5) + (ratings.interest * 5) + match.rating + ratings.rating, 0) as combined_rating'),

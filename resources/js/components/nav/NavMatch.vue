@@ -7,27 +7,43 @@
             classes="width-50">
 
             <div class="choose-match width-50">
-
                 <div class="choose-match__title pb-4">View {{ currentMatchName }}'s list</div>
 
                 <button v-for="type in matchTypes"
                         class="choose-match__button"
                         @click="setMatch( type.type)">{{ type.label }}</button>
-
             </div>
-
         </modal-wrap>
 
-        <div class="nav__select">
+        <!--
+        <select-match :open="openChooseMatchType"
+                      :matchTypes="matchTypes"
+                      :match="match"
+                      :users="users"
+                      :type="type"
+                      @close="openChooseMatchType = false"
+                      @changed="matchChanged">
+        </select-match>
+        -->
+
+        <div class="nav__select pos-relative">
             <i class="nav__icon icon-user" :class="{ active : isActive }"></i>
 
-            <select class="rated-filter__select nav__input  mobile-cover" v-model="match" @change="matchChanged">
+            <!-- invisible cover div that overlaps the select and intercepts any clicks on it
+            <div class="pos-absolute top-0 left-0 right-0 bottom-0 z-2" @click.prevent="openChooseMatchType = true"></div>
+            -->
+
+            <select class="rated-filter__select nav__input  mobile-cover"
+                    v-model="match"
+                    @change="matchChanged"
+                    @mouseup="log">
                 <option :value="null">None</option>
                 <option
                     v-for="user in users"
                     class="sort__option"
                     :value='user.uuid'
-                    v-text="user.name">
+                    v-text="user.name"
+                    >
                 </option>
             </select>
         </div>
@@ -38,7 +54,6 @@
 
 <script>
     export default {
-
         name: 'nav-match',
 
         data() {
@@ -50,9 +65,11 @@
                 type : null,
                 openChooseMatchType : false,
                 matchTypes : [
-                    { label : 'View your overlap', type : null },
                     { label : 'View their most interested', type : 'interest' },
                     { label : 'View their favorites', type : 'ratings' },
+                    { label : 'View your interest overlap', type : 'interest-overlap' },
+                    { label : 'View your ratings overlap', type : 'ratings-overlap' },
+                    { label : 'View your combined overlap', type : null },
                 ]
             };
         },
@@ -70,6 +87,10 @@
         },
 
         methods : {
+            log( e ){
+                console.log( e )
+            },
+
             closeChooseTypeModal(){
                 this.openChooseMatchType = false;
                 this.match = this.default;
@@ -108,9 +129,9 @@
             },
 
             currentMatchName(){
-                if( !this.match ) return;
+                if( !this.currentMatch ) return;
 
-                let user = this.users.find( obj => obj.uuid === this.match );
+                let user = this.users.find( obj => obj.uuid === this.currentMatch );
                 if( user ) return user.name;
             }
         }

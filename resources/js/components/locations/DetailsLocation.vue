@@ -91,11 +91,6 @@
     .location__line {
         margin-bottom: .5rem;
         line-height: 1.4;
-
-        @include mobile {
-            font-size: 1.2em;
-            margin-bottom: 1;
-        }
     }
 
     .location__actions-icon {

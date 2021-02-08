@@ -7,19 +7,16 @@ window.App.location = new class {
     }
 
     async get(){
-        console.log( 'coordinates', this._coordinates );
-        if( this._coordinates !== null ) return this._coordinates;
+        //if( this._coordinates !== null ) return this._coordinates;
 
-        console.log( 'await coordinates' );
         await this._loadCoordinates();
 
-        console.log( 'return coordinates', this._coordinates );
         return this._coordinates;
     }
 
 
     async _loadCoordinates(){
-        console.log( 'await geolocation' );
+
         const position = await this._getCoordinates();
         this._coordinates = position.coords;
     }
