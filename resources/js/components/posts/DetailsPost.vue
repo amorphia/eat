@@ -5,7 +5,7 @@
         </div>
         <div class="post__actions d-flex">
             <span class="grow-1">{{ date }}</span>
-            <button class="icon-edit" title="Edit post" @click="editingPost = true"></button>
+            <button class="icon-edit post__actions-icon" title="Edit post" @click="editingPost = true"></button>
             <button class="icon-trash" title="Delete post" @click="confirmDeletePost"></button>
         </div>
 
@@ -114,6 +114,12 @@
         padding-top: .5rem;
         font-size: 1rem;
         color: var(--subtle-text);
+    }
+
+    .post__actions-icon {
+        @include mobile {
+            margin-left: 1rem;
+        }
     }
 </style>
 
