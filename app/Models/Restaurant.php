@@ -243,7 +243,7 @@ class Restaurant extends Model
         if( !$latitude || !$longitude ) return $query;
 
         return $query->joinCoordinates()
-                     ->distance( $latitude, $longitude, 'locations' )
+                     ->distance( $latitude, $longitude, ['table' => 'locations'] )
                      ->addSelect( 'locations.yelp_id' )
                      ->whereNotNull( 'latitude' )
                      ->whereNotNull( 'longitude' )

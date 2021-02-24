@@ -1,14 +1,5 @@
-/* CSS Document */
-$size-1 : .125vw;
-$size-2 : .25vw;
-$size-3 : .5vw;
-$size-4 : 1vw;
-$size-5 : 2vw;
-$size-6 : 3vw;
-$size-7 : 4vw;
-$size-8 : 5vw;
-$size-9 : 6vw;
 
+// z-indexes
 .z--1 { z-index: -1 }
 .z-0 { z-index: 0 }
 .z-1 { z-index: 1 }
@@ -26,197 +17,83 @@ $size-9 : 6vw;
 .z-negative { z-index: -1 }
 
 
-/* ratios */
-.ratio-square {
-    position: relative;
+// ratios
+$ratios : (
+    "square" : 100%,
+    "80" : 80%,
+    "60" : 60%,
+    "50" : 50%
+);
 
-    &:after {
-        content: "";
-        padding-bottom: 100%;
-        display: block;
+@each $name, $value in $ratios {
+    .ratio-#{$name} {
+        position: relative;
+
+        &:after {
+            content: "";
+            padding-bottom: $value;
+            display: block;
+        }
     }
 }
 
-.ratio-80 {
-    position: relative;
 
-    &:after {
-        content: "";
-        padding-bottom: 80%;
-        display: block;
+// margin and paddings
+$props: (
+    "p"  : "padding",
+    "pr" : "padding-right",
+    "pl" : "padding-left",
+    "pt" : "padding-top",
+    "pb" : "padding-bottom",
+    "m"  : "margin",
+    "mr" : "margin-right",
+    "ml" : "margin-left",
+    "mt" : "margin-top",
+    "mb" : "margin-bottom",
+);
+
+$sizes: (
+    "0" : 0,
+    "1" : .125vw,
+    "2" : .25vw,
+    "3" : .5vw,
+    "4" : 1vw,
+    "5" : 2vw,
+    "6" : 3vw,
+    "7" : 4vw,
+    "8" : 5vw,
+    "9" : 6vw,
+    "auto" : auto
+);
+
+
+
+// core margins and padding
+@each $identifier, $property in $props {
+    @each $size, $value in $sizes {
+        .#{$identifier}-#{$size} { #{$property}: $value; }
     }
 }
 
-.ratio-60 {
-    position: relative;
-
-    &:after {
-        content: "";
-        padding-bottom: 60%;
-        display: block;
-    }
+// padding-x
+@each $size, $value in $sizes {
+    .px-#{$size} { padding-right: $value; padding-left : $value }
 }
 
-.ratio-50 {
-    position: relative;
-
-    &:after {
-        content: "";
-        padding-bottom: 50%;
-        display: block;
-    }
+// padding-y
+@each $size, $value in $sizes {
+    .py-#{$size} { padding-top: $value; padding-bottom : $value }
 }
 
-/* Padding */
-.p-0 { padding : 0 }
-.p-1 { padding: $size-1 }
-.p-2 { padding: $size-2 }
-.p-3 { padding: $size-3 }
-.p-4 { padding: $size-4 }
-.p-5 { padding: $size-5 }
-.p-6 { padding: $size-6 }
-.p-7 { padding: $size-7 }
-.p-8 { padding: $size-8 }
-.p-9 { padding: $size-9 }
+// margin-x
+@each $size, $value in $sizes {
+    .mx-#{$size} { margin-right: $value; margin-left : $value }
+}
 
-.px-0 { padding-right: 0; padding-left : 0 }
-.px-1 { padding-right : $size-1; padding-left : $size-1 }
-.px-2 { padding-right : $size-2; padding-left : $size-2; }
-.px-3 { padding-right : $size-3; padding-left : $size-3; }
-.px-4 { padding-right : $size-4; padding-left : $size-4; }
-.px-5 { padding-right : $size-5; padding-left : $size-5; }
-.px-6 { padding-right : $size-6; padding-left : $size-6; }
-.px-7 { padding-right : $size-7; padding-left: $size-7 }
-.px-8 { padding-right : $size-7; padding-left: $size-8 }
-.px-9 { padding-right : $size-7; padding-left: $size-9 }
-
-.py-0 { padding-top: 0; padding-bottom : 0 }
-.py-1 { padding-top: $size-1; padding-bottom : $size-1 }
-.py-2 { padding-top: $size-2; padding-bottom : $size-2; }
-.py-3 { padding-top: $size-3; padding-bottom : $size-3; }
-.py-4 { padding-top: $size-4; padding-bottom : $size-4; }
-.py-5 { padding-top: $size-5; padding-bottom : $size-5; }
-.py-6 { padding-top: $size-6; padding-bottom : $size-6; }
-.py-7 { padding-top : $size-7; padding-bottom: $size-7 }
-.py-8 { padding-top : $size-7; padding-bottom: $size-8 }
-.py-9 { padding-top : $size-7; padding-bottom: $size-9 }
-
-.pr-0 { padding-right: 0 }
-.pr-1 { padding-right: $size-1 }
-.pr-2 { padding-right: $size-2 }
-.pr-3 { padding-right: $size-3 }
-.pr-4 { padding-right: $size-4 }
-.pr-5 { padding-right: $size-5 }
-.pr-6 { padding-right: $size-6 }
-.pr-7 { padding-right: $size-7 }
-.pr-8 { padding-right: $size-8 }
-.pr-9 { padding-right: $size-9 }
-
-.pl-0 { padding-left: 0 }
-.pl-1 { padding-left: $size-1 }
-.pl-2 { padding-left: $size-2 }
-.pl-3 { padding-left: $size-3 }
-.pl-4 { padding-left: $size-4 }
-.pl-5 { padding-left: $size-5 }
-.pl-6 { padding-left: $size-6 }
-.pl-7 { padding-left: $size-7 }
-.pl-8 { padding-left: $size-8 }
-.pl-9 { padding-left: $size-9 }
-
-.pt-0 { padding-top: 0 }
-.pt-1 { padding-top: $size-1 }
-.pt-2 { padding-top: $size-2 }
-.pt-3 { padding-top: $size-3 }
-.pt-4 { padding-top: $size-4 }
-.pt-5 { padding-top: $size-5 }
-.pt-6 { padding-top: $size-6 }
-.pt-7 { padding-top: $size-7 }
-.pt-8 { padding-top: $size-8 }
-.pt-9 { padding-top: $size-9 }
-
-.pb-0 { padding-bottom: 0 }
-.pb-1 { padding-bottom: $size-1 }
-.pb-2 { padding-bottom: $size-2 }
-.pb-3 { padding-bottom: $size-3 }
-.pb-4 { padding-bottom: $size-4 }
-.pb-5 { padding-bottom: $size-5 }
-.pb-6 { padding-bottom: $size-6 }
-.pb-7 { padding-bottom: $size-7 }
-.pb-8 { padding-bottom: $size-8 }
-.pb-9 { padding-bottom: $size-9 }
-
-
-
-
-
-/* Margins */
-.m-0 { margin : 0 }
-.m-1 { margin: $size-1 }
-.m-2 { margin: $size-2 }
-.m-3 { margin: $size-3 }
-.m-4 { margin: $size-4 }
-.m-5 { margin: $size-5 }
-.m-6 { margin: $size-6 }
-
-.mx-0 { margin-right: 0; margin-left : 0 }
-.mx-1 { margin-right : $size-1; margin-left : $size-1 }
-.mx-2 { margin-right : $size-2; margin-left : $size-2; }
-.mx-3 { margin-right : $size-3; margin-left : $size-3; }
-.mx-4 { margin-right : $size-4; margin-left : $size-4; }
-.mx-5 { margin-right : $size-5; margin-left : $size-5; }
-.mx-6 { margin-right : $size-6; margin-left : $size-6; }
-
-.my-0 { margin-top: 0; margin-bottom : 0 }
-.my-1 { margin-top: $size-1; margin-bottom : $size-1 }
-.my-2 { margin-top: $size-2; margin-bottom : $size-2; }
-.my-3 { margin-top: $size-3; margin-bottom : $size-3; }
-.my-4 { margin-top: $size-4; margin-bottom : $size-4; }
-.my-5 { margin-top: $size-5; margin-bottom : $size-5; }
-.my-6 { margin-top: $size-6; margin-bottom : $size-6; }
-
-.mr-0 { margin-right: 0 }
-.mr-1 { margin-right: $size-1 }
-.mr-2 { margin-right: $size-2 }
-.mr-3 { margin-right: $size-3 }
-.mr-4 { margin-right: $size-4 }
-.mr-5 { margin-right: $size-5 }
-.mr-6 { margin-right: $size-6 }
-
-.mr-auto { margin-right: auto }
-
-.ml-0 { margin-left: 0 }
-.ml-1 { margin-left: $size-1 }
-.ml-2 { margin-left: $size-2 }
-.ml-3 { margin-left: $size-3 }
-.ml-4 { margin-left: $size-4 }
-.ml-5 { margin-left: $size-5 }
-.ml-6 { margin-left: $size-6 }
-
-.ml-auto { margin-left: auto }
-
-.mt-0 { margin-top: 0 }
-.mt-1 { margin-top: $size-1 }
-.mt-2 { margin-top: $size-2 }
-.mt-3 { margin-top: $size-3 }
-.mt-4 { margin-top: $size-4 }
-.mt-5 { margin-top: $size-5 }
-.mt-6 { margin-top: $size-6 }
-
-.mb-0 { margin-bottom: 0 }
-.mb-1 { margin-bottom: $size-1 }
-.mb-2 { margin-bottom: $size-2 }
-.mb-3 { margin-bottom: $size-3 }
-.mb-4 { margin-bottom: $size-4 }
-.mb-5 { margin-bottom: $size-5 }
-.mb-5 { margin-bottom: $size-6 }
-.m-auto { margin: auto }
-
-
-
-
-
-
-
+// margin-y
+@each $size, $value in $sizes {
+    .my-#{$size} { margin-top: $value; margin-bottom : $value }
+}
 
 
 .pull-right { margin-left: auto }
@@ -224,7 +101,7 @@ $size-9 : 6vw;
 .pull-center { margin-left: auto; margin-right: auto }
 
 
-/*  Positions  */
+// Positions
 .pos-fixed { position: fixed }
 .pos-relative { position: relative }
 .pos-absolute { position: absolute }
@@ -241,6 +118,7 @@ $size-9 : 6vw;
     width: 100%;
     height: 100%;
 }
+
 .pos-fixed-cover {
     position: fixed;
     top: 0;
@@ -248,6 +126,7 @@ $size-9 : 6vw;
     bottom: 0;
     right: 0;
 }
+
 .pos-absolute-center {
     position: absolute;
     left: 50%;
@@ -255,7 +134,7 @@ $size-9 : 6vw;
     transform: translate(-50%,-50%);
 }
 
-/*  Displays  */
+// Displays
 .d-block { display: block }
 .d-inline { display: inline }
 .d-inline-block { display: inline-block }
@@ -273,7 +152,7 @@ $size-9 : 6vw;
 .d-initial { display: initial }
 .hide-empty:empty { display: none; }
 
-/*  Flex  */
+// Flex
 .flex-horizontal {display: flex; flex-direction: row; justify-content: space-between; align-items: center }
 .flex-vertical {display: flex; flex-direction: column}
 .flex-center {display: flex; justify-content: center; align-items: center}
@@ -317,14 +196,14 @@ $size-9 : 6vw;
 .flex-column-reverse { flex-direction: column-reverse}
 
 
-/*  Media Queries  */
+// Media Queries
 .mobile-only { @include tablet-up { display: none !important; } }
 .desktop-only { @include tablet-down { display: none !important; } }
 .tablet-down-only { @include desktop { display: none !important; } }
 .tablet-up-only { @include mobile { display: none !important; } }
 
 
-/*  Text  */
+// Text
 .capitalize { text-transform: capitalize }
 .uppercase { text-transform: uppercase }
 .lowercase { text-transform: lowercase }
@@ -335,18 +214,18 @@ $size-9 : 6vw;
 .left-text { text-align: left }
 .no-hyphen { hyphens: none };
 
-/*  Overflow  */
+// Overflow
 .overflow-hidden { overflow: hidden }
 .overflow-auto { overflow: auto }
 .overflow-scroll { overflow: scroll }
 .overflow-visible { overflow: visible }
 
-/* Turning Stuff Off */
+// Turning Stuff Off
 [hidden] {display: none !important}
 [disabled] {pointer-events:none; opacity: 0.3}
 [inivisible] {visibility: hidden; pointer-events: none}
 
-/* Width */
+// Width
 .width-100 { width: 100% }
 .width-95 { width: 95% }
 .width-90 { width: 90% }
@@ -371,7 +250,7 @@ $size-9 : 6vw;
 .width-10 { width: 10% }
 .width-5 { width: 5% }
 
-/* Height */
+// Height
 .height-100 { height: 100% }
 .height-90 { height: 90% }
 .height-80 { height: 80% }
@@ -392,19 +271,19 @@ $size-9 : 6vw;
 .height-25 { height: 25% }
 .height-15 { height: 15% }
 
-/* Mouse */
+// Mouse
 .pointer { cursor: pointer }
 .no-click { pointer-events: none }
 .no-select { user-select: none };
 
-/* Button */
+// Button
 .button {
     cursor: pointer;
     transition: all .2s;
     border-radius: 3px;
 }
 
-/* Text */
+// Text
 .bold { font-weight: 700 }
 .book { font-weight: 400 }
 .line-125 { line-height: 1.25em }
@@ -413,7 +292,7 @@ $size-9 : 6vw;
 .line-175 { line-height: 1.75em }
 
 
-/* Opacity */
+// Opacity
 .opacity-full { opacity : 1 }
 .opacity-none { opacity : 0 }
 .opacity-9 { opacity : .9 }
@@ -447,7 +326,7 @@ $size-9 : 6vw;
 .bg-shadow-8 { background-color: rgba(0,0,0,.8)}
 .bg-shadow-9 { background-color: rgba(0,0,0,.9)}
 
-/* Border */
+// Border
 .circle { border-radius: 50% }
 .rounded { border-radius: .2em }
 
