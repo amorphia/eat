@@ -1,9 +1,13 @@
 <template>
     <div class="restaurant-list overflow-hidden">
             <section>
+                <button v-if="$route.query.match"
+                        class="p-4 center-text primary-light-bg pull-center my-4 d-block restaurant-list__load-previous"
+                        @click="openMatch"
+                >Change Match View</button>
 
                 <button v-if="shared.page.initial > 0"
-                        class="p-4 center-text primary-light-bg width-25 pull-center my-4 d-block restaurant-list__load-previous"
+                        class="p-4 center-text primary-light-bg  pull-center my-4 d-block restaurant-list__load-previous"
                         @click="loadPreviousPage"
                 >Load Previous Page</button>
 
@@ -80,6 +84,11 @@
         },
 
         methods : {
+            openMatch(){
+                console.log( 'emit change match type' );
+                App.event.emit( 'changeMatchType' );
+            },
+
             initPageManager(){
                 // set restaurants
                 this.shared.init( 'restaurants', [] );
@@ -235,12 +244,14 @@
     .restaurant-list__load-previous {
         margin-top: 2rem;
         margin-bottom: -.5rem;
+        width: 30%;
 
         @include mobile {
             padding: 1.5rem;
             font-size: 1.3em;
             margin-top: 3rem;
             margin-bottom: -1rem;
+            width: 80%
         }
     }
 

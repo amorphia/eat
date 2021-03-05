@@ -82,6 +82,9 @@
             // reset filter
             App.event.on( 'resetFilters', () => this.match = this.default );
 
+            // reset filter
+            App.event.on( 'changeMatchType', this.matchChanged );
+
             // get users list
             App.ajax.get( '/api/users', false ).then( response => this.users = response.data );
         },
@@ -155,7 +158,7 @@
         box-shadow: 0 0 10px rgba(0,0,0,.5);
 
         @include mobile {
-            width: 90%;
+            width: 100%;
         }
     }
 

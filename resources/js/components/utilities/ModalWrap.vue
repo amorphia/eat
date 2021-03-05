@@ -81,8 +81,8 @@
         transition: all .3s ease-out;
 
         @include mobile {
-            width: 80vw;
-            max-width: 80vw;
+            width: 90vw;
+            max-width: 90vw;
         }
     }
 

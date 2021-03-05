@@ -33,17 +33,19 @@
         @font-face {
             font-family: "HC";
             src: url("/fonts/hero.ttf") format('truetype');
-
+            font-display: block;
         }
         @font-face {
-        font-family: "HC";
+            font-family: "HC";
             src: url("/fonts/hero-bold.ttf") format('truetype');
             font-weight: bold;
+            font-display: block;
         }
         @font-face {
             font-family: "HC";
             src: url("/fonts/hero-light.ttf") format('truetype');
             font-weight: 300;
+            font-display: block;
         }
     </style>
 
