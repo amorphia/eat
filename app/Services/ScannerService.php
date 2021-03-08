@@ -256,7 +256,11 @@ class ScannerService
         if( ! $restaurant || !isset( $details->photos ) ) return;
 
         foreach( $details->photos as $photo ){
-            $restaurant->photos()->create([ 'url' => $photo ]);
+            try {
+                $restaurant->photos()->create([ 'url' => $photo ]);
+            } catch ( \Throwable $e ) {
+                if( $this->console ) $this->console->error( 'Adding photo failed: ' . $e->getMessage() );
+            }
         }
     }
 
