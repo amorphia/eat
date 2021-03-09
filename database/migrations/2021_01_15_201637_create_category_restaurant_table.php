@@ -15,8 +15,8 @@ class CreateCategoryRestaurantTable extends Migration
     {
         Schema::create('category_restaurant', function (Blueprint $table) {
             $table->id();
-            $table->integer( 'category_id' );
-            $table->integer( 'restaurant_id' );
+            $table->foreignId( 'category_id' )->constrained()->onDelete( 'cascade' );
+            $table->foreignId( 'restaurant_id' )->constrained()->onDelete( 'cascade' );
             $table->timestamps();
             $table->unique(['category_id', 'restaurant_id']);
         });

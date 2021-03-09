@@ -15,7 +15,7 @@ class CreateLocationsTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->integer( 'restaurant_id' )->nullable();
+            $table->foreignId( 'restaurant_id' )->nullable()->constrained()->onDelete( 'cascade' );
             $table->string( 'yelp_id' )->unique();
             $table->string( 'phone' )->nullable();
             $table->string( 'slug' );

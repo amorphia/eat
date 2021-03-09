@@ -14,7 +14,7 @@ class AddUuidToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->uuid('uuid' )->unique()->default( 'default_value_to_make_sqlite_happy' );
+            $table->uuid('uuid' )->unique();
         });
     }
 

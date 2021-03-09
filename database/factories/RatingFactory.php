@@ -27,8 +27,8 @@ class RatingFactory extends Factory
         return [
             'user_id' => User::factory(),
             'restaurant_id' => Restaurant::factory(),
-            'rating' => $this->faker->randomElement([ null, null, null, null, null, null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]),
-            'interest' => $this->faker->randomElement([ null, null, 5, 10 ])
+            'rating' => $this->faker->randomElement([ 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]),
+            'interest' => $this->faker->randomElement([ 0, 0, 5, 10 ])
         ];
     }
 }

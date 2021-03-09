@@ -15,9 +15,9 @@ class CreatePhotosTable extends Migration
     {
         Schema::create('photos', function ( Blueprint $table ) {
             $table->id();
-            $table->integer( 'user_id' )->nullable();
-            $table->integer( 'restaurant_id' );
-            $table->integer( 'post_id' )->nullable();
+            $table->foreignId( 'user_id' )->nullable();
+            $table->foreignId( 'restaurant_id' )->constrained()->onDelete( 'cascade' );
+            $table->foreignId( 'post_id' )->nullable();
             $table->string( 'url' )->unique();
             $table->text( 'body' )->nullable();
             $table->boolean( 'priority' )->default( false );

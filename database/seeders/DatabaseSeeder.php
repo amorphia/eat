@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 
         // create restaurants
         $restaurants = Restaurant::factory()
-            ->count( 100 )
+            ->count( 20 )
             ->hasPhotos( 3 )
             ->hasLocations( random_int( 1, 2 ) )
             ->create();
