@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Rating;
+use App\Models\Restaurant;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RatingFactory extends Factory
@@ -14,6 +16,7 @@ class RatingFactory extends Factory
      */
     protected $model = Rating::class;
 
+
     /**
      * Define the model's default state.
      *
@@ -22,7 +25,10 @@ class RatingFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'restaurant_id' => Restaurant::factory(),
+            'rating' => $this->faker->randomElement([ null, null, null, null, null, null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]),
+            'interest' => $this->faker->randomElement([ null, null, 5, 10 ])
         ];
     }
 }

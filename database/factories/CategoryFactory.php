@@ -21,8 +21,11 @@ class CategoryFactory extends Factory
      */
     public function definition()
     {
+        $category =  $this->faker->unique()->domainWord;
+
         return [
-            //
+            'name' => $category,
+            'label' => $category
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Photo;
+use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PhotoFactory extends Factory
@@ -22,7 +23,8 @@ class PhotoFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'restaurant_id' => Restaurant::factory(),
+            'url' => "https://picsum.photos/1000/800?" . $this->faker->uuid
         ];
     }
 }
