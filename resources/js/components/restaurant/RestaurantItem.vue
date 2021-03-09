@@ -21,6 +21,7 @@
                         <i :class="checkIcon"></i>
                 </div>
                 <div class='pad-buffer restaurant__name' @click="openViewRestaurant">{{ restaurant.name }}</div>
+                <div class="tour__rating-hook"></div>
                 <restaurant-rating :restaurant="restaurant"
                                    :open="ratingOpen"
                                    @opened="ratingOpen = true"

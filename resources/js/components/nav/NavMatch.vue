@@ -1,5 +1,5 @@
 <template>
-    <div class="friend-match nav__item pos-relative" title="Set Friend Match">
+    <div id="match" class="friend-match nav__item pos-relative" title="Set Friend Match">
 
         <modal-wrap
             :open="openChooseMatchType"

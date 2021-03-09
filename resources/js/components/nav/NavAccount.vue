@@ -24,6 +24,9 @@
                     <!-- close button -->
                     <button class="toggle mobile-only pos-absolute" @click="dropdown = false"><i class="icon-x"></i></button>
 
+
+
+
                     <!-- logout -->
                     <a class="nav-account__dropdown-item" href="/logout">logout</a>
 
@@ -32,6 +35,10 @@
                         reset filters
                     </button>
 
+                    <!-- reset filters -->
+                    <button class="nav-account__dropdown-item left-text" @click="startTour">
+                        take tour
+                    </button>
 
                     <button class="nav-account__dropdown-item left-text" @click="openAddPage = true">
                         add location
@@ -85,6 +92,11 @@
                 console.log( response );
                 this.openAddPage = false;
                 this.shared.forcedRestaurant = response;
+            },
+
+            startTour(){
+                this.dropdown = false;
+                this.$tours['myTour'].start();
             },
 
             toggleEditMode(){

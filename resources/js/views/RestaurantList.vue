@@ -1,5 +1,6 @@
 <template>
     <div class="restaurant-list overflow-hidden">
+
             <section>
                 <button v-if="$route.query.match"
                         class="p-4 center-text primary-light-bg pull-center my-4 d-block restaurant-list__load-previous"
@@ -65,6 +66,7 @@
             // set our event listeners
             App.event.on( 'loadRestaurants', this.loadRestaurants );
             App.event.on( 'nextPage', this.nextPage );
+            App.event.on( 'initRestaurantLoad', this.checkForTour );
 
             // store our infinite loader state manager
             this.shared.page.state = this.$refs.infinite.stateChanger;
@@ -233,6 +235,16 @@
                     App.event.emit( 'initRestaurantLoad' );
                 }
             },
+
+            checkForTour(){
+                if( this.shared.user.tour ) return;
+
+                App.ajax.get( `/api/user/${this.shared.user.id}/tour`, false );
+                this.shared.user.tour = true;
+
+                setTimeout( () => this.$tours['myTour'].start(), 1000 );
+            }
+
         },
     }
 </script>

@@ -23,6 +23,14 @@ class UserController extends Controller
     }
 
 
+    public function tour( Request $request, User $user )
+    {
+        if( user()->id !== $user->id ) return error();
+        $user->tour = true;
+        $user->save();
+        return $user;
+    }
+
     public function token( Request $request )
     {
         $token = $request->user()->createToken( $request->token_name );

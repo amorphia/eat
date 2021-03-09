@@ -142,9 +142,8 @@
                 // ad query parameters
                 this.setDetailsParam( val );
 
-
-
                 if( val ){
+                    if( this.$tours['myTour'].isRunning ) this.$tours['myTour'].finish();
                     App.event.emit( 'detailsChanged' );
                     this.markAsViewed( val );
                 }

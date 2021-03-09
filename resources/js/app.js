@@ -10,21 +10,40 @@ require('./dependencies');
 * Import Vue and Vue Router
 */
 import Vue from 'vue';
-import VueRouter from 'vue-router';
-import VueConfirmDialog from 'vue-confirm-dialog';
-import VueLazyLoad from 'vue-lazyload';
-import vSelect from 'vue-select';
-import Vue2TouchEvents from 'vue2-touch-events';
-
 window.Vue = Vue;
+
+import VueRouter from 'vue-router';
 Vue.use( VueRouter );
+
+import VueConfirmDialog from 'vue-confirm-dialog';
 Vue.use( VueConfirmDialog );
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default);
+
+import VueLazyLoad from 'vue-lazyload';
 Vue.use( VueLazyLoad );
+Vue.component('InfiniteLoading', require('vue-infinite-loading'));
+
+import vSelect from 'vue-select';
+Vue.component('v-select', vSelect);
+
+import Vue2TouchEvents from 'vue2-touch-events';
 Vue.use( Vue2TouchEvents );
 
-Vue.component('v-select', vSelect);
-Vue.component('InfiniteLoading', require('vue-infinite-loading'));
-Vue.component('vue-confirm-dialog', VueConfirmDialog.default);
+import VueTour from 'vue-tour'
+Vue.use(VueTour);
+
+
+
+
+
+
+
+
+
+
+
+
+
 Vue.config.devtools = true;
 
 

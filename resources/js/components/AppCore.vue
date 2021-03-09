@@ -9,6 +9,7 @@
         <working-slider></working-slider>
         <notify-queue></notify-queue>
         <vue-confirm-dialog class="confirm-popup"></vue-confirm-dialog>
+        <my-tour></my-tour>
     </div>
 </template>
 

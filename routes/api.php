@@ -21,7 +21,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
      */
     Route::get('/user', [App\Http\Controllers\UserController::class, 'show'] );
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'] );
-
+    Route::get('/user/{user}/tour', [App\Http\Controllers\UserController::class, 'tour'] );
 
     /*
      *  Categories
