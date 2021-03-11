@@ -9,11 +9,11 @@ Eat Columbus uses the Yelp API to list all of the restaurants in Columbus Ohio, 
 
 Comb through restaurants with a list view, or swipe through a a Tinder-esque interface. 
 
-![](public/images/readme/list.jpg)
+List View             |  Swipe View
+:-------------------------:|:-------------------------:
+![](public/images/readme/list.jpg)  |  ![](public/images/readme/details.jpg)
 
-![](public/images/readme/details.jpg)
 
-![](public/images/readme/match.jpg)
 
 ## Built With
 * Laravel
