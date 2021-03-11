@@ -28,6 +28,32 @@ class VueMakeCommand extends GeneratorCommand
      */
     protected $type = 'Vue template';
 
+
+    /**
+     * The directory for this to be stored in.
+     *
+     * @var string
+     */
+    protected $directory = '/../resources/js/components/';
+
+
+    /**
+     * The name of the stub file to use.
+     *
+     * @var string
+     */
+    protected $stub_name = 'vue-template';
+
+
+    /**
+     * The name of the stub file to use.
+     *
+     * @var string
+     */
+    protected $output_file_extension = 'vue';
+
+
+
     /**
      * Get the stub file for the generator.
      *
@@ -35,7 +61,7 @@ class VueMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/../stubs/vue-template.stub';
+        return __DIR__ . "/../stubs/{$this->stub_name}.stub";
     }
 
     /**
@@ -46,10 +72,7 @@ class VueMakeCommand extends GeneratorCommand
      */
     protected function alreadyExists($rawName)
     {
-        $name = class_basename(str_replace('\\', '/', $rawName));
-
-        $path = "{$this->laravel['path']}/../resources/js/components/{$name}.vue";
-
+        $path = $this->getPath( $rawName );
         return file_exists($path);
     }
 
@@ -81,6 +104,6 @@ class VueMakeCommand extends GeneratorCommand
     {
         $name = class_basename(str_replace('\\', '/', $name));
 
-        return "{$this->laravel['path']}/../resources/js/components/{$name}.vue";
+        return "{$this->laravel['path']}{$this->directory}{$name}.{$this->output_file_extension}";
     }
 }
