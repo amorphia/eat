@@ -70,10 +70,10 @@ Start the local development server
 You can now access the server at http://localhost:8000
 
 
-## Meta
+## About Me
 
-Jeremy Kalgreen 
-[@amorphiaapparel](https://twitter.com/amorphiaapparel)
-jeremy@jeremykalgreen.com
-[https://github.com/amorphia](https://github.com/amorphia)
+* Jeremy Kalgreen 
+* [@amorphiaapparel](https://twitter.com/amorphiaapparel)
+* jeremy@jeremykalgreen.com
+* [https://github.com/amorphia](https://github.com/amorphia)
 
