@@ -4,13 +4,11 @@
 @import 'utilities/mq';
 @import 'utilities/animations';
 @import 'utilities/utility';
-@import 'vue-select/vue-select';
 @import 'utilities/forms';
 @import 'utilities/transitions';
 @import 'partials/landing';
 @import 'partials/scrollbars';
 @import 'partials/confirm';
-@import 'partials/loader';
 @import 'partials/tour';
 
 .glass {
@@ -37,7 +35,6 @@
         height: 3rem;
         width: 3rem;
     }
-
 }
 
 body {
