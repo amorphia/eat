@@ -15,14 +15,14 @@ class User extends Authenticatable
 
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are not mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
+    protected $guarded = [
+        'remember_token',
+        'admin',
+        'uuid'
     ];
 
     /**
@@ -45,7 +45,6 @@ class User extends Authenticatable
     ];
 
 
-
     /**
      *
      *  Events
@@ -56,42 +55,38 @@ class User extends Authenticatable
     {
         parent::boot();
 
+        // when creating a user, generate a UUID for that user
         self::creating( function ( $model ) {
             $model->uuid = (string) Uuid::generate( 4 );
         });
-
     }
 
 
     /**
-     *
-     *  Relationships
-     *
-     */
-
-    /*
-    public function restaurants()
-    {
-        return $this->belongsToMany(Restaurant::class, 'ratings' )
-            ->as( 'rating' )
-            ->withPivot('visited', 'rating', 'priority' );
-    }
+    *
+    *  Relationships
+    *
     */
 
+
+    // the restaurants we have blocked
     public function blocked()
     {
         return $this->belongsToMany(Category::class );
     }
+
 
     public function ratings()
     {
         return $this->hasMany( Rating::class );
     }
 
+
     public function posts()
     {
         return $this->hasMany( Post::class );
     }
+
 
     public function photos()
     {

@@ -30,7 +30,7 @@
 
         methods : {
             loadUser(){
-                App.ajax.get( 'api/user', false )
+                App.ajax.get( 'api/users/null', false )
                     .then( ({ data }) => this.shared.init( 'user', data ) );
             }
         }

@@ -54,7 +54,7 @@ class LocationController extends Controller
      *
      *  @param  \Illuminate\Http\Request  $request
      */
-    public function yelpId(Request $request)
+    public function createByYelpId(Request $request)
     {
         $validated = $request->validate([
             'yelp_id' => 'string'
@@ -69,7 +69,7 @@ class LocationController extends Controller
      *
      *  @param  \Illuminate\Http\Request  $request
      */
-    public function yelpPage( Request $request )
+    public function createByYelpPage( Request $request )
     {
         $url = stripUrlParams( $request->yelp_url );
         $count = Location::where( 'yelp_url', stripUrlParams( $url ) )->count();

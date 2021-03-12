@@ -16,58 +16,39 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
-    /*
-     *  Users
-     */
-    Route::get('/user', [App\Http\Controllers\UserController::class, 'show'] );
-    Route::get('/users', [App\Http\Controllers\UserController::class, 'index'] );
-    Route::get('/user/{user}/tour', [App\Http\Controllers\UserController::class, 'tour'] );
+    // Users
+    Route::resource('users', App\Http\Controllers\UserController::class)->only([ 'show', 'index' ]);
 
-    /*
-     *  Categories
-     */
+    // Update user to flag if they have watched a specific tour
+    Route::patch('/tour', [App\Http\Controllers\TourController::class, 'update'] );
 
+    // Categories
     Route::get('/categories', [App\Http\Controllers\CategoryController::class, 'index'] );
 
-
-    /*
-     *  Restaurants
-     */
-    Route::get('/restaurants', [App\Http\Controllers\RestaurantController::class, 'index'] );
-    Route::get('/restaurants/{restaurant}', [App\Http\Controllers\RestaurantController::class, 'show'] );
-    Route::post('/restaurants/merge', [App\Http\Controllers\RestaurantController::class, 'merge'] );
-    Route::post('/restaurants/delete', [App\Http\Controllers\RestaurantController::class, 'destroy'] );
-    Route::patch('/restaurants/{restaurant}', [App\Http\Controllers\RestaurantController::class, 'update'] );
+    // Restaurants
+    Route::resource('restaurants', App\Http\Controllers\RestaurantController::class)->only([ 'index', 'show', 'update' ]);
     Route::post('/restaurants/search', [App\Http\Controllers\RestaurantController::class, 'search'] );
+    Route::post('/restaurants/merge', [App\Http\Controllers\RestaurantController::class, 'merge'] );
 
-
-    /*
-     *  Photos
-     */
-    Route::post('/photos', [App\Http\Controllers\PhotoController::class, 'store'] );
+    //Photos
+    Route::resource('photos', App\Http\Controllers\PhotoController::class)->only([ 'store', 'destroy', 'update' ]);
     Route::post('/photos/yelp', [App\Http\Controllers\PhotoController::class, 'yelp'] );
-    Route::patch('/photos/{photo}', [App\Http\Controllers\PhotoController::class, 'update'] );
-    Route::delete('/photos/{photo}', [App\Http\Controllers\PhotoController::class, 'destroy'] );
 
-    /*
-    *  Posts
-    */
-    Route::post('/posts', [App\Http\Controllers\PostController::class, 'store'] );
-    Route::delete('/posts/{post}', [App\Http\Controllers\PostController::class, 'destroy'] );
-    Route::patch('/posts/{post}', [App\Http\Controllers\PostController::class, 'update'] );
+    // Posts (I should rename this notes, as that's the wording I use in the UI)
+    Route::resource('posts', App\Http\Controllers\PostController::class)->only([ 'store', 'destroy', 'update' ]);
 
-    /*
-    *  Locations
-    */
+    // Locations
     Route::delete('/locations/{location}', [App\Http\Controllers\LocationController::class, 'destroy'] );
-    Route::post('/locations/yelp/id', [App\Http\Controllers\LocationController::class, 'yelpId'] );
-    Route::post('/locations/yelp/page', [App\Http\Controllers\LocationController::class, 'yelpPage'] );
+    Route::post('/locations/create/yelp/page', [App\Http\Controllers\LocationController::class, 'createByYelpPage'] );
+    Route::post('/locations/create/yelp/id', [App\Http\Controllers\LocationController::class, 'createByYelpId'] ); // for use by chrome extension
+
 });
 
 
+// Ratings throttle group allows substantially more requests per minute
 Route::middleware(['auth:sanctum', 'throttle:ratings'])->group(function () {
-        /*
-       *  Ratings
-       */
-    Route::patch('/ratings/{restaurant}', [App\Http\Controllers\RatingController::class, 'update'] )->middleware('throttle:ratings');
+
+    // Ratings
+    Route::patch('/ratings/{restaurant}', [App\Http\Controllers\RatingController::class, 'update'] );
+
 });

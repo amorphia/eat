@@ -237,10 +237,12 @@
             },
 
             checkForTour(){
-                if( this.shared.user.tour ) return;
+                console.log( this.shared.user );
 
-                App.ajax.get( `/api/user/${this.shared.user.id}/tour`, false );
-                this.shared.user.tour = true;
+                if( this.shared.user.list_tour ) return;
+
+                App.ajax.patch( `/api/tour`, { tour : 'list_tour' }, false );
+                this.shared.user.list_tour = true;
 
                 setTimeout( () => this.$tours['myTour'].start(), 1000 );
             }

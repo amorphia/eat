@@ -4,6 +4,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Tour Names
+    |--------------------------------------------------------------------------
+    |
+    | The names of each
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
+    'tours' => [
+        'list_tour',
+        'details_tour',
+        'match_tour'
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Name
     |--------------------------------------------------------------------------
     |

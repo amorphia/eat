@@ -70,7 +70,7 @@
                 shared : App.state,
                 dropdown : false,
                 openAddPage : false,
-                pageAction : '/api/locations/yelp/page',
+                pageAction : '/api/locations/create/yelp/page',
 
             };
         },

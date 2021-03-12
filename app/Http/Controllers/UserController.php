@@ -8,6 +8,11 @@ use App\Models\User;
 class UserController extends Controller
 {
 
+    /**
+     * Display listing of all users
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index( Request $request )
     {
         return User::where( 'id', '!=', user()->id )
@@ -16,6 +21,11 @@ class UserController extends Controller
     }
 
 
+    /**
+     * Display the currently logged in user
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function show( Request $request )
     {
         user()->load( 'blocked' );
@@ -23,18 +33,6 @@ class UserController extends Controller
     }
 
 
-    public function tour( Request $request, User $user )
-    {
-        if( user()->id !== $user->id ) return error();
-        $user->tour = true;
-        $user->save();
-        return $user;
-    }
 
-    public function token( Request $request )
-    {
-        $token = $request->user()->createToken( $request->token_name );
-        return ['token' => $token->plainTextToken];
-    }
 
 }

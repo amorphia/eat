@@ -16,26 +16,21 @@ use App\Models\Location;
 */
 
 
-/*
- * Routes for authentication and logging out
- */
+// Login/Register welcome page for unauthenticated Users
+Route::get( 'welcome', function () { return view( 'welcome' ); })
+    ->middleware('guest')
+    ->name( 'welcome' );
+
+
+// Routes for authentication
 Auth::routes();
 Route::get( 'logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'] );
 
-// get API token
-Route::get('/tokens/create', [App\Http\Controllers\UserController::class, 'token'] )->middleware( 'auth' );
 
-Route::get( 'welcome', function () {
-    return view( 'welcome' );
-} )->name( 'welcome' );
-
-/*
- * Other than authentication, all other routes should point to the SPA
- */
-
-
-Route::get('/{any}', function () {
-    return view( 'app' );
-})->where('any', '.*' )->middleware( 'auth' )->name( 'home' );
+// Outside of the landing and authentication, all other routes should just point to the SPA
+Route::get('/{any}', function () { return view( 'app' ); })
+    ->where('any', '.*' )
+    ->middleware( 'auth' )
+    ->name( 'home' );
 
 
