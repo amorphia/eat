@@ -16,7 +16,7 @@ class LocationPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny( User $user )
     {
         return true;
     }
@@ -28,7 +28,7 @@ class LocationPolicy
      * @param  \App\Models\Location  $location
      * @return mixed
      */
-    public function view(User $user, Location $location)
+    public function view( User $user, Location $location )
     {
         return true;
     }
@@ -39,7 +39,7 @@ class LocationPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create( User $user )
     {
         return $user->admin;
     }
@@ -51,7 +51,7 @@ class LocationPolicy
      * @param  \App\Models\Location  $location
      * @return mixed
      */
-    public function update(User $user, Location $location)
+    public function update( User $user, Location $location )
     {
         return $user->admin;
     }
@@ -63,7 +63,7 @@ class LocationPolicy
      * @param  \App\Models\Location  $location
      * @return mixed
      */
-    public function delete(User $user, Location $location)
+    public function delete( User $user, Location $location )
     {
         return $user->admin;
     }
@@ -75,7 +75,7 @@ class LocationPolicy
      * @param  \App\Models\Location  $location
      * @return mixed
      */
-    public function restore(User $user, Location $location)
+    public function restore( User $user, Location $location )
     {
         return $user->admin;
     }
@@ -87,7 +87,7 @@ class LocationPolicy
      * @param  \App\Models\Location  $location
      * @return mixed
      */
-    public function forceDelete(User $user, Location $location)
+    public function forceDelete( User $user, Location $location )
     {
         return $user->admin;
     }

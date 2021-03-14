@@ -14,6 +14,11 @@ class LocationFactory extends Factory
      */
     protected $model = Location::class;
 
+    /**
+     * The default hours entries as a JSON string
+     *
+     * @var string
+     */
     protected $default_hours = "[
         {
             \"day\": 2,

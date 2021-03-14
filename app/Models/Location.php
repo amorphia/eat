@@ -3,15 +3,21 @@
 namespace App\Models;
 
 use App\Models\Restaurant;
+use App\Services\YelpServiceInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use \Goutte\Client;
+use \Goutte\Client as HTTPClient;
 use Malhal\Geographical\Geographical;
 
 class Location extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are not mass assignable.
+     *
+     * @var array
+     */
     protected $guarded = [];
 
     /**
@@ -20,6 +26,11 @@ class Location extends Model
      *
      */
 
+    /**
+     * Get the restaurant this location belongs to
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class );
@@ -30,6 +41,11 @@ class Location extends Model
      *
      *  Methods
      *
+     */
+
+    /**
+     * @param object $locationData
+     * @return Location|Model
      */
     public static function addLocation( $locationData )
     {
@@ -59,10 +75,18 @@ class Location extends Model
         return $location;
     }
 
-    public static function addByYelpPage( $url, $yelp )
+
+    /**
+     * Add a location via a yelp url
+     *
+     * @param string $url
+     * @param YelpServiceInterface $yelp
+     * @return mixed
+     */
+    public static function addByYelpPage( string $url, YelpServiceInterface $yelp )
     {
 
-        $client = new Client();
+        $client = new HTTPClient();
 
         // scrape the page
         $crawler = $client->request('GET', $url );
@@ -76,9 +100,19 @@ class Location extends Model
     }
 
 
-    public static function addByYelpId( $id, $yelp )
+    /**
+     * Create and store a location via a yelp ID
+     *
+     * @param string $id
+     * @param YelpServiceInterface $yelp
+     * @return \App\Models\Restaurant | void
+     */
+    public static function addByYelpId( string $id, YelpServiceInterface $yelp )
     {
+        // fetch location details rom the yelp API via our yelp id
         $details = $yelp->details( $id );
+
+        // if we didn't get anything abort
         if( !$details ) return;
 
         // store location
@@ -97,21 +131,27 @@ class Location extends Model
             }
         }
 
-        // hit the database for the same restaurant again, with with all of the
+        // hit the database for the same restaurant again, with all of the
         // adjustments / relations / joins I make when searching so I can return it
         return Restaurant::search( $restaurant->name )->first();
     }
 
 
+    /**
+     * Close this location, and if this was a restaurant's only location close it as well
+     *
+     * @return bool | void
+     */
     public function close()
     {
         $this->update([ 'active' => false ]);
 
-        // check if restaurant parent needs to close
+        // check how many locations the parent restaurant has left
         $openLocationCount = Location::where( 'restaurant_id', $this->restaurant_id )
             ->where( 'active', true )
             ->count();
 
+        // if the parent restaurant has no locations left, then close it
         if( !$openLocationCount ){
             $restaurant = Restaurant::find( $this->restaurant_id );
             $restaurant->close();

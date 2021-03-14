@@ -7,9 +7,9 @@ return [
     | Tour Names
     |--------------------------------------------------------------------------
     |
-    | The names of each
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
+    | The names of each tour that a user can trigger while exploring the site
+    | which correspond to a column on the users table to allow us to flag when
+    | a user has seen a given tour
     |
     */
 

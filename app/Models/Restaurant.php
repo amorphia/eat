@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\PipelineService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -11,10 +13,21 @@ class Restaurant extends Model
 {
     use HasFactory, Geographical;
 
+    /**
+     * The attributes that are not mass assignable.
+     *
+     * @var array
+     */
     protected $guarded = [];
+
+    /**
+     * The attributes that should be appended to json output.
+     *
+     * @var array
+     */
     protected $appends = ['checked'];
-    protected $match_id = null;
-    protected $min_rating = 4;
+
+
 
     /**
      *
@@ -22,6 +35,12 @@ class Restaurant extends Model
      *
      */
 
+
+    /**
+     * Get the categories associated with this restaurant
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function categories()
     {
         return $this->belongsToMany(Category::class )
@@ -29,12 +48,24 @@ class Restaurant extends Model
                     ->orderBy( 'priority', 'desc' );
     }
 
+
+    /**
+     * Get the posts (notes) belonging to this restaurant
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function posts()
     {
         return $this->hasMany( Post::class )
                     ->orderBy( 'created_at', 'desc' );
     }
 
+
+    /**
+     * Get the photos belonging to this restaurant
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function photos()
     {
         return $this->hasMany( Photo::class )
@@ -43,12 +74,23 @@ class Restaurant extends Model
     }
 
 
+    /**
+     * Get the locations belonging to this restaurant
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function locations()
     {
         return $this->hasMany( Location::class )
                     ->where( 'active', true );
     }
 
+
+    /**
+     * Ge the ratings belonging to this restaurant
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function ratings()
     {
         return $this->hasMany( Rating::class );
@@ -62,8 +104,13 @@ class Restaurant extends Model
      *
      */
 
-    // dummy attributes appended to json output so its
-    // initialized for use on the vue end automatically
+
+    /**
+     * dummy attribute appended to json output so it is initialized
+     * and reactive on the vue end automatically
+     *
+     * @return bool false
+     */
     public function getCheckedAttribute()
     {
         return false;
@@ -76,117 +123,60 @@ class Restaurant extends Model
      *
      */
 
-    public function scopeIndex( $query )
+
+
+
+    /**
+     * Query scope for our index list search
+     *
+     * @param Builder $query
+     * @param PipelineService $pipeline
+     * @return Builder
+     */
+    public function scopeIndex( Builder $query, PipelineService $pipeline )
     {
-        return $query->active()
-                    ->withRelations()
-                    ->setCategory()
-                    ->joinRatings()
-                    ->setMatches()
-                    ->setSelects()
-                    ->setRatedFilter()
-                    ->setOrder();
+        $filters = [
+            \App\QueryFilters\Category::class,
+            \App\QueryFilters\Rated::class,
+            \App\QueryFilters\Match::class,
+            \App\QueryFilters\Sort::class,
+        ];
+
+        // initialize the query with the elements we will need for every request
+        $query->active()
+              ->withRelations()
+              ->joinRatings();
+
+        // send the query through our query filters pipeline and then return the query
+        return $pipeline->resolve( $query, $filters );
     }
 
 
-    public function scopeSetMatches( $query )
-    {
-        if( !request()->match ) return $query;
-
-        return $query->leftJoin( 'ratings AS match', function( $join ) {
-            $join->on( 'restaurants.id', '=', 'match.restaurant_id' )
-                ->where( 'match.user_id', '=', $this->getMatchId() );
-        });
-    }
-
-
-    public function scopeSetSelects( $query )
-    {
-
-        $query->select('restaurants.*',
-            DB::raw('coalesce( ratings.rating, 0) as rating'),
-            DB::raw('coalesce( ratings.interest, 0) as interest'),
-            DB::raw('coalesce( ratings.viewed, 0) as viewed'),
-        );
-
-        if( !request()->match ){
-            return $query;
-        } else {
-            return $query->setMatchSelects();
-        }
-    }
-
-    public function scopeSetMatchSelects( $query ){
-
-        $query->addSelect(
-            DB::raw('coalesce( match.rating, 0) as match_rating'),
-            DB::raw('coalesce( match.interest, 0) as match_interest')
-        );
-
-        switch( request()->type ){
-            case "interest":
-                $query->addSelect(
-                    DB::raw('coalesce( (match.interest * 5), 0) as combined_rating'),
-                    )->where( 'match.interest', '>=', 1 );
-                break;
-
-            case "ratings":
-                $query->addSelect(
-                    DB::raw('coalesce( match.rating, 0) as combined_rating'),
-                    )->where( 'match.rating', '>=', 1 );
-                break;
-
-
-            case "interest-overlap":
-                $query->addSelect(
-                    DB::raw('coalesce( (match.interest * 5) + (ratings.interest * 5), 0) as combined_rating'),
-                    )->where( function($query) {
-                        $query->where( 'match.interest', '>=', 1 )
-                        ->where( 'ratings.interest', '>=', 1 ) ;
-                    }) ;
-                break;
-
-            case "ratings-overlap":
-                $query->addSelect(
-                    DB::raw('coalesce( match.rating + ratings.rating, 0) as combined_rating'),
-                    )->where( function($query) {
-                        $query->where( 'match.rating', '>=', $this->min_rating  )
-                            ->where( 'ratings.rating', '>=', $this->min_rating ) ;
-                    }) ;
-                break;
-
-            default:
-                $query->addSelect(
-                    DB::raw('coalesce( (match.interest * 5) + (ratings.interest * 5) + match.rating + ratings.rating, 0) as combined_rating'),
-                    )->where( function($query) {
-                        $query->where( function( $query ){
-                            $query->where( 'match.rating', '>=', $this->min_rating  )
-                                ->orWhere( 'match.interest', '>=', 1 );
-                        })->where( function( $query ){
-                            $query->where( 'ratings.rating', '>=', $this->min_rating )
-                                ->orWhere( 'ratings.interest', '>=', 1 );
-                        }) ;
-                });
-                break;
-        }
-
-        return $query;
-    }
-
-
-    public function scopeSearch( $query, $searchTerm )
+    /**
+     * Query scope for when we perform a restaurant search
+     *
+     * @param Builder $query
+     * @param string $searchTerm
+     * @return Builder
+     */
+    public function scopeSearch( Builder $query, string $searchTerm )
     {
         return $query->where( 'name', 'like', "%{$searchTerm}%" )
             ->active()
             ->withRelations()
-            ->setSelects()
             ->joinRatings()
             ->take( 10 )
             ->orderBy( 'name', 'asc' );
     }
 
 
-    public function scopeActive( $query )
+    /**
+     * Get active restaurants
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeActive( Builder $query )
     {
         return $query->where( 'restaurants.active', true )
                 ->where( function($query) {
@@ -196,16 +186,14 @@ class Restaurant extends Model
     }
 
 
-    public function scopeWithLimitedRelations( $query )
-    {
-        return $query->with([
-            'photos',
-            'categories'
-        ]);
 
-    }
-
-    public function scopeWithRelations( $query )
+    /**
+     * Add the restaurant's core relations
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeWithRelations( Builder $query )
     {
 
         return $query->with([
@@ -219,107 +207,26 @@ class Restaurant extends Model
     }
 
 
-    public function scopeJoinRatings( $query )
+    /**
+     * Join the current user's ratings to the restaurants
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeJoinRatings( Builder $query )
     {
         return $query->leftJoin( 'ratings', function( $join ) {
                     $join->on( 'restaurants.id', '=', 'ratings.restaurant_id' )
                         ->where( 'ratings.user_id', '=', request()->user()->id );
-                });
-    }
-
-    public function scopeJoinCoordinates( $query )
-    {
-        return $query->rightJoin( 'locations', function( $join ) {
-            $join->on( 'restaurants.id', '=', 'locations.restaurant_id' );
-        });
+                })->select('restaurants.*',
+                    DB::raw('coalesce( ratings.rating, 0) as rating'),
+                    DB::raw('coalesce( ratings.interest, 0) as interest'),
+                    DB::raw('coalesce( ratings.viewed, 0) as viewed'),
+                );
     }
 
 
-    public function scopeSortByDistance( $query )
-    {
-        $latitude = request()->latitude;
-        $longitude = request()->longitude;
 
-        if( !$latitude || !$longitude ) return $query;
-
-        return $query->joinCoordinates()
-                     ->distance( $latitude, $longitude, ['table' => 'locations'] )
-                     ->addSelect( 'locations.yelp_id' )
-                     ->whereNotNull( 'latitude' )
-                     ->whereNotNull( 'longitude' )
-                     ->orderBy( 'distance', request()->direction ?? 'asc' );
-    }
-
-    public function scopeSetOrder( $query )
-    {
-        // all match searches are sorted by combined rating
-        if( request()->match ) return $query->orderBy( 'combined_rating', 'desc' );
-
-        $sort = request()->sort ?? 'interest';
-
-        if( $sort === 'distance' ){
-            $query->sortByDistance();
-        } else {
-            // add first sort
-            $query->orderBy( $sort, request()->direction ?? 'desc' );
-        }
-
-        // add default secondary sorts
-        if( $sort !== 'rating' ) $query->orderBy( 'rating', 'desc' );
-        if( $sort !== 'interest' ) $query->orderBy( 'interest', 'desc' );
-        if( $sort !== 'name' ) $query->orderBy( 'name', 'asc' );
-
-        return $query;
-    }
-
-
-    public function scopeSetRatedFilter( $query )
-    {
-        if( request()->match ) return $query;
-
-        $filter = request()->rated;
-
-        switch( $filter ){
-            // if we are filtering by rated our rating has to be equal to non-zero
-            case 'rated': return $query->where( 'rating', '!=', 0 );
-
-            // if we are filtering by interested our interest has to be equal to non-zero
-            case 'interested': return $query->where( 'interest', '!=', 0 );
-
-            // if we are filtering unviewed then allow only null or viewed 0
-            case 'unviewed':  return $query->where( function( $query ) {
-                $query->where( 'viewed', 0 )
-                    ->orWhereNull( 'rating' );
-            });
-
-            // if we are filtering by unrated only then allow ratings of 0 or null
-            case 'unrated': return $query->where( function( $query ) {
-                    $query->where( 'rating', 0 )
-                          ->orWhereNull( 'rating' );
-            });
-
-            // otherwise just return the query
-            default: return $query;
-        }
-
-    }
-
-
-    public function scopeSetCategory( $query )
-    {
-        if( request()->match ) return $query;
-
-        $category = request()->category;
-
-        // if set to all, just return
-        if( !$category || $category === 'all' ) return $query;
-
-        // otherwise filter by relation with chosen category
-        return $query->whereHas( 'categories', function( $q ) use ( $category ){
-            $q->where( 'name', $category );
-        });
-
-    }
 
     /**
      *
@@ -327,34 +234,49 @@ class Restaurant extends Model
      *
      */
 
-    protected function getMatchId(){
-          if( $this->match_id ) return $this->match_id;
 
-          $match = User::where( 'uuid', request()->match )->first();
-          $this->match_id = $match->id;
-
-          return $this->match_id;
-    }
-
-
+    /**
+     *  Close this restaurant
+     *
+     * @return void
+     */
     public function close()
     {
         $this->update([ 'active' => false ]);
     }
 
 
-    public function merge( $id )
+    /**
+     * Merge this restaurant into another restaurant entry
+     *
+     * @param int $id
+     * @return void
+     */
+    public function merge( int $id )
     {
+        // we can't merge into ourselves, silly
         if( $this->id === $id ) return;
 
+        // make sure we have a restaurant to merge into
+        Restaurant::findOrFail( $id );
+
+        // merge our relations
         $this->photos->each->update([ 'restaurant_id' => $id ]);
         $this->posts->each->update([ 'restaurant_id'=> $id ]);
         $this->locations->each->update([ 'restaurant_id' => $id ]);
 
+        // set this restaurant as inactive, and add an "x" to the end of the name in case we want to change the
+        // merged restaurant's name this name, so we don't get a duplicate name error
         $this->update([ 'active' => false, 'name' => $this->name . 'x' ]);
     }
 
 
+    /**
+     * Create a restaurant from the given location data
+     *
+     * @param $location
+     * @return Restaurant|Model
+     */
     public static function addRestaurant( $location )
     {
         // create restaurant
@@ -377,11 +299,16 @@ class Restaurant extends Model
     }
 
 
-    public function addCategories( $categories )
+    /**
+     * Add categories to this restaurant
+     *
+     * @param array $categories
+     */
+    public function addCategories( array $categories )
     {
         foreach( $categories as $cat ){
-            // find the category of create it if new
 
+            // find the category of create it if we don't have one already
             $category = Category::where( 'name', $cat )->first();
 
             if( ! $category ){

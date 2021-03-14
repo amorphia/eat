@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+
+use App\Services\YelpServiceInterface;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Blade;
@@ -17,19 +19,23 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
 
-        /*
-         *  Yelp API Client
-         */
+        // Yelp API Client
         $this->app->singleton('Yelp', function ( $app ) {
+
             $config = [
                 'apiKey' => config( 'services.yelp.api_key' ),
                 'apiHost' => config( 'services.yelp.host' ),
             ];
-            return \Stevenmaguire\Yelp\ClientFactory::makeWith(
-                $config,
-                \Stevenmaguire\Yelp\Version::THREE
-            );
+
+            return \Stevenmaguire\Yelp\ClientFactory::makeWith( $config, \Stevenmaguire\Yelp\Version::THREE );
         });
+
+
+        // Yelp Service Interface
+        $this->app->bind( YelpServiceInterface::class, function ( $app ) {
+            return new \App\Services\YelpService();
+        });
+
     }
 
     /**
@@ -42,12 +48,12 @@ class AppServiceProvider extends ServiceProvider
         // Set database string length
         Schema::defaultStringLength(191);
 
+
         /**
          *
          *  Register svg blade helper
          *
          */
-
         Blade::directive('svg', function( $expression ) {
             $expression = str_replace( ["'", '"'], '', $expression );
             $path = "images/svg/$expression.svg";

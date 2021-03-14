@@ -57,8 +57,6 @@ trait Geographical
             $query->selectRaw($sql, [$latitude, $latitude, $longitude, 1.1515]);
         }
 
-        //echo $query->toSql();
-        //var_export($query->getBindings());
         return $query;
     }
 

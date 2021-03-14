@@ -9,7 +9,13 @@ class Rating extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are not mass assignable.
+     *
+     * @var array
+     */
     protected $guarded = [];
+
 
     /**
      *
@@ -17,13 +23,26 @@ class Rating extends Model
      *
      */
 
+
+    /**
+     * Get the user that owns this rating
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo( User::class );
     }
 
+
+    /**
+     * Get the restaurant this rating belongs to
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function restaurant()
     {
         return $this->belongsTo( Restaurant::class );
     }
+
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
-use App\Services\YelpService;
+use App\Services\YelpServiceInterface;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
@@ -11,7 +11,7 @@ class LocationController extends Controller
 
     protected $yelp;
 
-    public function __construct( YelpService $yelpService )
+    public function __construct( YelpServiceInterface $yelpService )
     {
         $this->yelp = $yelpService;
     }

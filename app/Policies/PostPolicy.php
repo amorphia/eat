@@ -16,7 +16,7 @@ class PostPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny( User $user )
     {
         return true;
     }
@@ -28,7 +28,7 @@ class PostPolicy
      * @param  \App\Models\Post  $post
      * @return mixed
      */
-    public function view(User $user, Post $post)
+    public function view( User $user, Post $post )
     {
         return $user->admin || $user->id === $post->user_id;
     }
@@ -39,7 +39,7 @@ class PostPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create( User $user )
     {
         return true;
     }
@@ -51,7 +51,7 @@ class PostPolicy
      * @param  \App\Models\Post  $post
      * @return mixed
      */
-    public function update(User $user, Post $post)
+    public function update( User $user, Post $post )
     {
         return $user->id === $post->user_id;
     }
@@ -63,7 +63,7 @@ class PostPolicy
      * @param  \App\Models\Post  $post
      * @return mixed
      */
-    public function delete(User $user, Post $post)
+    public function delete( User $user, Post $post )
     {
         return $user->admin || $user->id === $post->user_id;
     }
@@ -75,7 +75,7 @@ class PostPolicy
      * @param  \App\Models\Post  $post
      * @return mixed
      */
-    public function restore(User $user, Post $post)
+    public function restore( User $user, Post $post )
     {
         return $user->admin;
     }
@@ -87,7 +87,7 @@ class PostPolicy
      * @param  \App\Models\Post  $post
      * @return mixed
      */
-    public function forceDelete(User $user, Post $post)
+    public function forceDelete( User $user, Post $post )
     {
         return $user->admin;
     }

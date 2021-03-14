@@ -12,7 +12,21 @@ class Photo extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are not mass assignable.
+     *
+     * @var array
+     */
     protected $guarded = [];
+
+
+    /**
+     * The maximum height/width of our image
+     *
+     * @var int
+     */
+    const MAX_SIZE = 1000;
+
 
     /**
      *
@@ -20,18 +34,33 @@ class Photo extends Model
      *
      */
 
+    /**
+     * get the user who owns this image
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo( User::class );
     }
 
 
+    /**
+     * get the post this photo is associated with (if any)
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function post()
     {
         return $this->belongsTo( Post::class );
     }
 
 
+    /**
+     * get the restaurant this photo belongs to
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function restaurant()
     {
         return $this->belongsTo( Restaurant::class );
@@ -44,6 +73,12 @@ class Photo extends Model
      *
      */
 
+    /**
+     * @param Request $request
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \ImagickException
+     */
     public static function saveUpload( Request $request )
     {
         // set a temp name equal to the unixtimestamp with microseconds
@@ -62,7 +97,6 @@ class Photo extends Model
 
         // save as jpg
         $img->setImageFormat( 'jpg' );
-
         $img->stripImage();
         $img->writeImage( storage_path() . "/app/public/uploads/{$name}.jpg" );
         $img->clear();
@@ -71,14 +105,21 @@ class Photo extends Model
         return "/storage/uploads/{$name}.jpg";
     }
 
-    public static function scaleImage( $img )
+    /**
+     * Scale the image
+     *
+     * @param Imagick $img
+     * @return Imagick $image
+     * @throws \ImagickException
+     */
+    public static function scaleImage( Imagick $img )
     {
         // set starting and ending dimensions
         $start_width = $img->getImageWidth();
         $start_height = $img->getImageHeight();
 
-        $excess_width = $start_width - 1000;
-        $excess_height = $start_height - 1000;
+        $excess_width = $start_width - self::MAX_SIZE;
+        $excess_height = $start_height - self::MAX_SIZE;
 
         // get the current dimension ratio
         if( $excess_height <= 0 && $excess_width <= 0 ){
@@ -87,10 +128,10 @@ class Photo extends Model
 
         // set final size parameters
         if( $excess_width > $excess_height ){
-            $width = 1000;
+            $width = self::MAX_SIZE;
             $height = 0;
         } else {
-            $height = 1000;
+            $height = self::MAX_SIZE;
             $width = 0;
         }
 

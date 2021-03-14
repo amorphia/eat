@@ -4,19 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Rating;
 use App\Models\Restaurant;
+use App\Services\PipelineService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class RestaurantController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index( Request $request )
+    public function index( Request $request, PipelineService $pipelineService )
     {
-        return Restaurant::index()->paginate( 102 );
+        return Restaurant::index( $pipelineService )->paginate( 102 );
     }
 
 

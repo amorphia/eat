@@ -16,7 +16,7 @@ class PhotoPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny( User $user )
     {
         return true;
     }
@@ -28,7 +28,7 @@ class PhotoPolicy
      * @param  \App\Models\Photo  $photo
      * @return mixed
      */
-    public function view(User $user, Photo $photo)
+    public function view( User $user, Photo $photo )
     {
         return true;
     }
@@ -39,7 +39,7 @@ class PhotoPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create( User $user )
     {
         return true;
     }
@@ -51,7 +51,7 @@ class PhotoPolicy
      * @param  \App\Models\Photo  $photo
      * @return mixed
      */
-    public function update(User $user, Photo $photo)
+    public function update( User $user, Photo $photo )
     {
         return $user->admin || $user->id === $photo->user_id;
     }
@@ -63,7 +63,7 @@ class PhotoPolicy
      * @param  \App\Models\Photo  $photo
      * @return mixed
      */
-    public function delete(User $user, Photo $photo)
+    public function delete( User $user, Photo $photo )
     {
         return $user->admin || $user->id === $photo->user_id;
     }
@@ -75,7 +75,7 @@ class PhotoPolicy
      * @param  \App\Models\Photo  $photo
      * @return mixed
      */
-    public function restore(User $user, Photo $photo)
+    public function restore( User $user, Photo $photo )
     {
         return $user->admin;
     }
@@ -87,7 +87,7 @@ class PhotoPolicy
      * @param  \App\Models\Photo  $photo
      * @return mixed
      */
-    public function forceDelete(User $user, Photo $photo)
+    public function forceDelete( User $user, Photo $photo )
     {
         return $user->admin;
     }

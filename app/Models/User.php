@@ -46,11 +46,8 @@ class User extends Authenticatable
 
 
     /**
-     *
-     *  Events
-     *
+     *  Model events
      */
-
     public static function boot()
     {
         parent::boot();
@@ -69,27 +66,47 @@ class User extends Authenticatable
     */
 
 
-    // the restaurants we have blocked
+    /**
+     * Get the categories that the user has blocked.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function blocked()
     {
         return $this->belongsToMany(Category::class );
     }
 
 
+    /**
+     * Get the ratings belonging to this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function ratings()
     {
         return $this->hasMany( Rating::class );
     }
 
 
+    /**
+     * Get the posts (notes) belonging to this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function posts()
     {
         return $this->hasMany( Post::class );
     }
 
 
+    /**
+     * Get the photos belonging to this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function photos()
     {
         return $this->hasMany( Photo::class );
     }
+
 }

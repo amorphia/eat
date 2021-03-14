@@ -22,7 +22,7 @@ class RestaurantFactory extends Factory
     public function definition()
     {
         $name = $this->faker->unique()->text( rand( 10, 20 ) );
-        $name = preg_replace("/(\W)+/", "", $name );
+        $name = preg_replace("/(\W)+/", "", $name ); // remove punctuation
 
         return [
             'name' => $name

@@ -16,8 +16,8 @@ use App\Models\Location;
 */
 
 
-// Login/Register welcome page for unauthenticated Users
-Route::get( 'welcome', function () { return view( 'welcome' ); })
+//  welcome page for unauthenticated Users to Login/Register
+Route::view( 'welcome', 'welcome' )
     ->middleware('guest')
     ->name( 'welcome' );
 
@@ -27,8 +27,8 @@ Auth::routes();
 Route::get( 'logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'] );
 
 
-// Outside of the landing and authentication, all other routes should just point to the SPA
-Route::get('/{any}', function () { return view( 'app' ); })
+// Outside of the landing and authentication, all other web routes should just point to the SPA
+Route::view('/{any}','app' )
     ->where('any', '.*' )
     ->middleware( 'auth' )
     ->name( 'home' );
