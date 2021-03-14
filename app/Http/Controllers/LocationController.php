@@ -9,110 +9,54 @@ use Illuminate\Http\Request;
 class LocationController extends Controller
 {
 
+    /**
+     * Our Yelp API Service class
+     *
+     * @var YelpServiceInterface
+     */
     protected $yelp;
+
 
     public function __construct( YelpServiceInterface $yelpService )
     {
         $this->yelp = $yelpService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
 
     /*
-     *
      *  Create a new location from a yelp id
      *
      *  @param  \Illuminate\Http\Request  $request
      */
-    public function createByYelpId(Request $request)
+    public function createByYelpId( Request $request )
     {
         $validated = $request->validate([
             'yelp_id' => 'string'
         ]);
 
+        // add yelp location by ID
         Location::addByYelpId( $validated['yelp_id'], $this->yelp );
     }
 
+
     /*
-     *
-     *  Create a new location from a yelp id
+     *  Create a new location from a yelp url
      *
      *  @param  \Illuminate\Http\Request  $request
      */
     public function createByYelpPage( Request $request )
     {
+        // remove parameters from the url and then check if its already in our DB
         $url = stripUrlParams( $request->yelp_url );
         $count = Location::where( 'yelp_url', stripUrlParams( $url ) )->count();
 
+        // if this url already exists in our DB then abort
         if( $count > 0 ) return error( 'This location already exists' );
 
+        // add yelp location
         return Location::addByYelpPage( $url, $this->yelp );
     }
 
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Location  $location
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Location $location)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Location  $location
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Location $location)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Location  $location
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Location $location)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.

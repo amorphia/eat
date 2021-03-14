@@ -56,8 +56,11 @@ class ScanYelp extends Command
         if( $this->option( 'hot' ) ){
 
             $options = [];
+
+            // if we are supplying a zip code manually, add it to our options
             if( $this->argument('zip') ) $options['zip'] = $this->argument('zip');
 
+            // run a hot and new scan
             $this->scanner->scanNewAndHot( $options );
             return;
         }
@@ -65,6 +68,7 @@ class ScanYelp extends Command
         // set how many zip codes to scan
         $this->scanner->setZipCount( $this->option( 'zipsCount' ) );
 
+        // run our scan
         $this->scanner->scan( $this->argument('zip'), $this->option( 'slow' ) );
     }
 }

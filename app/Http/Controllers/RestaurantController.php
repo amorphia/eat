@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\DB;
 class RestaurantController extends Controller
 {
 
-
     /**
-     * Display a listing of the resource.
+     * Return an index of restaurants.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index( Request $request, PipelineService $pipelineService )
@@ -23,72 +23,41 @@ class RestaurantController extends Controller
     }
 
 
-
+    /**
+     * Return restaurant search results
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function search( Request $request )
     {
-        if( ! $request->searchTerm ) return;
+        if( ! $request->searchTerm ) return error( 'No Search Term' );
 
+        // get restaurants matching our search results
         $restaurants = Restaurant::search( $request->searchTerm )->get();
 
-        if( $restaurants->count() ){
-            return $restaurants;
-        }
-
+        // if we have any results return them, otherwise just return a dummy "no results" entry
         return $restaurants->count() ? $restaurants : [[ "name" => "No Results" ]];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
-     * Store a newly created resource in storage.
+     * Display the specified restaurant.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Restaurant  $restaurant
+     * @param  \App\Models\Restaurant $restaurant
      * @return \Illuminate\Http\Response
      */
     public function show( Request $request )
     {
-
         return Restaurant::active()
                     ->withRelations()
                     ->joinRatings()
-                    ->setMatches()
-                    ->setSelects()
-                    ->setRatedFilter()
                     ->find( $request->restaurant );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Restaurant  $restaurant
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Restaurant $restaurant)
-    {
-        //
-    }
 
     /**
-     * Update the specified resource in storage.
+     * Update the restaurant in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Restaurant  $restaurant
@@ -104,10 +73,15 @@ class RestaurantController extends Controller
         ]);
 
         $restaurant->update( $validated );
-
     }
 
 
+    /**
+     * Merge two or more restaurants into one entry
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function merge( Request $request )
     {
         if( !user()->can( 'update', Restaurant::class ) ) return error();
@@ -116,24 +90,13 @@ class RestaurantController extends Controller
             'ids.*' => 'exists:restaurants,id'
         ]);
 
-        $restaurants = Restaurant::whereIn( 'id', $validated['ids'] )->get();
-
-        // take the first restaurant as the anchor to merge the rest into, then merge
-        // the other's relations to it
-        $anchor = $restaurants->first();
-        $restaurants->each->merge( $anchor->id );
-
-        // grab the restaurant ids, and remove the anchor ID to make a list of deleted restaurants
-        $ids = collect( $validated['ids'] )->filter( function ( $val, $key ) use ( $anchor ) {
-            return $val !== $anchor->id;
-        })->toArray();
-
+        $ids = Restaurant::mergeRestaurants( $validated );
         return response()->json([ 'ids' => $ids ]);
     }
 
 
     /**
-     * Remove the specified resource from storage.
+     * Set the given restaurants to inactive.
      *
      * @param  \App\Models\Restaurant  $restaurant
      * @return \Illuminate\Http\Response
@@ -146,10 +109,9 @@ class RestaurantController extends Controller
             'ids.*' => 'exists:restaurants,id'
         ]);
 
-        // get restaurant models
+        // get restaurant models and set them to inactive
         Restaurant::whereIn( 'id', $validated['ids'] )->update([ 'active' => false ]);
-
         return response()->json([ 'ids' => $validated['ids'] ]);
-
     }
+
 }

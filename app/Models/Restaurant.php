@@ -247,6 +247,29 @@ class Restaurant extends Model
 
 
     /**
+     * Merge two or more restaurants into a single entry
+     *
+     * @param array $validated
+     * @return array
+     */
+    public static function mergeRestaurants( array $validated )
+    {
+        $restaurants = Restaurant::whereIn( 'id', $validated['ids'] )->get();
+
+        // take the first restaurant as the anchor to merge the rest into, then merge
+        // the other's relations to it
+        $anchor = $restaurants->first();
+        $restaurants->each->merge( $anchor->id );
+
+        // grab the restaurant ids, and remove the anchor ID to make a list of deleted restaurants
+        $ids = collect( $validated['ids'] )->filter( function ( $val, $key ) use ( $anchor ) {
+                    return $val !== $anchor->id;
+                })->toArray();
+
+        return $ids;
+    }
+
+    /**
      * Merge this restaurant into another restaurant entry
      *
      * @param int $id

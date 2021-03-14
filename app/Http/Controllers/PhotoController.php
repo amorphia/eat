@@ -10,31 +10,14 @@ use Illuminate\Http\Request;
 
 class PhotoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \ImagickException
      */
     public function store( Request $request )
     {
@@ -45,20 +28,8 @@ class PhotoController extends Controller
             'url' => 'string|nullable|required_without:image'
         ]);
 
-        // save image if file supplied rather than url
-        if( $validated['image'] ){
-            $validated['url'] = Photo::saveUpload( $request );
-        }
-
-        // get parent restaurant
-        $restaurant = Restaurant::where( 'id', $validated['restaurant_id'] )->first();
-
-        // store in db
-        $photo = $restaurant->photos()->create([
-            'url' => $validated['url'],
-            'body' => $validated['body'],
-            'user_id' => user()->id
-        ]);
+        // store our photo
+        $photo = Photo::storePhoto( $request, $validated );
 
         // return model
         return $photo;
@@ -91,28 +62,6 @@ class PhotoController extends Controller
 
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Photo  $photo
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Photo $photo)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Photo  $photo
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Photo $photo)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -132,6 +81,7 @@ class PhotoController extends Controller
         // update rating with new values then return
         return $photo->update( $validated );
     }
+
 
     /**
      * Remove the specified resource from storage.

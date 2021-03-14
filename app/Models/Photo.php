@@ -73,6 +73,37 @@ class Photo extends Model
      *
      */
 
+
+    /**
+     * Store a photo from validated request data
+     *
+     * @param $request
+     * @param $validated
+     * @return Model
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \ImagickException
+     */
+    public static function storePhoto( $request, $validated )
+    {
+        // save image if file supplied rather than url
+        if( $validated['image'] ){
+            $validated['url'] = Photo::saveUpload( $request );
+        }
+
+        // get parent restaurant
+        $restaurant = Restaurant::where( 'id', $validated['restaurant_id'] )->first();
+
+        // store in db
+        $photo = $restaurant->photos()->create([
+            'url' => $validated['url'],
+            'body' => $validated['body'],
+            'user_id' => user()->id
+        ]);
+
+        return $photo;
+    }
+
+
     /**
      * @param Request $request
      * @return string
@@ -104,6 +135,7 @@ class Photo extends Model
 
         return "/storage/uploads/{$name}.jpg";
     }
+
 
     /**
      * Scale the image
