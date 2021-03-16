@@ -2298,7 +2298,7 @@ body.v-tour--active {
 }
 
 body {
-  background-color: var(--near-white);
+  background-color: #2e3f40;
   font-family: var(--primary-font);
   color: white;
 }
