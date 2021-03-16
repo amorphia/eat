@@ -61,12 +61,11 @@
                 // close add post modal
                 this.openAddPost = false;
 
-                // get our restaurant from the shared restaurants array (unless its forced)
-                let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );
-                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
+                // get our restaurant from the shared array
+                let restaurant = this.shared.getRestaurant( this.restaurant.id );
 
                 // add the new note to the top of the restaurants notes list
-                restaurant.posts.unshift( response );
+                if( restaurant ) restaurant.posts.unshift( response );
             },
         },
 

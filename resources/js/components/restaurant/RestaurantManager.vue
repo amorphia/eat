@@ -25,58 +25,31 @@
         methods : {
 
             /**
-             * Grab a restaurant from our shared restaurants array
-             *
-             * @param {object|int} restaurant - a restaurant object, or an id
-             * @returns {object|null} - the restaurant if we find one
-             */
-            findRestaurant( restaurant ){
-                let id;
-
-                // get our id
-                if( typeof restaurant === 'object' && restaurant !== null ){
-                    id = restaurant.id;
-                } else if( typeof restaurant === 'number' ) {
-                    id = restaurant;
-                } else {
-                    // if we don't have a valid ID then abort
-                    return;
-                }
-
-                // if the restaurant doesn't exist in our shared.restaurants list, is must be a forced restaurant
-                // provided by the search function
-                return this.shared.restaurants.find( obj => obj.id === id ) ?? this.shared.forcedRestaurant;
-            },
-
-
-            /**
              * Delete a restaurant location
              *
              * @param location
              */
             deleteLocation( location ){
-                // find the location's parent restaurant
-                let restaurant = this.findRestaurant( location.restaurant_id );
-
                 // make a delete request for the location
                 App.ajax.delete( `/api/locations/${location.id}` ).then( result => {
                     // remove location from restaurant locations
-                    restaurant.locations = restaurant.locations.filter( obj => obj.id !== location.id );
+                    let restaurant = this.shared.getRestaurant( location.restaurant_id );
+                    if( restaurant) restaurant.locations = restaurant.locations.filter( obj => obj.id !== location.id );
                 });
-
             },
 
 
             /**
              * Update a restaurant's rating relation
              *
-             * @param rest - the restaurant
+             * @param restaurant - the restaurant
              * @param params - the ratings column to update (interest, rating, viewed) and its new value
              */
-            updateRating( rest, params ){
+            updateRating( restaurant, params ){
 
                 // get the restaurant in our shared list
-                let restaurant = this.findRestaurant( rest );
+                restaurant = this.shared.getRestaurant( restaurant );
+                if( ! restaurant ) return;
 
                 // update the restaurant rating locally
                 restaurant[params.column] = params.value;
@@ -100,15 +73,13 @@
             /**
              * update a photo
              *
-             * @param p - the photo to update
+             * @param photo - the photo to update
              * @param params - the column to update and its value
              */
-            updatePhoto( p, params ){
+            updatePhoto( photo, params ){
 
-                // get the restaurant in our shared list
-                let restaurant = this.findRestaurant( p.restaurant_id );
-
-                let photo = restaurant.photos.find( obj => obj.id === p.id );
+                let restaurant = this.shared.getRestaurant( photo.restaurant_id );
+                photo = restaurant.photos.find( obj => obj.id === photo.id );
 
                 // delete photo if we set active to false
                 if( params.column === 'active' && !params.value ) {
@@ -162,11 +133,11 @@
             /**
              * Update a restaurant
              *
-             * @param rest - the restaurant to update
+             * @param restaurant - the restaurant to update
              * @param params - the column to update and its value
              */
-            updateRestaurant( rest, params ){
-                let restaurant = this.findRestaurant( rest );
+            updateRestaurant( restaurant, params ){
+                restaurant = this.shared.getRestaurant( restaurant );
 
                 // update the restaurant locally
                 restaurant[params.column] = params.value;
@@ -185,7 +156,4 @@
 </script>
 
 
-<style lang="scss">
-    @import 'resources/sass/utilities/_mq.scss';
-</style>
 

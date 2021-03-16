@@ -87,7 +87,9 @@
              * @param editedPost
              */
             postEdited( editedPost ){
-                let restaurant = this.getRestaurant();
+                let restaurant = this.shared.getRestaurant( this.post.restaurant_id );
+                if( !restaurant ) return;
+
                 let post = restaurant.posts.find( obj => obj.id === +editedPost.id );
                 post.body = editedPost.body;
                 this.editingPost = false;
@@ -95,26 +97,14 @@
 
 
             /**
-             * Get our parent restaurant
-             *
-             * @param id
-             * @returns {object}
-             */
-            getRestaurant( id ){
-                let restaurant =  this.shared.restaurants.find( obj => obj.id === +this.post.restaurant_id );
-                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
-
-                return restaurant;
-            },
-
-
-            /**
              * Delete a note
              */
             deletePost(){
-                let restaurant = this.getRestaurant();
                 App.ajax.delete( `/api/posts/${this.post.id}` ).then( response => {
                     // remove photo from restaurant photos array
+                    let restaurant = this.shared.getRestaurant( this.post.restaurant_id );
+                    if( !restaurant ) return;
+
                     let index = _.findIndex( restaurant.posts, [ 'id', this.post.id ] );
                     this.$delete( restaurant.posts, index );
                 });

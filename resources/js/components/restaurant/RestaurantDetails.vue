@@ -246,7 +246,7 @@
             loadRestaurantData(){
                 App.ajax.get( `/api/restaurants/${this.restaurant.id}`, false )
                         .then( response => {
-                            let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );
+                            let restaurant = this.shared.getRestaurant( this.restaurant.id );
                             if( restaurant ){
                                 Object.entries( response.data ).forEach( ([ key, val ]) => this.$set( restaurant, key, val ) );
                                 this.$set( restaurant, 'loaded', true );
@@ -294,8 +294,8 @@
              * @param restaurant
              */
             forceRestaurant( restaurant ){
-                let listRestaurant = this.shared.restaurants.find( obj => obj.id === restaurant.id );
-                this.shared.forcedRestaurant = listRestaurant ? listRestaurant : restaurant;
+                let listRestaurant = this.shared.getRestaurant( restaurant.id );
+                this.shared.forcedRestaurant = listRestaurant ?? restaurant;
             },
 
 

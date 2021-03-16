@@ -113,11 +113,10 @@
                 this.openAddPhoto = false;
 
                 // get our parent restaurant
-                let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );
-                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
+                let restaurant = this.shared.getRestaurant( this.restaurant.id );
 
                 // add this photo to our restaurant's photos
-                restaurant.photos.push( response );
+                if( restaurant ) restaurant.photos.push( response );
             }
         },
 

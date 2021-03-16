@@ -34,7 +34,7 @@
         watch : {
             // whenever we open a ratings panel announce it
             open( val ){
-                    if( val ) App.event.emit( 'ratingOpened', this.restaurant.id );
+                if( val ) App.event.emit( 'ratingOpened', this.restaurant.id );
             }
         },
 
