@@ -78,6 +78,7 @@ require( './partials/_ajax' ); // ajax helper
 require( './partials/_state' ); // set up shared state
 require( './partials/_cookies' ); // Cookie handler
 require( './partials/_confirm' ); // Confirm dialog handler
+require( './partials/_filters' ); // vue text filters
 require( './partials/_date' ); // Date handler
 require( './partials/_location' ); // Geolocation handler
 

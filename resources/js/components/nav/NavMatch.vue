@@ -18,8 +18,7 @@
                     v-for="user in users"
                     class="sort__option"
                     :value='user.uuid'
-                    v-text="user.name"
-                    >
+                    >{{ user.name | startCase }}
                 </option>
             </select>
         </div>
