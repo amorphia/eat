@@ -71,7 +71,7 @@ You can now access the server at http://localhost:8000
 
 ## Project Status
 
-Woof, this is still very much a work in progress, but a few things a re floating to the top of my to-do list:
+Woof, this is still very much a work in progress, but a few things are floating to the top of my to-do list:
 * Fix some UI/UX issues that still linger
 * Add more instructional tours for various parts of the site
 * Add ability to compare more than two people (or at least match two people that aren't you)
