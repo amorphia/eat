@@ -169,7 +169,7 @@
                     App.event.emit( 'detailsChanged' );
 
                     // mark this restaurant as having been viewed
-                    this.markAsViewed( val );
+                    this.markAsViewed( restaurant );
                 }
             }
 
@@ -229,11 +229,11 @@
             /**
              * Set our details query parameter to the current restaurant
              *
-             * @param val
+             * @param restaurant
              */
-            setDetailsParam( val ){
+            setDetailsParam( restaurant ){
                 let paramVal = null;
-                if( val ) paramVal = val.id;
+                if( restaurant ) paramVal = restaurant.id;
 
                 if( +this.$route.query.details === paramVal ) return;
                 App.query.set( 'details', paramVal );

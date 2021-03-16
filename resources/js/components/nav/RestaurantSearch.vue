@@ -115,13 +115,19 @@
              */
             viewRestaurant( restaurant ){
 
+                // if we pass the selected string instead of a restaurant, then grab the currently selected restaurant
                 if( restaurant === 'selected'){
                     restaurant = this.results[ this.selectedItem ];
                 }
 
-                App.event.emit( 'forceViewRestaurant', restaurant );
-                this.reset();
+                // if we don't have a real restaurant, abort
+                if( !restaurant.id ) return this.reset();
 
+                // force view this restaurant
+                App.event.emit( 'forceViewRestaurant', restaurant );
+
+                // reset the search
+                this.reset();
             },
 
             /**

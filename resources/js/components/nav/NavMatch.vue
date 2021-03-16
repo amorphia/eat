@@ -87,17 +87,23 @@
              * Close choose match type modal
              */
             closeChooseTypeModal(){
+                let hadMatch = !! this.match;
+
+                // close match type modal and clear our match
                 this.openChooseMatchType = false;
                 this.match = this.default;
+
+                // if we had a match before we cleared it, reload the restaurant list
+                if( hadMatch ) this.matchChanged();
+
             },
 
 
             /**
              * Apply changed match
              *
-             * @param e - change event
              */
-            matchChanged( e ){
+            matchChanged(){
 
                 // if we changed to the default null value, then reset everything
                 if( this.default === this.match ){
