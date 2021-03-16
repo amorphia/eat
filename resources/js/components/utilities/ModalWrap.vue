@@ -1,10 +1,17 @@
 <template>
+    <!-- modal -->
     <transition name="modalfade" mode="out-in">
         <div class="modal-wrap pos-fixed" v-if="open">
+
+            <!-- close button -->
             <button @click="$emit('closed')" class="pos-absolute p-4 modal-wrap__close"><i class="icon-x"></i></button>
+
+            <!-- modal main content -->
             <div class="modal-wrap__content pos-absolute-center" :class="classes" @click="clickedIn">
                 <slot></slot>
             </div>
+
+            <!-- modal background -->
             <div class="modal-wrap__bg pos-cover" @click.self="$emit('closed')"></div>
         </div>
     </transition>
@@ -22,6 +29,8 @@
             };
         },
         watch : {
+            // watch for when we open a modal, if we have an element to focus on wait
+            // one tick and then set our focus on it
             open( val ){
                 if( val && this.focus ){
                     this.$nextTick( () => {
@@ -31,8 +40,14 @@
             }
         },
         methods : {
-            // if we click inside the modal, sniff for a close modal button, otherwise just report there was
-            // a click, pass the event target and let the parent decide what to do with it (if anything)
+
+            /**
+             * if we click inside the modal, sniff for a close modal button, otherwise just report there was
+             * a click, pass the event target and let the parent decide what to do with it (if anything)
+             *
+             * @param event
+             * @returns {boolean|void}
+             */
             clickedIn( event ){
 
                 if( event.target.getAttribute( 'data-close-modal' ) ){

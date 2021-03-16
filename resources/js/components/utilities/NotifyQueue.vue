@@ -1,6 +1,8 @@
 <template>
     <div class="notify-queue overflow-hidden">
         <transition-group name="slide" tag="ul">
+
+            <!-- notification items -->
             <li class="notify-item"
                  v-for="note in queue"
                 :key="note.id"
@@ -10,6 +12,7 @@
                 <i class="notify-item__icon" :class="note.class === 'error' ? 'icon-block' : 'icon-check'"></i>
                 <span v-if="note.message" class="notify-item__message" v-html="note.message"></span>
             </li>
+
         </transition-group>
     </div>
 </template>
@@ -29,6 +32,15 @@
         },
 
         methods : {
+
+            /**
+             * Create a notification item
+             *
+             * @param {object} note
+             *      [error] - is this note an error notification?
+             *      [persist] - should this note persist until clicked?
+             *      [message] - the message to add to our note
+             */
             createNote( note = {} ){
 
                 // generate an id from a timestamp
@@ -50,6 +62,12 @@
                 }
             },
 
+
+            /**
+             *  remove a note
+             *
+             * @param note - a note's ID
+             */
             removeNote( note ){
                 this.queue = this.queue.filter( item => item.id !== note.id );
             }

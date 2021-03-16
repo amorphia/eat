@@ -17,17 +17,25 @@
             };
         },
         computed : {
+            // is this rating value the restaurant's current rating?
             active(){
                 return this.value === this.restaurant.rating;
             },
 
+            // if our rating is "0" replace the "0" with a dash "-"
             ratingText(){
                 return this.value > 0 ? this.value : '-';
             },
         },
         methods : {
+
+            /**
+             * update the restaurant's rating
+             */
             updateRating(){
                 this.$emit( 'clicked' );
+
+                // if we click the active rating, then do nothing
                 if( !this.active ){
                     App.event.emit( 'updateRating', this.restaurant, { column : 'rating', value : this.value } );
                 }

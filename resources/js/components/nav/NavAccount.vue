@@ -1,31 +1,18 @@
 <template>
     <div class="nav-account pull-right pos-relative">
 
-        <modal-wrap
-            :open="openAddPage"
-            @closed="openAddPage = false"
-            classes="width-50"
-            focus=".should-focus">
-            <vue-form
-                method="post"
-                :action="pageAction"
-                submitclass="width-100"
-                @success="addedNewRestaurant"
-                :schema="pageSchema"></vue-form>
-        </modal-wrap>
-
+        <!-- settings button -->
         <div class="nav-account__button primary" @click="dropdown = !dropdown" :class="{active : dropdown}">
             <i class="icon-settings"></i>
         </div>
+
+        <!-- settings panel -->
         <transition name="collapse">
             <div class="nav-account__dropdown pos-absolute top-100" v-if="dropdown">
                 <div class="nav-account__dropdown-content p-4 d-flex flex-column">
 
                     <!-- close button -->
                     <button class="toggle mobile-only pos-absolute" @click="dropdown = false"><i class="icon-x"></i></button>
-
-
-
 
                     <!-- logout -->
                     <a class="nav-account__dropdown-item" href="/logout">logout</a>
@@ -40,12 +27,12 @@
                         take tour
                     </button>
 
+                    <!-- add location -->
                     <button class="nav-account__dropdown-item left-text" @click="openAddPage = true">
                         add location
                     </button>
 
-                    <!-- <a class="nav-account__dropdown-item" href="/account">account</a> -->
-
+                    <!-- edit mode -->
                     <button v-if="shared.user.admin"
                             class="nav-account__dropdown-item left-text"
                             :class="{active: shared.editMode}"
@@ -55,6 +42,21 @@
 
             </div>
         </transition>
+
+        <!-- add new restaurant modal -->
+        <modal-wrap
+            :open="openAddPage"
+            @closed="openAddPage = false"
+            classes="width-50"
+            focus=".should-focus">
+            <vue-form
+                method="post"
+                :action="pageAction"
+                submitclass="width-100"
+                @success="addedNewRestaurant"
+                :schema="pageSchema"></vue-form>
+        </modal-wrap>
+
     </div>
 </template>
 
@@ -70,8 +72,7 @@
                 shared : App.state,
                 dropdown : false,
                 openAddPage : false,
-                pageAction : '/api/locations/create/yelp/page',
-
+                pageAction : '/api/locations/create/yelp/page', // add page form action
             };
         },
 
@@ -81,24 +82,47 @@
 
         methods : {
 
+            /**
+             * Reset all list filters
+             */
             resetFilters(){
+                // clear query string
                 this.$router.push( { name: this.$route.name, query: {} } );
+
+                // close panel
                 this.dropdown = false;
+
+                // emit reset to other components
                 App.event.emit( 'resetFilters' );
+
+                // load restaurants
                 App.event.emit( 'loadRestaurants' );
             },
 
+
+            /**
+             * Show newly added restaurant
+             *
+             * @param response
+             */
             addedNewRestaurant( response ){
-                console.log( response );
                 this.openAddPage = false;
                 this.shared.forcedRestaurant = response;
             },
 
+
+            /**
+             * Manually start a tour
+             */
             startTour(){
                 this.dropdown = false;
                 this.$tours['myTour'].start();
             },
 
+
+            /**
+             * Toggle edit mode
+             */
             toggleEditMode(){
                 this.shared.editMode = !this.shared.editMode;
                 this.dropdown = false;
@@ -106,6 +130,11 @@
         },
 
         computed : {
+
+            /**
+             * Add restaurant form schema
+             * @returns {object}
+             */
             pageSchema(){
                 return [
                     { name: 'yelp_url', label : 'yelp url', focus : true },

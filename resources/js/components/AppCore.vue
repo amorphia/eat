@@ -1,15 +1,22 @@
 <template>
     <div class="d-flex align-stretch">
+        <!-- nav menu -->
         <nav-menu></nav-menu>
+
+        <!-- main content -->
         <div class="main-content">
             <router-view></router-view>
         </div>
+
+        <!-- restaurant details -->
         <restaurant-details></restaurant-details>
-        <restaurant-manager></restaurant-manager>
+
+        <!-- nutz and boltz -->
         <working-slider></working-slider>
         <notify-queue></notify-queue>
         <vue-confirm-dialog class="confirm-popup"></vue-confirm-dialog>
         <my-tour></my-tour>
+        <restaurant-manager></restaurant-manager>
     </div>
 </template>
 
@@ -29,6 +36,7 @@
         },
 
         methods : {
+            // load our user object
             loadUser(){
                 App.ajax.get( 'api/users/null', false )
                     .then( ({ data }) => this.shared.init( 'user', data ) );

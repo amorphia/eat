@@ -1,9 +1,14 @@
 <template>
     <div class="details__photo pos-relative"
          :style="`background-image:url(${photo.url})`">
+
+        <!-- click handler -->
         <div class="pos-cover z-1" @click="$emit( 'clicked', index )"></div>
+
+        <!-- photo priority tag -->
         <photo-priority :photo="photo"></photo-priority>
 
+        <!-- delete button -->
         <div v-if="canEdit" class="edit-panel pos-absolute top-0 right-0">
             <button class="edit-panel__button"><i class="icon-trash" @click="deletePhoto"></i></button>
         </div>
@@ -25,6 +30,9 @@
         },
 
         methods : {
+            /**
+             * Delete this photo
+             */
             deletePhoto(){
                 App.confirm( () => App.event.emit( 'updatePhoto', this.photo, { column : 'active', value : false } ),
                     {
@@ -34,6 +42,7 @@
         },
 
         computed : {
+            // can we edit this photo?
             canEdit(){
                 return this.shared.user.admin || this.shared.user.id === this.photo.user_id;
             }

@@ -1,8 +1,10 @@
 <template>
     <div class="restaurant__rating">
+
         <div class="restaurant_ratings"
              :class="{ open : open  }"
         >
+            <!-- rating numbers -->
             <rating-number
                 v-for="val in values"
                 :value="val"
@@ -11,6 +13,7 @@
                 :restaurant="restaurant"
                 @clicked="numberClicked"
             ></rating-number>
+
         </div>
     </div>
 </template>
@@ -23,31 +26,40 @@
 
         data() {
             return {
-                values: [0,1,2,3,4,5,6,7,8,9,10],
+                values: [0,1,2,3,4,5,6,7,8,9,10], // potential rating values
                 shared : App.state
             };
         },
 
         watch : {
+            // whenever we open a ratings panel announce it
             open( val ){
                     if( val ) App.event.emit( 'ratingOpened', this.restaurant.id );
             }
         },
 
         created(){
+            // whenever the restaurants details panel closes close all ratings as well
             App.event.on( 'detailsChanged', () => {
                 this.$emit( 'closed' );
             });
 
+            // whenever we open a ratings panel, close all others
             App.event.on( 'ratingOpened', id => {
                 if( this.restaurant.id !==  id ) this.$emit( 'closed' );
             });
         },
 
         methods : {
-            numberClicked( rating ){
-                if( this.open ) this.$emit( 'closed' );
-                else this.$emit( 'opened' );
+            /**
+             * when a rating is clicked open the panel if its not opened, or close it if it was already open
+             */
+            numberClicked(){
+                if( this.open ){
+                    this.$emit( 'closed' );
+                } else {
+                    this.$emit( 'opened' );
+                }
             },
         }
     }

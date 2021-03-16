@@ -22,9 +22,12 @@
                 buttonScrollCards : 3
             };
         },
+
         mounted(){
+            // flag us as mounted
             this.isMounted = true;
 
+            // set our easing
             Math.easeInOutQuad = function (t, b, c, d) {
                 t /= d/2;
                 if (t < 1) return c/2*t*t + b;
@@ -34,27 +37,55 @@
         },
 
         methods : {
+            /**
+             * Is our content overflowing the container (and thus even possibly in need of scrolling)?
+             * @returns {boolean}
+             */
             contentOverflowing(){
                 return this.$refs.container.scrollWidth > this.$refs.container.clientWidth;
             },
 
+            /**
+             * Handle mouse wheel scrolling
+             *
+             * @param e
+             */
             wheel( e ){
+                // if our content is overflowing then capture the event and don't apply the usual down page scroll
                 if( this.contentOverflowing() ) e.preventDefault();
 
+                // instead scroll our horizontal element left or right depending on our wheel direction
                 if (e.deltaY > 0) this.$refs.container.scrollLeft += this.wheelScroll;
                 else this.$refs.container.scrollLeft -= this.wheelScroll;
             },
 
+
+            /**
+             * Reset our container scroll to the left most edge
+             */
             resetScroll(){
-                console.log( 'reset scroll' );
                 this.$refs.container.scrollLeft = 0;
             },
 
+
+            /**
+             * manually scroll a fixed distance left or right
+             *
+             * @param sign
+             */
             scroll( sign ){
                 let buttonScroll = this.$refs.container.firstChild.clientWidth * this.buttonScrollCards;
                 this.scrollTo( this.$refs.container, sign * buttonScroll );
             },
 
+
+            /**
+             * Scroll an element horizontally
+             *
+             * @param element - the element to scroll
+             * @param shift - how far to scroll in px
+             * @param duration - how long to animate the scroll
+             */
             scrollTo( element, shift, duration = 250 ) {
                 let start = element.scrollLeft,
                     change = shift,
@@ -77,6 +108,7 @@
 
 
     computed : {
+            // should we add manual scroll buttons?
             addButtons(){
                 if (!this.isMounted ) return;
                 return this.buttons && this.$refs.container.scrollWidth > this.$refs.container.clientWidth;

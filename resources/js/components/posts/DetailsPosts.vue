@@ -1,17 +1,23 @@
 <template>
     <div class="posts pos-relative width-60">
+
+        <!-- header -->
         <h2 class="posts__headline width-100 d-flex align-center">
             <span class="mr-5">Your Notes</span>
+
+            <!-- add note button -->
             <button class="action-button posts__add-button" title="Add Post" @click="openAddPost = true">
                 <i class="icon-add_post"></i>
             </button>
         </h2>
 
+        <!-- display notes -->
         <div v-if="restaurant.posts && restaurant.posts.length" class="posts__container">
             <details-post v-for="post in restaurant.posts" :post="post" :key="post.id"></details-post>
         </div>
         <div v-else class="posts__empty subtle p-4 py-6">You haven't made any notes yet</div>
 
+        <!-- add note modal -->
         <modal-wrap
             :open="openAddPost"
             @closed="openAddPost = false"
@@ -46,16 +52,30 @@
 
 
         methods : {
+            /**
+             * process a newly added note
+             *
+             * @param response - ajax response
+             */
             postAdded( response ){
+                // close add post modal
                 this.openAddPost = false;
 
+                // get our restaurant from the shared restaurants array (unless its forced)
                 let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );
                 restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
+
+                // add the new note to the top of the restaurants notes list
                 restaurant.posts.unshift( response );
             },
         },
 
         computed : {
+            /**
+             * The form schema for the add a post modal form
+             *
+             * @returns {*[]}
+             */
             postSchema(){
                 return [
                     { name: 'body', type: 'textarea', focus : true },

@@ -27,18 +27,12 @@
             };
         },
 
-        created(){
-
-        },
-
-        methods : {
-
-        },
-
         computed : {
+
             day(){
                 return this.dayOfWeekCodes[this.hour.day];
             },
+
             hoursText(){
                 return `${App.date.parseTime( this.hour.start )} - ${App.date.parseTime( this.hour.end )}`;
             },

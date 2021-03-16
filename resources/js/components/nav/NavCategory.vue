@@ -1,14 +1,20 @@
 <template>
     <div id="category" class="category nav__item pos-relative" title="Set Category Filter" :class="{ disabled  : $route.query.match }">
-
         <div class="nav__select">
+
+            <!-- icon -->
             <i class="nav__icon icon-food" :class="{ active : isActive }"></i>
 
+            <!-- select -->
             <select class="rated-filter__select nav__input  mobile-cover"
                     v-model="category"
                     @change="setFilter"
                     :disabled="$route.query.match">
+
+                <!-- all categories option -->
                 <option class="sort__option" value="all">all</option>
+
+                <!-- categories -->
                 <option v-for="category in categories"
                         class="sort__option"
                         :value='category.name'

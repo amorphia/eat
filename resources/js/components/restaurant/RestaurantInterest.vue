@@ -21,8 +21,11 @@
 
         methods : {
             updateInterest(){
+                // increment this interest level by one, then if we go over 2 reset back to 9
                 let interest = this.restaurant.interest + 1;
                 if( interest > 2 ) interest = 0;
+
+                // update our interest rating
                 App.event.emit( 'updateRating', this.restaurant, { column : 'interest', value : interest } );
             }
         }

@@ -43,18 +43,6 @@
                 searchInput : '',
             };
         },
-
-        created(){
-
-        },
-
-        methods : {
-
-        },
-
-        computed: {
-
-        }
     }
 </script>
 

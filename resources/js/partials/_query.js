@@ -1,3 +1,8 @@
+/**
+ *
+ *  The query class handles setting and removing vue router query parameters
+ *
+ */
 window.App.query = new class {
 
     constructor() {
@@ -5,8 +10,14 @@ window.App.query = new class {
         this.debug = false;
     }
 
+    /**
+     * Set a query parameter
+     *
+     * @param name
+     * @param value
+     */
     set( name, value = null ){
-        console.log( 'query set invoked' );
+
         let paramArray = [];
 
         // wrap parameters in an array if there is only one
@@ -23,6 +34,12 @@ window.App.query = new class {
         if( hasChange ) this._vue.$router.push( { name: this._vue.$route.name, query: params } );
     }
 
+    /**
+     * build our parameters
+     *
+     * @param paramArray
+     * @returns {[{}, boolean]}
+     */
     generateParams( paramArray ){
         // grab our original query object and clone it
         let params =  {...this._vue.$route.query};
@@ -49,7 +66,13 @@ window.App.query = new class {
         return [params, hasChange];
     }
 
-    // helper that just calls set with a null value to delete the chosen parameter
+
+
+    /**
+     * delete the chosen parameter
+     *
+     * @param name
+     */
     remove( name ){
         this.set( name, null );
     }

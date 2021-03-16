@@ -24,12 +24,14 @@
         },
 
         watch : {
+            // watch when we leave edit mode and uncheck any checked restaurants
             'shared.editMode' : function( val ) {
                 if( !val ) this.checked.forEach( obj => obj.checked = false );
             }
         },
 
         created(){
+            // if we are an admin and hit the escape key then toggle edit mode
             document.addEventListener( 'keyup', (e) => {
                 if( this.shared.user.admin && e.key === 'Escape') this.shared.editMode = !this.shared.editMode;
             });

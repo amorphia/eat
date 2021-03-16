@@ -1,6 +1,8 @@
 <template>
     <div class="details__photos-container pos-relative">
         <div v-if="photos.length" class="details__photos">
+
+            <!-- photos horizontal scroll -->
             <horizontal-scroll classes="height-100" ref="container">
                 <details-photo v-for="(photo, index) in photos"
                                :photo="photo"
@@ -9,15 +11,19 @@
                                @clicked="openLightbox"
                 ></details-photo>
             </horizontal-scroll>
+
         </div>
+        <!-- no photos -->
         <div v-else class="primary-darkest-bg p-5 light-text">
             No Photos
         </div>
 
+        <!-- add photo button -->
         <button class="action-button shift-down" title="Add Photo" @click="openAddPhoto = true">
             <i class="icon-add_photo"></i>
         </button>
 
+        <!-- lightbox -->
         <LightBox v-if="media.length" :media="media"
                   :showLightBox="false"
                   :showThumbs="false"
@@ -25,6 +31,7 @@
                   ref="lightbox"
         ></LightBox>
 
+        <!-- add photo modal -->
         <modal-wrap
             :open="openAddPhoto"
             @closed="openAddPhoto = false"
@@ -77,27 +84,50 @@
         },
 
         methods : {
+
+            /**
+             * Open our lightbox to zoom in on our images
+             *
+             * @param index - image index to start with
+             */
             openLightbox( index ){
                 this.$refs.lightbox.showImage( index );
             },
 
+
+            /**
+             * Scroll our photos slider back to the first photo
+             */
             resetPhotoScroll(){
                 if( this.$refs.container ) this.$refs.container.resetScroll();
             },
 
+
+            /**
+             * Process a newly added photo
+             *
+             * @param response
+             */
             photoAdded( response ){
+                // close add photo modal
                 this.openAddPhoto = false;
+
+                // get our parent restaurant
                 let restaurant = this.shared.restaurants.find( obj => obj.id === this.restaurant.id );
                 restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
+
+                // add this photo to our restaurant's photos
                 restaurant.photos.push( response );
             }
         },
 
         computed: {
+            // this restaurants photos
             photos(){
                 return this.restaurant.photos;
             },
 
+            // return a formatted array of our photos
             media(){
                 let photos = [];
                 this.photos.forEach( photo => {
@@ -109,6 +139,7 @@
                 return photos;
             },
 
+            // schema for our add restaurants form
             photoSchema(){
                 return [
                     { name: 'restaurant_id', value: this.restaurant.id, type: 'hidden' },

@@ -15,6 +15,10 @@ window.Vue = Vue;
 import VueRouter from 'vue-router';
 Vue.use( VueRouter );
 
+
+/*
+* Import other plugins
+ */
 import VueConfirmDialog from 'vue-confirm-dialog';
 Vue.use( VueConfirmDialog );
 Vue.component('vue-confirm-dialog', VueConfirmDialog.default);
@@ -32,35 +36,22 @@ Vue.use( Vue2TouchEvents );
 import VueTour from 'vue-tour'
 Vue.use(VueTour);
 
-
-
-
-
-
-
-
-
-
-
-
-
 Vue.config.devtools = true;
-
-
-
 
 /*
 * Import day JS
 */
-window.Day = require('dayjs');
+window.DayJs = require('dayjs');
 
 // add custom parse format
-var customParseFormat = require('dayjs/plugin/customParseFormat');
-Day.extend(customParseFormat);
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+DayJs.extend(customParseFormat);
 
 // add is between
-var isBetween = require('dayjs/plugin/isBetween');
-Day.extend(isBetween);
+const isBetween = require('dayjs/plugin/isBetween');
+DayJs.extend(isBetween);
+
+
 /*
 *
 *  Register vue components globally
@@ -84,19 +75,13 @@ window.App = window.App || {};
  */
 require( './partials/_event' ); // Event emitter
 require( './partials/_ajax' ); // ajax helper
-require( './partials/_onload' ); // onload helper
-require( './partials/_helpers' ); // set up shared state
 require( './partials/_state' ); // set up shared state
 require( './partials/_cookies' ); // Cookie handler
 require( './partials/_confirm' ); // Confirm dialog handler
 require( './partials/_date' ); // Date handler
-require( './partials/_location' ); // Date handler
+require( './partials/_location' ); // Geolocation handler
 
-//require( './partials/_filters' ); // filters
-//require( './partials/_drag' ); // drag directive
-
-
-
+// import our site vue router routes
 import routes from './routes';
 
 /**

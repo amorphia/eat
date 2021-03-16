@@ -11,31 +11,6 @@ window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.withCredentials = true;
 
-/**
- * Next we will register the CSRF Token as a common header with Axios so that
- * all outgoing HTTP requests automatically have it attached. This is just
- * a simple convenience so we don't have to attach every token manually.
- */
-
-/*
-let getToken = function(){
-
-    let token = document.querySelector('meta[name="csrf-token"]');
-
-    if ( token && token.content && token.content !== 'loading...' ) {
-        App.csrf = token.content;
-        window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-    } else {
-        setTimeout( getToken, 100 );
-    }
-};
-
-getToken();
-*/
-
-/**
-
-
 
 /**
  * Set core app object

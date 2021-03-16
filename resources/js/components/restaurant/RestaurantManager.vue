@@ -2,7 +2,6 @@
     <div></div>
 </template>
 
-
 <script>
     export default {
 
@@ -15,6 +14,7 @@
         },
 
         created() {
+            // register event listeners
             App.event.on( 'updateRating', this.updateRating );
             App.event.on( 'updatePhoto', this.updatePhoto );
             App.event.on( 'editRestaurants', this.editRestaurants );
@@ -23,18 +23,42 @@
         },
 
         methods : {
+
+            /**
+             * Grab a restaurant from our shared restaurants array
+             *
+             * @param {object|int} restaurant - a restaurant object, or an id
+             * @returns {object|null} - the restaurant if we find one
+             */
             findRestaurant( restaurant ){
                 let id;
-                if( typeof restaurant === 'object' && restaurant !== null ) id = restaurant.id;
-                else id = restaurant;
 
-                return this.shared.restaurants.find( obj => obj.id === id );
+                // get our id
+                if( typeof restaurant === 'object' && restaurant !== null ){
+                    id = restaurant.id;
+                } else if( typeof restaurant === 'number' ) {
+                    id = restaurant;
+                } else {
+                    // if we don't have a valid ID then abort
+                    return;
+                }
+
+                // if the restaurant doesn't exist in our shared.restaurants list, is must be a forced restaurant
+                // provided by the search function
+                return this.shared.restaurants.find( obj => obj.id === id ) ?? this.shared.forcedRestaurant;
             },
 
-            deleteLocation( location ){
-                let restaurant = this.findRestaurant( location.restaurant_id );
-                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
 
+            /**
+             * Delete a restaurant location
+             *
+             * @param location
+             */
+            deleteLocation( location ){
+                // find the location's parent restaurant
+                let restaurant = this.findRestaurant( location.restaurant_id );
+
+                // make a delete request for the location
                 App.ajax.delete( `/api/locations/${location.id}` ).then( result => {
                     // remove location from restaurant locations
                     restaurant.locations = restaurant.locations.filter( obj => obj.id !== location.id );
@@ -42,12 +66,22 @@
 
             },
 
+
+            /**
+             * Update a restaurant's rating relation
+             *
+             * @param rest - the restaurant
+             * @param params - the ratings column to update (interest, rating, viewed) and its new value
+             */
             updateRating( rest, params ){
-                // get and update the restaurant in our list
+
+                // get the restaurant in our shared list
                 let restaurant = this.findRestaurant( rest );
-                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
+
+                // update the restaurant rating locally
                 restaurant[params.column] = params.value;
 
+                // update the restaurant on the back end
                 App.ajax.patch( `/api/ratings/${restaurant.id}`, {
                         rating : restaurant.rating,
                         interest : restaurant.interest,
@@ -62,9 +96,17 @@
                 });
             },
 
+
+            /**
+             * update a photo
+             *
+             * @param p - the photo to update
+             * @param params - the column to update and its value
+             */
             updatePhoto( p, params ){
+
+                // get the restaurant in our shared list
                 let restaurant = this.findRestaurant( p.restaurant_id );
-                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
 
                 let photo = restaurant.photos.find( obj => obj.id === p.id );
 
@@ -84,6 +126,12 @@
             },
 
 
+            /**
+             * Merge or delete one or more restaurants
+             *
+             * @param mode - (merge|delete)
+             * @param restaurants
+             */
             editRestaurants( mode, restaurants ){
                 let ids = restaurants.map( obj => obj.id );
 
@@ -92,19 +140,38 @@
                 });
             },
 
+
+            /**
+             * remove the specified restaurants from our shared restaurant list
+             *
+             * @param response
+             */
             clearRestaurants( response ){
+                // get our restaurant ids
                 let ids = response.data.ids;
                 if( !Array.isArray( ids ) ) ids = _.values( ids );
+
+                // filter out the specified restaurants
                 this.shared.restaurants = this.shared.restaurants.filter( obj => !ids.includes( obj.id ) );
+
+                // uncheck any checked restaurants we still have
                 this.shared.restaurants.forEach( obj => obj.checked = false );
             },
 
+
+            /**
+             * Update a restaurant
+             *
+             * @param rest - the restaurant to update
+             * @param params - the column to update and its value
+             */
             updateRestaurant( rest, params ){
                 let restaurant = this.findRestaurant( rest );
-                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
 
+                // update the restaurant locally
                 restaurant[params.column] = params.value;
 
+                // update the restaurant on the back end
                 App.ajax.patch( `/api/restaurants/${restaurant.id}`, restaurant ).then( response => {
                     // delete restaurant from array if we set active to false
                     if( params.column === 'active' && !params.value ) {

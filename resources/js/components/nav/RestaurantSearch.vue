@@ -1,10 +1,12 @@
 <template>
 
-    <div class="nav-search nav__item" title="Search movies">
-
+    <div class="nav-search nav__item" title="Search restaurants">
         <div class="nav__select">
+
+            <!-- search icon -->
             <i class="nav__icon icon-search" @click="setSearchOpen"></i>
 
+            <!-- search input -->
             <div class="nav-search-wrap width-100 d-flex align-center" :class="{ open : openSearch }">
                 <input class="nav__input search-input"
                        v-model="query"
@@ -17,8 +19,10 @@
                        ref="search"
                         >
 
+                <!-- clear search -->
                 <i v-if="openSearch || query" class="nav-search-close icon-x pointer" @click="reset"></i>
 
+                <!-- search results -->
                 <div v-if="results" class="autocomplete pos-absolute width-100">
                     <div v-for="( restaurant, index ) in results"
                          class="autocomplete__item ellipses"
@@ -27,7 +31,9 @@
                          @click="viewRestaurant( restaurant )"
                         ></div>
                 </div>
+
             </div>
+
         </div>
     </div>
 </template>
@@ -57,12 +63,11 @@
 
         },
 
-        computed : {
-
-        },
-
         methods : {
 
+            /**
+             * open our search (on mobile) and set the focus
+             */
             setSearchOpen(){
                 this.openSearch = true;
 
@@ -72,6 +77,9 @@
 
             },
 
+            /**
+             * reset our search and close (on mobile)
+             */
             reset(){
                 this.query = '';
                 this.results = null;
@@ -79,6 +87,12 @@
                 this.openSearch = false;
             },
 
+
+            /**
+             * Navigate through our results list
+             *
+             * @param increment
+             */
             navigateList( increment ){
                 this.selectedItem += increment;
                 if( this.selectedItem < -1 ){
@@ -94,8 +108,12 @@
                 }
             },
 
+            /**
+             * View a restaurant from our search results
+             *
+             * @param restaurant
+             */
             viewRestaurant( restaurant ){
-
 
                 if( restaurant === 'selected'){
                     restaurant = this.results[ this.selectedItem ];
@@ -106,21 +124,28 @@
 
             },
 
+            /**
+             * Generate our search request handler
+             */
             makeRequestCreator() {
-                var call;
-                return () => {
+                let call;
 
+                return () => {
+                    // if we have a pending request, cancel it
                     if (call) { call.cancel(); }
                     call = axios.CancelToken.source();
 
+                    // hit the API with our search request
                     return axios.post(
                         '/api/restaurants/search',
                         { searchTerm : this.query },
                         { cancelToken : call.token }
                     )
                         .then( response => {
-                            console.log( response );
+                            // populate results
                             this.results = response.data;
+
+                            // reset navigation to the first item in the list
                             this.navigateList( 0 );
                         })
                         .catch( errors => {

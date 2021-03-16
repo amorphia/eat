@@ -1,26 +1,43 @@
+/**
+ * App state manager
+ *
+ */
 window.App.state = {
 
-    debug : false,
-    editMode : false,
+    /*
+    * Options
+    */
 
-    filterMap : {
-        //'xSEEKx': '<img class="icon-image ml-3" src="/images/icons/seeking.png">',
-    },
+    debug : false, // log errors in the console?
 
-    errorReport( error ) {
-        console.log( error.message );
-        console.log( error.data );
-    },
 
+
+    /*
+    *
+    * Methods
+    *
+    */
+
+    /**
+     * Initialize a property in our shared state
+     *
+     * @param property
+     * @param value
+     */
     init( property, value ) {
 
+        // if we are in debug mode log the deetz
         if ( this.debug ){
             console.log( `set ${property} to:` );
             console.log( value );
         }
 
+        // split the given property into an array by "."
         let propertyArr = property.split('.');
+
+        // then grab the last element of the array (the actual property to add)
         property = propertyArr.pop();
+
         let object = this;
 
         propertyArr.forEach( prop => {
@@ -57,15 +74,16 @@ window.App.state = {
         }
     },
 
-    filterText( text ){
-        let regex = Object.keys( this.filterMap ).join('|');
-        let _map = this.filterMap;
-        return text.replace( new RegExp( regex, 'gi'), function( matched ){
-            return _map[matched];
-        });
+
+
+    /**
+     * Report an error in the console, and dump any data associated with it
+     * @param error
+     */
+    errorReport( error ) {
+        console.log( error.message );
+        console.log( error.data );
     },
-
-
 
 }
 

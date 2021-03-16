@@ -1,43 +1,19 @@
 <template>
     <div id="match" class="friend-match nav__item pos-relative" title="Set Friend Match">
-
-        <modal-wrap
-            :open="openChooseMatchType"
-            @closed="closeChooseTypeModal"
-            classes="width-50">
-
-            <div class="choose-match width-50">
-                <div class="choose-match__title pb-4">View {{ currentMatchName }}'s list</div>
-
-                <button v-for="type in matchTypes"
-                        class="choose-match__button"
-                        @click="setMatch( type.type)">{{ type.label }}</button>
-            </div>
-        </modal-wrap>
-
-        <!--
-        <select-match :open="openChooseMatchType"
-                      :matchTypes="matchTypes"
-                      :match="match"
-                      :users="users"
-                      :type="type"
-                      @close="openChooseMatchType = false"
-                      @changed="matchChanged">
-        </select-match>
-        -->
-
         <div class="nav__select pos-relative">
+
+            <!-- icon -->
             <i class="nav__icon icon-user" :class="{ active : isActive }"></i>
 
-            <!-- invisible cover div that overlaps the select and intercepts any clicks on it
-            <div class="pos-absolute top-0 left-0 right-0 bottom-0 z-2" @click.prevent="openChooseMatchType = true"></div>
-            -->
-
+            <!-- select -->
             <select class="rated-filter__select nav__input  mobile-cover"
                     v-model="match"
-                    @change="matchChanged"
-                    @mouseup="log">
+                    @change="matchChanged">
+
+                <!-- no match option -->
                 <option :value="null">None</option>
+
+                <!-- user match options -->
                 <option
                     v-for="user in users"
                     class="sort__option"
@@ -48,6 +24,22 @@
             </select>
         </div>
 
+        <!-- select match type modal -->
+        <modal-wrap
+            :open="openChooseMatchType"
+            @closed="closeChooseTypeModal"
+            classes="width-50">
+
+            <div class="choose-match width-50">
+                <!-- title -->
+                <div class="choose-match__title pb-4">View {{ currentMatchName }}'s list</div>
+
+                <!-- match type buttons -->
+                <button v-for="type in matchTypes"
+                        class="choose-match__button"
+                        @click="setMatch( type.type)">{{ type.label }}</button>
+            </div>
+        </modal-wrap>
     </div>
 </template>
 
@@ -90,17 +82,24 @@
         },
 
         methods : {
-            log( e ){
-                console.log( e )
-            },
 
+            /**
+             * Close choose match type modal
+             */
             closeChooseTypeModal(){
                 this.openChooseMatchType = false;
                 this.match = this.default;
             },
 
+
+            /**
+             * Apply changed match
+             *
+             * @param e - change event
+             */
             matchChanged( e ){
-                // if we changed to the default, then reset
+
+                // if we changed to the default null value, then reset everything
                 if( this.default === this.match ){
                     App.query.set([
                         {name : 'match', value : null },
@@ -114,23 +113,33 @@
                 this.openChooseMatchType = true;
             },
 
+            /**
+             * Apply match
+             *
+             * @param type
+             */
             setMatch( type ){
+                // close modal
                 this.openChooseMatchType = false;
 
+                // set query string
                 App.query.set([
                     {name : 'match', value : this.match  },
                     {name : 'type', value : type }
                 ]);
 
+                // load restaurants
                 App.event.emit( 'loadRestaurants' );
             },
         },
 
         computed : {
+            // is this filter active
             isActive(){
                 return this.match !== this.default;
             },
 
+            // get the name of the currently matched user, if any
             currentMatchName(){
                 if( !this.currentMatch ) return;
 

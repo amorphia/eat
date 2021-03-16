@@ -13,15 +13,18 @@
         data() {
             return {
                 shared : App.state,
-                requests : 0
+                requests : 0 // the number of ajax requests currently outstanding
             };
         },
 
         created() {
+            // each time we see a "working" event increase our outstanding requests by one
+            // as long as we have at least one outstanding request display our working slider
             App.event.on( 'working', () => {
                 this.requests = this.requests + 1;
             } );
 
+            // each time we see a "done" event reduce our outstanding requests by one
             App.event.on('done', () => {
                 this.requests--;
                 if( this.requests < 0 ) this.requests = 0;

@@ -1,14 +1,24 @@
 <template>
     <div class="post">
+
+        <!-- note body -->
         <div class="post__body">
             {{ post.body }}
         </div>
+
+        <!-- note actions -->
         <div class="post__actions d-flex">
+            <!-- date -->
             <span class="grow-1">{{ date }}</span>
+
+            <!-- edit post -->
             <button class="icon-edit post__actions-icon" title="Edit post" @click="editingPost = true"></button>
+
+            <!-- delete post -->
             <button class="icon-trash" title="Delete post" @click="confirmDeletePost"></button>
         </div>
 
+        <!-- edit post modal -->
         <modal-wrap
             :open="editingPost"
             @closed="editingPost = false"
@@ -41,14 +51,18 @@
         },
 
         computed : {
+
+            // formatted post created at date
             date(){
                 return App.date.format( this.post.created_at, "MMM D, YYYY - h:mma" );
             },
 
+            // the form action url to pass when editing this post
             editPostAction(){
                 return `/api/posts/${this.post.id}`;
             },
 
+            // the form schema for the edit post modal form
             editSchema(){
                 return [
                     { name: 'body', type: 'textarea', focus : true, value : this.post.body },
@@ -57,12 +71,21 @@
         },
 
         methods : {
+
+            /**
+             * Confirm if we really want to delete this note
+             */
             confirmDeletePost(){
                 App.confirm( () => this.deletePost(),
                     { message: 'Are you sure you want to delete this note?' });
             },
 
 
+            /**
+             * Apply edited note data
+             *
+             * @param editedPost
+             */
             postEdited( editedPost ){
                 let restaurant = this.getRestaurant();
                 let post = restaurant.posts.find( obj => obj.id === +editedPost.id );
@@ -71,12 +94,23 @@
             },
 
 
+            /**
+             * Get our parent restaurant
+             *
+             * @param id
+             * @returns {object}
+             */
             getRestaurant( id ){
                 let restaurant =  this.shared.restaurants.find( obj => obj.id === +this.post.restaurant_id );
+                restaurant = restaurant ? restaurant : this.shared.forcedRestaurant;
+
                 return restaurant;
             },
 
 
+            /**
+             * Delete a note
+             */
             deletePost(){
                 let restaurant = this.getRestaurant();
                 App.ajax.delete( `/api/posts/${this.post.id}` ).then( response => {

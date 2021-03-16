@@ -1,33 +1,43 @@
 <template>
+
+    <!-- wrapper -->
     <div class="restaurant-wrap"
          :class="{ selected : isSelected, visited : restaurant.visited }"
          v-touch:swipe.left="() => ratingOpen = true"
          v-touch:swipe.right="() => ratingOpen = false"
     >
+        <!-- restaurant -->
         <div class="restaurant">
 
+            <!-- restaurant interest flag -->
             <restaurant-interest :restaurant="restaurant"></restaurant-interest>
 
+
+            <!-- main restaurant content -->
             <div class="restaurant__main" :id="`restaurant-${restaurant.id}`">
 
+                <!-- combined rating when in match view -->
                 <div v-if="restaurant.combined_rating" class="restaurant__combined-rating">
                     <span class="z-6">{{ restaurant.combined_rating }}</span>
                 </div>
 
+                <!-- checkbox when in edit mode -->
                 <div v-if="shared.editMode"
                      class="restaurant__checkbox"
                      :class="{active : restaurant.checked}"
                      @click="$emit('checked')">
                         <i :class="checkIcon"></i>
                 </div>
+
+                <!-- name -->
                 <div class='pad-buffer restaurant__name' @click="openViewRestaurant">{{ restaurant.name }}</div>
-                <div class="tour__rating-hook"></div>
+
+                <!-- rating -->
                 <restaurant-rating :restaurant="restaurant"
                                    :open="ratingOpen"
                                    @opened="ratingOpen = true"
                                    @closed="ratingOpen = false">
                 </restaurant-rating>
-
 
             </div>
 
@@ -48,16 +58,21 @@
             };
         },
         computed : {
+
+            // is this restaurant currently selected
             isSelected(){
-                return this.selected
-                    &&  this.selected.id === this.restaurant.id;
+                return this.selected && this.selected.id === this.restaurant.id;
             },
 
+            // which checkbox icon should we display when in edit mode, checked or unchecked?
             checkIcon(){
                 return this.restaurant.checked ? 'icon-checkbox' : 'icon-checkbox_unchecked';
             }
         },
         methods : {
+            /**
+             * Open this restaurant's details
+             */
             openViewRestaurant(){
                 App.event.emit( 'viewRestaurant', this.index, );
             }

@@ -112,12 +112,14 @@
             }
         },
         methods: {
+
             onStartCallback () {
                 this.$nextTick( () => {
                     console.log( 'scroll top' );
                     window.scrollTo({ top: 10, behavior: 'smooth' });
                 });
             },
+
             nextStepCallback (currentStep) {
                 this.$nextTick( () => {
                     let scroll = currentStep % 2 ? -1 : 1;

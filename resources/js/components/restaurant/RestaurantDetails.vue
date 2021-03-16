@@ -1,5 +1,6 @@
 <template>
     <transition name="right">
+        <!-- restaurant details -->
         <div v-if="restaurant" class="details pos-fixed width-100 height-100 top-0 left-0 right-0 bottom-0 z-50">
 
             <!-- edit name modal -->
@@ -17,6 +18,7 @@
 
             <!-- main content -->
             <div class="width-100 height-100 overflow-auto pos-relative">
+
                 <!-- restaurant interest -->
                 <restaurant-interest :restaurant="restaurant"></restaurant-interest>
 
@@ -24,23 +26,28 @@
                 <div class="details__name d-flex overflow-hidden">
 
                     <div class="details__name-input pr-6 d-flex align-center ellipses">
+
+                        <!-- reload restaurant data button -->
                         <button v-if="shared.user.admin"
                                 class="details__reload-restaurant details__edit-button mr-3 tablet-up-only"
                                 @click="loadRestaurantData">
                             <i class="icon-upload"></i>
                         </button>
 
+                        <!-- delete restaurant button -->
                         <button v-if="shared.user.admin"
                                 class="details__delete-restaurant details__edit-button mr-3"
                                 @click="confirmDeleteRestaurant">
                             <i class="icon-trash"></i>
                         </button>
 
+                        <!-- block restaurant button -->
                         <button class="details__delete-restaurant details__edit-button mr-3"
                                 @click="confirmBlockRestaurant">
                             <i class="icon-block"></i>
                         </button>
 
+                        <!-- restaurant name -->
                         <div class="details__name-name ellipses" @click="openEditName" v-text="restaurant.name"></div>
                     </div>
 
@@ -52,10 +59,12 @@
                         </category-item>
                     </div>
 
-                    <!-- combined -->
+
+                    <!-- combined rating (when in match view) -->
                     <div v-if="restaurant.combined_rating" class="details__combined-container" >
                         <span class="details__combined-rating">{{ restaurant.combined_rating }}</span>
                     </div>
+
 
                     <!-- rating -->
                     <div class="details__rating-container pos-relative ml-auto"
@@ -76,12 +85,15 @@
                     </button>
                 </div>
 
-              <details-photos :restaurant="restaurant"></details-photos>
+                <!-- photos -->
+                <details-photos :restaurant="restaurant"></details-photos>
 
+                <!-- details view navigation -->
                 <div class="details__secondary-wrap d-flex p-6"
                      v-touch:swipe.left="() => updateIndex( 1 )"
                      v-touch:swipe.right="() => updateIndex( -1 )">
 
+                    <!-- navigation buttons -->
                     <div v-if="!shared.forcedRestaurant && (index > 0 || index < maxIndex)" class="details__nav-buttons">
                         <!-- left nav button -->
                         <button v-if="index > 0 && !shared.forcedRestaurant" @click="updateIndex( -1 )" class="details__nav-button left">
@@ -98,9 +110,11 @@
 
 
                     <!-- secondary content -->
-                    <details-posts :restaurant="restaurant" class="details__secondary"></details-posts>
-                    <details-locations :restaurant="restaurant" class="details__secondary"></details-locations>
 
+                    <!-- notes -->
+                    <details-posts :restaurant="restaurant" class="details__secondary"></details-posts>
+                    <!-- locations -->
+                    <details-locations :restaurant="restaurant" class="details__secondary"></details-locations>
 
                 </div>
 
@@ -126,8 +140,10 @@
         },
 
         created(){
+            // initialize shared forced restaurant property
             this.shared.init( 'forcedRestaurant', null );
 
+            // add event listeners
             App.event.on( 'viewRestaurant', this.viewRestaurant );
             App.event.on( 'forceViewRestaurant', this.forceRestaurant );
             App.event.on( 'initRestaurantLoad', this.loadDetailsFromParam );
@@ -135,16 +151,24 @@
 
 
         watch : {
-            restaurant( val ){
-                // lock the scrollbars on the underlying page
-                this.lockPage( val );
 
-                // ad query parameters
-                this.setDetailsParam( val );
+            // monitor when the restaurant being viewed changes
+            restaurant( restaurant ){
 
-                if( val ){
+                // lock or unlock the scrollbars on the underlying page
+                this.lockPage();
+
+                // add or remove query parameters
+                this.setDetailsParam( restaurant );
+
+                if( restaurant ){
+                    // close the list_tour tour when we open a restaurant's details
                     if( this.$tours['myTour'].isRunning ) this.$tours['myTour'].finish();
+
+                    // emit we have a new restaurant
                     App.event.emit( 'detailsChanged' );
+
+                    // mark this restaurant as having been viewed
                     this.markAsViewed( val );
                 }
             }
@@ -152,12 +176,14 @@
         },
 
         computed : {
+            // the restaurant being viewed
             restaurant(){
                 if( this.shared.forcedRestaurant ) return this.shared.forcedRestaurant;
                 if( this.index === null ) return null;
                 return this.shared.restaurants[this.index];
             },
 
+            // what is the maximum index value for our list? Used when decided to display a next button
             maxIndex(){
                 if( !this.shared.restaurants ) return 0;
                 return this.shared.restaurants.length - 1;
@@ -165,11 +191,24 @@
         },
 
         methods : {
+
+            /**
+             * Mark a restaurant as having been viewed by a user
+             *
+             * @param restaurant
+             */
             markAsViewed( restaurant ){
+                // if its already been marked as viewed, abort
                 if( restaurant.viewed ) return;
+
+                // post the changes to the server
                 App.event.emit( 'updateRating', this.restaurant, { column : 'viewed', value : true, message : false } );
             },
 
+
+            /**
+             * Load a restaurant's details from the query parameter when the page is reloaded
+             */
             loadDetailsFromParam(){
                 if( !this.$route.query.details )  return;
 
@@ -186,6 +225,12 @@
                     .then( response =>  this.shared.forcedRestaurant = response.data );
             },
 
+
+            /**
+             * Set our details query parameter to the current restaurant
+             *
+             * @param val
+             */
             setDetailsParam( val ){
                 let paramVal = null;
                 if( val ) paramVal = val.id;
@@ -194,6 +239,10 @@
                 App.query.set( 'details', paramVal );
             },
 
+
+            /**
+             *  Load a restaurant's data
+             */
             loadRestaurantData(){
                 App.ajax.get( `/api/restaurants/${this.restaurant.id}`, false )
                         .then( response => {
@@ -205,34 +254,63 @@
                         });
             },
 
-            lockPage( val ){
+
+            /**
+             * Lock or unlock the page scroll depending on if we have a restaurant
+             */
+            lockPage(){
                 let body = document.getElementById( 'top' );
 
-                if( val ){
+                if( this.restaurant ){
                     setTimeout( () => body.classList.add( 'overflow-hidden' ), 200 );
                 } else {
                     body.classList.remove( 'overflow-hidden' );
                 }
             },
 
+
+            /**
+             * Open edit name modal
+             */
             openEditName(){
                 if( this.shared.user.admin ) this.editName = true;
             },
 
+
+            /**
+             * Open a restaurant's details
+             *
+             * @param index
+             */
             viewRestaurant( index ){
                 this.index = index;
             },
 
-            forceRestaurant( rest ){
-                let listRestaurant = this.shared.restaurants.find( obj => obj.id === rest.id );
-                this.shared.forcedRestaurant = listRestaurant ? listRestaurant : rest;
+
+            /**
+             * Force a restaurant into view even if its not in our shared restaurant list
+             * such as a restaurant provided by our search bar, or details parameter
+             *
+             * @param restaurant
+             */
+            forceRestaurant( restaurant ){
+                let listRestaurant = this.shared.restaurants.find( obj => obj.id === restaurant.id );
+                this.shared.forcedRestaurant = listRestaurant ? listRestaurant : restaurant;
             },
 
+
+            /**
+             * Apply a restaurant name change
+             */
             nameChanged(){
                 App.event.emit( 'updateRestaurant', this.restaurant, { column : 'name', value : this.restaurant.name });
                 this.editName = false;
             },
 
+
+            /**
+             * Close the restaurant details view
+             */
             closeDetails(){
                 if( this.shared.forcedRestaurant ){
                     this.shared.forcedRestaurant = null;
@@ -242,11 +320,19 @@
                 this.index = null;
             },
 
+
+            /**
+             * Confirm we want to block this restaurant. and if so apply the block
+             */
             confirmBlockRestaurant(){
                 App.confirm( () => App.event.emit( 'updateRating', this.restaurant, { column : 'interest', value : -1 } ) ,{
                     message: 'Are you sure you want to block this restaurant?' });
             },
 
+
+            /**
+             * Confirm we want to delete this restaurant. and if so apply the deletion
+             */
             confirmDeleteRestaurant(){
                 App.confirm( () => App.event.emit( 'updateRestaurant',
                                     this.restaurant,
@@ -254,6 +340,11 @@
                                     message: 'Are you sure you want to delete this restaurant?' });
             },
 
+            /**
+             * Update our restaurant index by the value provided
+             *
+             * @param val - usually -1 or +1 as provided by the navigation buttons
+             */
             updateIndex( val ){
                 let index = this.index;
                 index += val;
@@ -265,6 +356,10 @@
                 this.checkForPageLoad();
             },
 
+
+            /**
+             * If we near the end of our restaurants index and have more to load, then emit a request to load more restaurants
+             */
             checkForPageLoad(){
                 // if we have less than 5 restaurants left, and we are not done loading
                 if( this.index > this.shared.restaurants.length - 5 && !this.shared.page.complete ){
