@@ -33,7 +33,7 @@ List View             |  Swipe View
 
 Clone the repository
 
-    https://github.com/amorphia/eat.git
+    git clone https://github.com/amorphia/eat.git
 
 Switch to the repository's folder
 
@@ -49,7 +49,7 @@ Install node dependencies using NPM
     
 Copy the example env file and update its contents to suit your local environment (most importantly set up a local database and configure it within your .env)
 
-    cp .env.example .env
+    copy .env.example .env
 
 Generate an application key
 
