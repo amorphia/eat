@@ -20,6 +20,7 @@ class Restaurant extends Model
      */
     protected $guarded = [];
 
+
     /**
      * The attributes that should be appended to json output.
      *
@@ -138,7 +139,7 @@ class Restaurant extends Model
         $filters = [
             \App\QueryFilters\Category::class,
             \App\QueryFilters\Rated::class,
-            \App\QueryFilters\Match::class,
+            \App\QueryFilters\Matches::class,
             \App\QueryFilters\Sort::class,
         ];
 

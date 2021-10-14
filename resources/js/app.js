@@ -21,11 +21,11 @@ Vue.use( VueRouter );
  */
 import VueConfirmDialog from 'vue-confirm-dialog';
 Vue.use( VueConfirmDialog );
-Vue.component('vue-confirm-dialog', VueConfirmDialog.default);
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default );
 
 import VueLazyLoad from 'vue-lazyload';
 Vue.use( VueLazyLoad );
-Vue.component('InfiniteLoading', require('vue-infinite-loading'));
+Vue.component('InfiniteLoading', require('vue-infinite-loading') );
 
 import vSelect from 'vue-select';
 Vue.component('v-select', vSelect);

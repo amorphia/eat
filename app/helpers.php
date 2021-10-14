@@ -7,9 +7,12 @@
  * @param int $status
  * @return \Illuminate\Http\JsonResponse
  */
-function error( string $message = 'Action Forbidden', int $status = 403 )
+if( !function_exists( 'error' ) )
 {
-    return response()->json(['error' => $message], $status );
+    function error( string $message = 'Action Forbidden', int $status = 403 )
+    {
+        return response()->json(['error' => $message], $status);
+    }
 }
 
 
@@ -18,9 +21,12 @@ function error( string $message = 'Action Forbidden', int $status = 403 )
  *
  * @return \App\Models\User
  */
-function user()
+if( !function_exists( 'user' ) )
 {
-    return request()->user();
+    function user()
+    {
+        return request()->user();
+    }
 }
 
 
@@ -30,8 +36,11 @@ function user()
  * @param string $url
  * @return string
  */
-function stripUrlParams( string $url ) : string
+if( !function_exists( 'stripUrlParams' ) )
 {
-    $arr = explode("?", $url );
-    return $arr[0];
+    function stripUrlParams( string $url ): string
+    {
+        $arr = explode("?", $url);
+        return $arr[0];
+    }
 }

@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
-class Match extends QueryFilterAbstract
+class Matches extends QueryFilterAbstract
 {
 
     /**
