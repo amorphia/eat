@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use Imagick;
 
 class Photo extends Model
 {
@@ -81,7 +80,6 @@ class Photo extends Model
      * @param $validated
      * @return Model
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \ImagickException
      */
     public static function storePhoto( $request, $validated )
     {
@@ -108,69 +106,12 @@ class Photo extends Model
      * @param Request $request
      * @return string
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \ImagickException
      */
     public static function saveUpload( Request $request )
     {
-        // set a temp name equal to the unixtimestamp with microseconds
-        $name = implode( '', hrtime() );
-        $extension = $request->image->extension();
 
-        // store the file
-        $request->image->storeAs( '/public/uploads', "{$name}.{$extension}" );
-
-        // open source file with imagick
-        $img = new Imagick();
-        $img->readImageBlob( Storage::get( "/public/uploads/{$name}.{$extension}" ) );
-
-        // resize image
-        $img = self::scaleImage( $img );
-
-        // save as jpg
-        $img->setImageFormat( 'jpg' );
-        $img->stripImage();
-        $img->writeImage( storage_path() . "/app/public/uploads/{$name}.jpg" );
-        $img->clear();
-        $img->destroy();
-
-        return "/storage/uploads/{$name}.jpg";
-    }
-
-
-    /**
-     * Scale the image
-     *
-     * @param Imagick $img
-     * @return Imagick $image
-     * @throws \ImagickException
-     */
-    public static function scaleImage( Imagick $img )
-    {
-        // set starting and ending dimensions
-        $start_width = $img->getImageWidth();
-        $start_height = $img->getImageHeight();
-
-        $excess_width = $start_width - self::MAX_SIZE;
-        $excess_height = $start_height - self::MAX_SIZE;
-
-        // get the current dimension ratio
-        if( $excess_height <= 0 && $excess_width <= 0 ){
-            return $img;
-        }
-
-        // set final size parameters
-        if( $excess_width > $excess_height ){
-            $width = self::MAX_SIZE;
-            $height = 0;
-        } else {
-            $height = self::MAX_SIZE;
-            $width = 0;
-        }
-
-        // scale image
-        $img->scaleImage( $width, $height );
-
-        return $img;
+        $path = $request->image->store( 'public/uploads' );
+        return Storage::url( $path );
     }
 
 }
