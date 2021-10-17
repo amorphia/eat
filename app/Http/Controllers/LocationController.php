@@ -28,7 +28,7 @@ class LocationController extends Controller
      *
      *  @param  \Illuminate\Http\Request  $request
      */
-    public function createByYelpId( Request $request )
+    public function createByYelpId( Request $request ) : void
     {
         $validated = $request->validate([
             'yelp_id' => 'string'
@@ -39,30 +39,11 @@ class LocationController extends Controller
     }
 
 
-    /*
-     *  Create a new location from a yelp url
-     *
-     *  @param  \Illuminate\Http\Request  $request
-     */
-    public function createByYelpPage( Request $request )
-    {
-        // remove parameters from the url and then check if its already in our DB
-        $url = stripUrlParams( $request->yelp_url );
-        $count = Location::where( 'yelp_url', stripUrlParams( $url ) )->count();
-
-        // if this url already exists in our DB then abort
-        if( $count > 0 ) return error( 'This location already exists' );
-
-        // add yelp location
-        return Location::addByYelpPage( $url, $this->yelp );
-    }
-
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Location  $location
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse|void
      */
     public function destroy( Location $location )
     {

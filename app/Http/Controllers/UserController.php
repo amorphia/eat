@@ -11,7 +11,7 @@ class UserController extends Controller
     /**
      * Display listing of all users
      *
-     * @return \Illuminate\Http\Response
+     * @return User[]
      */
     public function index( Request $request )
     {
@@ -24,7 +24,7 @@ class UserController extends Controller
     /**
      * Display the currently logged in user
      *
-     * @return \Illuminate\Http\Response
+     * @return User
      */
     public function show( Request $request )
     {

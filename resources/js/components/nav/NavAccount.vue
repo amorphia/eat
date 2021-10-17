@@ -137,7 +137,7 @@
              */
             pageSchema(){
                 return [
-                    { name: 'yelp_url', label : 'yelp url', focus : true },
+                    { name: 'yelp_id', label : 'yelp url', focus : true },
                 ]
             }
         }

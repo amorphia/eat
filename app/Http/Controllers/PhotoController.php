@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Location;
 use App\Models\Photo;
 use App\Models\Restaurant;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 
@@ -14,10 +15,9 @@ class PhotoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Model
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \ImagickException
      */
     public function store( Request $request )
     {
@@ -36,7 +36,10 @@ class PhotoController extends Controller
     }
 
 
-
+    /**
+     * @param Request $request
+     * @return Model
+     */
     public function yelp( Request $request )
     {
         $validated = $request->validate([
@@ -64,9 +67,9 @@ class PhotoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Photo  $photo
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Photo $photo
+     * @return Photo|\Illuminate\Http\JsonResponse
      */
     public function update( Request $request, Photo $photo )
     {
@@ -79,17 +82,18 @@ class PhotoController extends Controller
         ]);
 
         // update rating with new values then return
-        return $photo->update( $validated );
+        $photo->update( $validated );
+        return $photo;
     }
 
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Photo  $photo
-     * @return \Illuminate\Http\Response
+     * @param Photo $photo
+     * @return bool|\Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, Photo $photo)
+    public function destroy( Request $request, Photo $photo )
     {
         if( !user()->can( 'delete', $photo ) ) return error();
 

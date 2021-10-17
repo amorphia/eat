@@ -14,7 +14,7 @@ class RatingController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Rating  $rating
-     * @return \Illuminate\Http\Response
+     * @return Rating|\Illuminate\Database\Eloquent\Model
      */
     public function update( Request $request, Restaurant $restaurant )
     {

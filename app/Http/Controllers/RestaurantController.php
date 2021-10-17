@@ -15,7 +15,7 @@ class RestaurantController extends Controller
      * Return an index of restaurants.
      *
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function index( Request $request, PipelineService $pipelineService )
     {
@@ -45,7 +45,7 @@ class RestaurantController extends Controller
      * Display the specified restaurant.
      *
      * @param  \App\Models\Restaurant $restaurant
-     * @return \Illuminate\Http\Response
+     * @return Restaurant
      */
     public function show( Request $request )
     {
@@ -61,7 +61,7 @@ class RestaurantController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Restaurant  $restaurant
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function update(Request $request, Restaurant $restaurant)
     {
@@ -99,7 +99,7 @@ class RestaurantController extends Controller
      * Set the given restaurants to inactive.
      *
      * @param  \App\Models\Restaurant  $restaurant
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy( Request $request )
     {

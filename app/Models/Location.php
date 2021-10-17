@@ -76,66 +76,6 @@ class Location extends Model
     }
 
 
-    /**
-     * Add a location via a yelp url
-     *
-     * @param string $url
-     * @param YelpServiceInterface $yelp
-     * @return mixed
-     */
-    public static function addByYelpPage( string $url, YelpServiceInterface $yelp )
-    {
-
-        $client = new HTTPClient();
-
-        // scrape the page
-        $crawler = $client->request('GET', $url );
-
-        // get id
-        $id = $crawler->filter( 'meta[name=yelp-biz-id]' )->eq( 0 )->attr( 'content' );
-        if( !$id ) return;
-
-        // store
-        return self::addByYelpId( $id, $yelp );
-    }
-
-
-    /**
-     * Create and store a location via a yelp ID
-     *
-     * @param string $id
-     * @param YelpServiceInterface $yelp
-     * @return \App\Models\Restaurant | void
-     */
-    public static function addByYelpId( string $id, YelpServiceInterface $yelp )
-    {
-        // fetch location details rom the yelp API via our yelp id
-        $details = $yelp->details( $id );
-
-        // if we didn't get anything abort
-        if( !$details ) return;
-
-        // store location
-        $location = self::addLocation( $details );
-
-        // update location hours
-        if( isset( $details->hours ) ) $location->update([ 'hours' => $details->hours[0]->open ]);
-
-        // get parent restaurant
-        $restaurant = Restaurant::find( $location->restaurant_id );
-
-        // add photos
-        if( isset( $details->photos ) ){
-            foreach( $details->photos as $photo ){
-                $restaurant->photos()->create([ 'url' => $photo ]);
-            }
-        }
-
-        // hit the database for the same restaurant again, with all of the
-        // adjustments / relations / joins I make when searching so I can return it
-        return Restaurant::search( $restaurant->name )->first();
-    }
-
 
     /**
      * Close this location, and if this was a restaurant's only location close it as well

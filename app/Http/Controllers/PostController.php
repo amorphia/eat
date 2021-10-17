@@ -30,7 +30,7 @@ class PostController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @return Post|\Illuminate\Http\JsonResponse
      */
     public function update( Request $request, Post $post )
     {
@@ -50,7 +50,7 @@ class PostController extends Controller
      * Remove the specified resource from storage.
      *
      * @param \App\Models\Post $post
-     * @return \Illuminate\Http\Response
+     * @return bool|\Illuminate\Http\JsonResponse
      * @throws \Exception
      */
     public function destroy( Post $post )
