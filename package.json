@@ -19,7 +19,9 @@
         "sass-loader": "^8.0.2",
         "vue": "^2.5.17",
         "vue-loader": "^15.9.8",
-        "vue-template-compiler": "^2.6.10"
+        "vue-template-compiler": "^2.6.10",
+        "trim-newlines": ">=3.0.1",
+        "tar": ">=4.4.18"
     },
     "dependencies": {
         "dayjs": "^1.10.4",
