@@ -12,7 +12,6 @@ use Laravel\Sanctum\Sanctum;
 
 class LocationControllerTest extends TestCase
 {
-
     use RefreshDatabase;
 
     public function setUp(): void

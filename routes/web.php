@@ -24,7 +24,7 @@ Route::view( 'welcome', 'welcome' )
 
 // Routes for authentication
 Auth::routes();
-Route::get( 'logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'] )->name( 'logout' );
+Route::get( 'logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'] );
 
 
 // Outside of the landing and authentication, all other web routes should just point to the SPA
