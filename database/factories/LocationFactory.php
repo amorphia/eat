@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Location;
+use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LocationFactory extends Factory
@@ -63,6 +64,7 @@ class LocationFactory extends Factory
         $name = preg_replace("/(\W)+/", "", $name );
 
         return [
+            'restaurant_id' => Restaurant::factory(),
             'yelp_id' => $this->faker->uuid,
             'phone' => $this->faker->e164PhoneNumber,
             'slug' => str_replace( " ", "-", $name ),

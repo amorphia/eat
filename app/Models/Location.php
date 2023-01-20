@@ -36,6 +36,20 @@ class Location extends Model
         return $this->belongsTo(Restaurant::class );
     }
 
+    /**
+     *
+     *  Scopes
+     *
+     */
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeActive( $query )
+    {
+        return $query->where('active', true);
+    }
 
     /**
      *

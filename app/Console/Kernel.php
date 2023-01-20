@@ -32,6 +32,10 @@ class Kernel extends ConsoleKernel
         $schedule->command( 'scanYelp --hot' )
             ->weekly()
             ->emailOutputTo('jeremy@jeremykalgreen.com' );
+
+        $schedule->command( 'scanClosed' )
+            ->everyThreeHours()
+            ->emailOutputTo('jeremy@jeremykalgreen.com' );
     }
 
     /**

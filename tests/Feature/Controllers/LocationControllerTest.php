@@ -98,4 +98,5 @@ class LocationControllerTest extends TestCase
         $this->assertDatabaseHas('restaurants', [ 'id' => $restaurant->id, 'active' => true ]);
     }
 
+
 }

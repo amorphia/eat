@@ -40,7 +40,6 @@ class ScannerService
     // how many zip codes to scan each session by default
     protected $zipCount = 5;
 
-
     /*
      * Internals
      */
@@ -98,7 +97,6 @@ class ScannerService
     {
         $this->zipCount = $count;
     }
-
 
     /**
      * Set our console if we want to output our results in realtime
@@ -201,7 +199,6 @@ class ScannerService
 
         if( $this->console ) $this->console->info( "Sort set to {$this->sort}" );
     }
-
 
     /**
      * Run a special scan type for "new and hot" restaurants.
@@ -403,7 +400,7 @@ class ScannerService
 
         // close the location
         $result = $location->close();
-        
+
         if( $result ) if( $this->console ) $this->console->error( "Closing restaurant: {$location->name}" );
     }
 
