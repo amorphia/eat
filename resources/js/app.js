@@ -15,13 +15,12 @@ window.Vue = Vue;
 import VueRouter from 'vue-router';
 Vue.use( VueRouter );
 
-
 /*
 * Import other plugins
  */
-import VueConfirmDialog from 'vue-confirm-dialog';
-Vue.use( VueConfirmDialog );
-Vue.component('vue-confirm-dialog', VueConfirmDialog.default );
+import VueConfirmDialog from 'vue-confirm-dialog'
+Vue.use(VueConfirmDialog)
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default)
 
 import VueLazyLoad from 'vue-lazyload';
 Vue.use( VueLazyLoad );
