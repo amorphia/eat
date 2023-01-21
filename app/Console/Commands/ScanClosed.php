@@ -15,7 +15,7 @@ class ScanClosed extends Command
      *
      * @var string
      */
-    protected $signature = "scanClosed {--count=100} {--silent=true : don't send summary email} {--slow=true : slow the rate of api calls}";
+    protected $signature = "scanClosed {--count=100} {--slow=true : slow the rate of api calls}";
 
 
     /**
@@ -49,9 +49,6 @@ class ScanClosed extends Command
      */
     public function handle()
     {
-        // sell scanner to send summary email
-        if( $this->option( 'silent' ) ) $this->scanner->setSummary( false );
-
         // set how many zip codes to scan
         $this->scanner->setClosedCount( $this->option( 'count' ) );
 

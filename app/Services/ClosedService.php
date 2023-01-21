@@ -139,7 +139,7 @@ class ClosedService
 
         // if we should send a summary email, do so now
         if( $this->summary && $this->closedLocations ){
-            Mail::send( new ScanSummary( null, $this->closedLocations ) );
+            Mail::send( new ScanSummary( [], $this->closedLocations ) );
         }
     }
 
