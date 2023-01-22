@@ -15,7 +15,7 @@ class ScanClosed extends Command
      *
      * @var string
      */
-    protected $signature = "scanClosed {--count=100} {--slow=true : slow the rate of api calls} {--silent=true : output to console?}";
+    protected $signature = "scanClosed {--count=100} {--slow=true : slow the rate of api calls} {--silent=false : output to console?}";
 
 
     /**
