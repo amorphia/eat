@@ -40,6 +40,8 @@ class ClosedService
     // how many closed restaurants to scan for at a time
     protected $closedCount = 100;
 
+    // should we output to console
+    protected $silent = true;
 
     /*
      * Internals
@@ -87,6 +89,17 @@ class ClosedService
     public function setClosedCount( $count )
     {
         $this->closedCount = $count;
+    }
+
+    /**
+     * Manually set at runtime if we should output to console
+     *
+     * @param bool $silent
+     * @return void
+     */
+    public function setSilent( $silent )
+    {
+        $this->closedCount = $silent;
     }
 
     /**
@@ -150,7 +163,7 @@ class ClosedService
      */
     protected function checkLocation( $location )
     {
-        if( $this->console ) $this->console->info( "Checking {$location->name}" );
+        if( $this->console && !$this->silent ) $this->console->info( "Checking {$location->name}" );
 
         // grab our results for this location from yelp
         $details = $this->getLocationDetails( $location );

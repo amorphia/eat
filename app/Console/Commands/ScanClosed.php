@@ -15,7 +15,7 @@ class ScanClosed extends Command
      *
      * @var string
      */
-    protected $signature = "scanClosed {--count=100} {--slow=true : slow the rate of api calls}";
+    protected $signature = "scanClosed {--count=100} {--slow=true : slow the rate of api calls} {--silent=true : output to console?}";
 
 
     /**
@@ -49,8 +49,11 @@ class ScanClosed extends Command
      */
     public function handle()
     {
-        // set how many zip codes to scan
+        // set how many locations to scan
         $this->scanner->setClosedCount( $this->option( 'count' ) );
+
+        // set if we should not output to console
+        $this->scanner->setSilent( $this->option( 'silent' ) );
 
         // run our scan
         $this->scanner->scan( $this->option( 'slow' ) );
