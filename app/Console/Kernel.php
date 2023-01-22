@@ -34,8 +34,7 @@ class Kernel extends ConsoleKernel
             ->emailOutputTo('jeremy@jeremykalgreen.com' );
 
         $schedule->command( 'scanClosed --count=20' )
-            ->everyThirtyMinutes()
-            ->emailOutputTo('jeremy@jeremykalgreen.com' );
+            ->everyThirtyMinutes();
     }
 
     /**
