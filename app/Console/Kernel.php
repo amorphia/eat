@@ -31,11 +31,11 @@ class Kernel extends ConsoleKernel
 
         $schedule->command( 'scanYelp --hot' )
             ->weekly()
-            ->emailOutputTo('jeremy@jeremykalgreen.com' );
+            ->emailOutputOnFailure('jeremy@jeremykalgreen.com' );
 
         $schedule->command( 'scanClosed --count=20' )
             ->everyThirtyMinutes()
-            ->emailOutputTo('jeremy@jeremykalgreen.com' );
+            ->emailOutputOnFailure('jeremy@jeremykalgreen.com' );
     }
 
     /**
