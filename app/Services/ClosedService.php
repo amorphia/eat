@@ -41,7 +41,7 @@ class ClosedService
     protected $closedCount = 100;
 
     // should we output to console
-    protected $silent = true;
+    protected $silent = false;
 
     /*
      * Internals
