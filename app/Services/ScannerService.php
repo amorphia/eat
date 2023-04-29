@@ -328,7 +328,7 @@ class ScannerService
      *
      * @param \App\Models\Location $location
      */
-    public function getLocationDetails( $location )
+    public function getLocationDetails( $location, $debug = false )
     {
         $details = null;
 
@@ -336,6 +336,7 @@ class ScannerService
         try {
             $details = $this->yelp->details( $location );
         } catch ( \Throwable $e ) {
+            if($debug) logger( 'Failed to scan for details: ' . $e->getMessage() );
             if( $this->console ) $this->console->error( 'Failed to scan for details: ' . $e->getMessage() );
 
             $this->errors++;
@@ -347,17 +348,21 @@ class ScannerService
             }
         }
 
+        if($debug) logger("yelp search returned 200");
+
         // sleep for a bit to avoid API trouble
         sleep( $this->sleep );
 
         // if we didn't get nothin, then we are done here
         if( !$details ) return;
 
+        if($debug) logger("found location details");
+
         // set location hours
         if( isset( $details->hours ) ) $location->update([ 'hours' => $details->hours[0]->open ]);
 
         // save location photos
-        $this->saveLocationPhotos( $location, $details );
+        $this->saveLocationPhotos( $location, $details, $debug );
     }
 
 
@@ -367,19 +372,24 @@ class ScannerService
      * @param \App\Models\Location $location
      * @param object $details
      */
-    public function saveLocationPhotos( $location, $details )
+    public function saveLocationPhotos( $location, $details, $debug = false)
     {
         // find the restaurant model our location belongs to
         $restaurant = Restaurant::find( $location->restaurant_id );
 
         // if we can't find the restaurant give up
-        if( ! $restaurant || !isset( $details->photos ) ) return;
+        if( ! $restaurant || !isset( $details->photos ) ){
+            if($debug) logger("No restaurant, or no photos");
+            return;
+        }
+        if($debug) logger( count( $details->photos ) . " photos found" );
 
         // store each photo with the restaurant model
         foreach( $details->photos as $photo ){
             try {
                 $restaurant->photos()->create([ 'url' => $photo ]);
             } catch ( \Throwable $e ) {
+                if($debug) logger( 'Adding photo failed: ' . $e->getMessage() );
                 if( $this->console ) $this->console->error( 'Adding photo failed: ' . $e->getMessage() );
             }
         }

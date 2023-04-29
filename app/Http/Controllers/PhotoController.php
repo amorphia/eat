@@ -42,16 +42,15 @@ class PhotoController extends Controller
         return $photo;
     }
 
-    public function reload( Request $request ){
-        $validated = $request->validate([
-            'restaurant' => 'exists:restaurants,id',
-        ]);
+    public function reload( Request $request, Restaurant $restaurant ){
+        logger("reload started");
 
-        $restaurant = Restaurant::find($validated['restaurant']);
         foreach( $restaurant->locations as $location ){
-            $this->scannerService->getLocationDetails( $location );
+            logger("reloading location");
+            $this->scannerService->getLocationDetails( $location, true );
         }
 
+        return response()->json(["worked" => true]);
     }
 
     /**

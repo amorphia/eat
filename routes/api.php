@@ -32,7 +32,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     //Photos
     Route::resource('photos', App\Http\Controllers\PhotoController::class)->only([ 'store', 'destroy', 'update' ]);
-    Route::post('/photos/reload/{restaurant}', [App\Http\Controllers\PhotoController::class, 'reload'] )->name( 'photos.reload' );
+    Route::get('/photos/reload/{restaurant}', [App\Http\Controllers\PhotoController::class, 'reload'] )->name( 'photos.reload' );
     Route::post('/photos/yelp', [App\Http\Controllers\PhotoController::class, 'yelp'] )->name( 'photos.yelp' );
 
     // Posts (I should rename this notes, as that's the wording I use in the UI)
