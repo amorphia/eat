@@ -265,7 +265,14 @@
              *  Load a restaurant's photos
              */
             loadRestaurantPhotos(){
-                App.ajax.get( `/api/photos/reload/${this.restaurant.id}`, true);
+                App.ajax.get( `/api/photos/reload/${this.restaurant.id}`, true)
+                    .then( response => {
+                        let restaurant = this.shared.getRestaurant( this.restaurant.id );
+                        if( restaurant ){
+                            Object.entries( response.data ).forEach( ([ key, val ]) => this.$set( restaurant, key, val ) );
+                            this.$set( restaurant, 'loaded', true );
+                        }
+                    });
             },
 
             /**

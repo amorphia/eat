@@ -50,7 +50,11 @@ class PhotoController extends Controller
             $this->scannerService->getLocationDetails( $location, true );
         }
 
-        return response()->json(["worked" => true]);
+        // reloading the hard way
+        return Restaurant::active()
+            ->withRelations()
+            ->joinRatings()
+            ->find( $restaurant->id );
     }
 
     /**
