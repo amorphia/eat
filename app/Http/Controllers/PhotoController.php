@@ -7,10 +7,17 @@ use App\Models\Photo;
 use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use App\Services\ScannerService;
 
 
 class PhotoController extends Controller
 {
+    protected $scannerService;
+
+    public function __construct(ScannerService $scannerService)
+    {
+        $this->scannerService = $scannerService;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,6 +42,17 @@ class PhotoController extends Controller
         return $photo;
     }
 
+    public function reload( Request $request ){
+        $validated = $request->validate([
+            'restaurant' => 'exists:restaurants,id',
+        ]);
+
+        $restaurant = Restaurant::find($validated['restaurant']);
+        foreach( $restaurant->locations as $location ){
+            $this->scannerService->getLocationDetails( $location );
+        }
+
+    }
 
     /**
      * @param Request $request

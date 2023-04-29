@@ -328,7 +328,7 @@ class ScannerService
      *
      * @param \App\Models\Location $location
      */
-    protected function getLocationDetails( $location )
+    public function getLocationDetails( $location )
     {
         $details = null;
 
@@ -367,7 +367,7 @@ class ScannerService
      * @param \App\Models\Location $location
      * @param object $details
      */
-    protected function saveLocationPhotos( $location, $details )
+    public function saveLocationPhotos( $location, $details )
     {
         // find the restaurant model our location belongs to
         $restaurant = Restaurant::find( $location->restaurant_id );

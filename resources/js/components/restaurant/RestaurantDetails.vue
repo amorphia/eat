@@ -47,6 +47,13 @@
                             <i class="icon-block"></i>
                         </button>
 
+                        <!-- reload restaurant data button -->
+                        <button v-if="shared.user.admin"
+                                class="details__reload-restaurant details__edit-button mr-3 tablet-up-only"
+                                @click="loadRestaurantPhotos">
+                            reload photos
+                        </button>
+
                         <!-- restaurant name -->
                         <div class="details__name-name ellipses" @click="openEditName" v-text="restaurant.name"></div>
                     </div>
@@ -254,6 +261,12 @@
                         });
             },
 
+            /**
+             *  Load a restaurant's photos
+             */
+            loadRestaurantPhotos(){
+                App.ajax.get( `/api/photos/reload/${this.restaurant.id}`, true);
+            },
 
             /**
              * Lock or unlock the page scroll depending on if we have a restaurant
