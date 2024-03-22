@@ -289,6 +289,20 @@ class ScannerService
         // grab the matching object from our DB if it exists
         $existingLocation = Location::where( 'yelp_id', $location->id )->first();
 
+        // if this exists but was disabled
+        if( !$location->is_closed && $existingLocation && $existingLocation->exists() && !$existingLocation->active ){
+            $existingLocation->active = true;
+            $existingLocation->closure_scanned = false;
+            $existingLocation->save();
+
+            $existingLocation->restaurant->active = true;
+            $existingLocation->restaurant->save();
+            $existingLocation->refresh();
+
+            if( $this->summary ) $this->newLocations[] = $existingLocation;
+        }
+
+
         // if this location doesn't already exist add it
         if( !$existingLocation || !$existingLocation->exists() ){
             $this->addLocation( $location );
