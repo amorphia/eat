@@ -59,7 +59,7 @@ class CreateLocationFromYelp
     {
         // remove parameters from the url and then check if its already in our DB
         $url = stripUrlParams( $url );
-        $count = Location::where( 'yelp_url', $url )->count();
+        $count = Location::where( 'yelp_url', $url )->where( 'active', 1 )->count();
 
         // if this url already exists in our DB then abort
         if( $count > 0 ){
