@@ -300,6 +300,7 @@ class ScannerService
             $existingLocation->refresh();
 
             if( $this->summary ) $this->newLocations[] = $existingLocation;
+            return;
         }
 
 
