@@ -89,6 +89,20 @@ class CreateLocationFromYelp
         // if we didn't get anything abort
         if( !$details ) throw new \Exception( 'Could not get location details from yelp' ) ;
 
+        // if we have an existing location make sure its not disabled then return it
+        $existing = Location::where('yelp_id', $details->id )->first();
+        if( $existing ){
+            $existing->active = true;
+            $existing->closure_scanned = false;
+            $existing->save();
+
+            $existing->restaurant->active = true;
+            $existing->restaurant->save();
+            $existing->refresh();
+
+            return $existing->restaurant;
+        }
+
         // store location
         $location = Location::addLocation( $details );
 
